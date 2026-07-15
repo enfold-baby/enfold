@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#faf7f2"/>
+  <circle cx="180" cy="120" r="220" fill="#5c7f71" fill-opacity="0.12"/>
+  <circle cx="1020" cy="520" r="260" fill="#c96b7e" fill-opacity="0.14"/>
+  <path d="M120 470 Q 600 80 1080 470" stroke="#5c7f71" stroke-opacity="0.25" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <g transform="translate(96, 196)">
+    <path d="M48 88c0-18-7.8-28.2-22.2-33.6" stroke="#5c7f71" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
+    <path d="M48 88c0-21 6.6-31.4 22.8-36.6" stroke="#5c7f71" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
+    <path d="M48 55.5c-7.8 0-13.5-5.7-13.5-12.9 0-4.5 2.4-8.7 6.6-11.1C40.2 22.4 43.8 18 48 18s7.8 4.4 5.4 13.5c4.2 2.4 6.6 6.6 6.6 11.1 0 7.2-5.7 12.9-13.5 12.9Z" fill="#c96b7e"/>
+    <circle cx="48" cy="40.5" r="6" fill="#faf7f2"/>
+  </g>
+  <text x="170" y="300" fill="#3d3229" font-family="Georgia, serif" font-size="72" font-weight="600">BloomDue</text>
+  <text x="170" y="370" fill="#6b5e54" font-family="Arial, sans-serif" font-size="34">Grow with confidence.</text>
+  <text x="170" y="430" fill="#5c7f71" font-family="Arial, sans-serif" font-size="26" font-weight="700">Free calm baby care · bloomdue.baby</text>
+</svg>

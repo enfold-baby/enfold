@@ -1,0 +1,84 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+*~
+
+# Env & secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.keystore
+*.jks
+key.properties
+**/google-services.json
+**/GoogleService-Info.plist
+firebase_options.dart
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+/coverage/
+**/doc/api/
+*.g.dart.bak
+
+# Symbolication / obfuscation
+app.*.symbols
+app.*.map.json
+
+# Android
+/android/.gradle/
+/android/local.properties
+/android/captures/
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+/android/**/key.properties
+
+# iOS
+/ios/Pods/
+/ios/.symlinks/
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/ephemeral/
+/ios/Flutter/app.flx
+/ios/Flutter/app.zip
+/ios/Flutter/flutter_assets/
+/ios/Flutter/flutter_export_environment.sh
+/ios/ServiceDefinitions.json
+
+# macOS desktop
+/macos/Flutter/ephemeral/
+
+# Web
+/web/.dart_tool/
+
+# Test / tooling artifacts
+.test_runner/
+agent-tools/
+*.log
+
+# Release artifacts (build locally or in CI)
+*.apk
+*.aab
+*.ipa
+*.dSYM.zip
+
+# Drift — generated code IS committed; only ignore temp
+*.drift.dart.tmp

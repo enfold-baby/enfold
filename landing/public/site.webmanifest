@@ -1,0 +1,16 @@
+{
+  "name": "BloomDue",
+  "short_name": "BloomDue",
+  "description": "Calm baby care tracking with doctor-reviewed guidance.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#5c7f71",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

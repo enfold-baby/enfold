@@ -1,0 +1,19 @@
+# Normalize line endings for cross-platform clones
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.apk binary
+*.aab binary
+*.ipa binary
+*.woff binary
+*.woff2 binary
+
+# Shell scripts always LF
+*.sh text eol=lf

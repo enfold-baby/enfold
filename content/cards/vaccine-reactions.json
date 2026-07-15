@@ -1,0 +1,25 @@
+{
+  "id": "vaccine-reactions",
+  "title": "Vaccine reactions — expected vs call",
+  "summary": "Mild reactions after vaccines are common. Know what is typical and what is not.",
+  "whatsNormal": "Vaccines teach the immune system to recognize germs. Mild reactions mean the body is responding.\n\n• Soreness, redness, or small lump at the injection site for 1–2 days\n• Low-grade fever or fussiness for 24–48 hours after some vaccines\n• Sleepier or clingier for a day — still waking for feeds\n• Rotavirus vaccine can rarely cause loose stools for a few days\n\nComfort measures: extra cuddles, fluids as usual, and acetaminophen only if your pediatrician recommended it for your baby's age and weight.",
+  "watchFor": [
+    "Fever of 100.4°F (38°C) or higher in a baby under 3 months — always call, even after vaccines",
+    "High fever lasting more than 48 hours after a vaccine",
+    "Non-stop crying for 3+ hours or an unusual high-pitched cry",
+    "Hives, swelling of face or lips, or trouble breathing within hours of a vaccine"
+  ],
+  "callDoctorIf": [
+    "Signs of allergic reaction: rash with hives, wheezing, or swelling — seek emergency care for breathing difficulty",
+    "Seizure or limp, unresponsive baby",
+    "Injection site redness spreading or with red streaks",
+    "You are unsure whether symptoms are vaccine-related — your clinic can guide you"
+  ],
+  "reviewer": {
+    "name": "Pending physician review",
+    "credentials": "",
+    "specialty": "Neonatology / Pediatrics",
+    "reviewedAt": "2026-07-01"
+  },
+  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+}

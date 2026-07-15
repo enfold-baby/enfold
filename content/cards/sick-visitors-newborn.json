@@ -1,0 +1,25 @@
+{
+  "id": "sick-visitors-newborn",
+  "title": "Visitors and sick contacts — protecting your newborn",
+  "summary": "Newborns have developing immune systems. Boundaries are health care, not rudeness.",
+  "whatsNormal": "It is reasonable to limit exposure in the early weeks.\n\n• Ask visitors to wash hands before holding baby\n• Skip visits from anyone with fever, cough, cold sores, or vomiting\n• Kissing baby on hands or feet instead of face reduces germ spread\n• Older siblings at daycare bring home viruses — extra hand washing helps\n• Outdoor or distanced visits can still share joy safely\n\nYou do not owe everyone immediate access. Your pediatrician supports protective choices.",
+  "watchFor": [
+    "Baby fever 100.4°F (38°C) or higher if under 3 months after a sick contact",
+    "Runny nose with poor feeding or unusual sleepiness",
+    "Cold sore (herpes) lesion near baby — newborn herpes is an emergency",
+    "Cough in baby or breathing faster than usual"
+  ],
+  "callDoctorIf": [
+    "Any fever in a baby under 3 months — call now",
+    "Baby exposed to someone with active cold sores and you see lesions on baby",
+    "Breathing difficulty, blue lips, or dehydration signs",
+    "You want guidance after a known exposure — nurse lines can triage"
+  ],
+  "reviewer": {
+    "name": "Pending physician review",
+    "credentials": "",
+    "specialty": "Neonatology / Pediatrics",
+    "reviewedAt": "2026-07-01"
+  },
+  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+}

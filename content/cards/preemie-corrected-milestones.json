@@ -1,0 +1,25 @@
+{
+  "id": "preemie-corrected-milestones",
+  "title": "Preemie milestones — corrected age matters",
+  "summary": "Babies born early often reach skills on a adjusted timeline. That is expected.",
+  "whatsNormal": "Corrected (adjusted) age counts from the due date, not the birth date.\n\n• Example: born 8 weeks early, now 4 months old by birth date → corrected age about 2 months\n• Many preemies catch up to peers by age 2–3 for large motor skills; smaller differences can persist\n• Use corrected age for milestone guides until at least age 2 (your pediatrician may adjust)\n• NICU graduates may have extra follow-up for vision, hearing, and development\n\nCelebrate progress without comparing to full-term babies of the same birth age.",
+  "watchFor": [
+    "Not fixing and following faces by corrected 2–3 months",
+    "Very stiff or very floppy muscle tone",
+    "No social smiles by corrected 3 months",
+    "Feeding difficulty worsening after NICU discharge"
+  ],
+  "callDoctorIf": [
+    "Regression — skills your baby had are lost",
+    "Seizures or unusual repetitive movements",
+    "You want early intervention referral — ask at any visit; earlier support helps",
+    "Your NICU or developmental follow-up clinic gave specific checklists — use those dates"
+  ],
+  "reviewer": {
+    "name": "Pending physician review",
+    "credentials": "",
+    "specialty": "Neonatology / Pediatrics",
+    "reviewedAt": "2026-07-01"
+  },
+  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "blocked-tear-duct",
+  "title": "Blocked tear duct — watery or crusty eye",
+  "summary": "One watery eye with mild crusting is common and often clears on its own.",
+  "whatsNormal": "Many newborns have a blocked tear duct (nasolacrimal duct) on one or both sides.\n\n• Watery eye or dried crust in the inner corner after sleep\n• Usually starts in the first weeks of life\n• White or clear discharge — not thick green pus alone\n• Often improves by 6–12 months as the duct opens\n\nGentle massage as your pediatrician shows and wiping crusts with a clean warm cloth can help.",
+  "watchFor": [
+    "Increasing redness of the white part of the eye",
+    "Eyelid swelling or warmth",
+    "Thick yellow-green discharge that returns quickly after cleaning",
+    "Baby rubbing eye constantly or seeming in pain"
+  ],
+  "callDoctorIf": [
+    "Redness spreading, swollen eyelid, or fever with eye symptoms",
+    "Eye looks cloudy or baby avoids light",
+    "Not improved by 12 months — specialist evaluation may be needed",
+    "You were given antibiotic drops — use as directed and call if worse"
+  ],
+  "reviewer": {
+    "name": "Pending physician review",
+    "credentials": "",
+    "specialty": "Neonatology / Pediatrics",
+    "reviewedAt": "2026-07-01"
+  },
+  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+}

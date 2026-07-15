@@ -1,0 +1,25 @@
+{
+  "id": "dehydration-signs",
+  "title": "Dehydration signs in a newborn",
+  "summary": "Young babies can dry out quickly when feeds are low. Know the early clues.",
+  "whatsNormal": "A well-hydrated newborn usually has:\n\n• At least 6 wet diapers per day once milk is in (days 5–7)\n• Pale yellow urine (not dark orange)\n• Moist mouth and tears when crying (after the first weeks)\n• A soft spot that is flat, not sunken\n• Wakes for feeds and has alert periods\n\nIn hot weather or illness, babies may need extra attention to fluids — follow your clinician's advice.",
+  "watchFor": [
+    "Fewer wet diapers than expected for your baby's age in days",
+    "Dark yellow or orange urine after day 4",
+    "Sunken soft spot (fontanelle) or dry lips and mouth",
+    "Very sleepy, hard to wake, or weak suck"
+  ],
+  "callDoctorIf": [
+    "No wet diaper for 12+ hours after day 3",
+    "Sunken eyes, no tears when crying, or limpness",
+    "Fever under 3 months with poor feeding",
+    "Vomiting everything or refusing all feeds — seek care promptly"
+  ],
+  "reviewer": {
+    "name": "Pending physician review",
+    "credentials": "",
+    "specialty": "Neonatology / Pediatrics",
+    "reviewedAt": "2026-07-01"
+  },
+  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+}

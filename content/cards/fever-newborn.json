@@ -1,0 +1,60 @@
+{
+  "id": "fever-newborn",
+  "title": "Fever in a newborn — when is it urgent?",
+  "summary": "A temperature in a young baby needs quick attention. Here's how to think about it.",
+  "whatsNormal": "A normal temperature is typically around 97.7–99.5°F (36.5–37.5°C) rectally, depending on the method you use.\n\nA fever is usually 100.4°F (38°C) or higher rectally.\n\nIn babies under 3 months, fever is taken seriously because their immune systems are still developing. That does not mean every warm forehead is an emergency — but it does mean you should not wait and see for days.",
+  "watchFor": [
+    "Temperature of 100.4°F (38°C) or higher",
+    "Baby feels warm but you do not have a thermometer — get one and recheck",
+    "Poor feeding, unusual sleepiness, or irritability with a warm temperature",
+    "Fever after recent vaccines — some low-grade fever can be expected; ask your clinician what to watch for"
+  ],
+  "callDoctorIf": [
+    "Any fever 100.4°F (38°C) or higher in a baby under 3 months — call now",
+    "Fever with rash, difficulty breathing, or blue lips",
+    "You cannot reach your pediatrician and baby is under 3 months with fever — go to ER",
+    "Seizure, limpness, or you cannot wake baby"
+  ],
+  "reviewer": {
+    "name": "Pending physician review",
+    "credentials": "",
+    "specialty": "Neonatology / Pediatrics",
+    "reviewedAt": "2026-07-01"
+  },
+  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately.",
+  "triage": {
+    "intro": "Answer a few quick questions. This is educational guidance, not a diagnosis.",
+    "startId": "age",
+    "outcomes": {
+      "green": {
+        "title": "Likely OK to watch",
+        "body": "No fever by your check and baby seems well. Keep monitoring temperature and hydration. Call your pediatrician if anything changes or you are worried."
+      },
+      "yellow": {
+        "title": "Call your pediatrician today",
+        "body": "Some signs need a clinician's input even if it is not an emergency. Describe symptoms, how you measured temperature, and when they started."
+      },
+      "red": {
+        "title": "Seek care now",
+        "body": "Fever in a young baby or concerning symptoms need prompt medical evaluation. Call your pediatrician now or go to the emergency department if you cannot reach them."
+      }
+    },
+    "nodes": {
+      "age": {
+        "question": "Is your baby younger than 3 months?",
+        "yes": { "goto": "temp" },
+        "no": { "goto": "temp" }
+      },
+      "temp": {
+        "question": "Is their temperature 100.4°F (38°C) or higher?",
+        "yes": { "goto": "well" },
+        "no": { "outcome": "green" }
+      },
+      "well": {
+        "question": "Is your baby feeding, alert enough to wake for feeds, and not having breathing difficulty?",
+        "yes": { "outcome": "yellow" },
+        "no": { "outcome": "red" }
+      }
+    }
+  }
+}

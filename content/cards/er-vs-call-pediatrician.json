@@ -1,0 +1,70 @@
+{
+  "id": "er-vs-call-pediatrician",
+  "title": "ER vs call pediatrician — quick guide",
+  "summary": "Some symptoms need emergency care. Many others can start with a phone call.",
+  "whatsNormal": "Most day-to-day questions — spit-up, fussiness, diaper rash, sleep patterns — are best handled by your pediatrician's office or nurse line during business hours.\n\n• Keep your clinic's after-hours number saved\n• Nurse triage lines can often advise within minutes\n• Urgent care can help for non-life-threatening issues when the office is closed\n• Emergency departments are for true emergencies — they are always the right choice when in doubt for severe symptoms\n\nTrust your instinct. If you think it is an emergency, it is OK to go.",
+  "watchFor": [
+    "Symptoms worsening over hours: breathing, color, alertness, or feeding",
+    "Fever in a baby under 3 months — always needs prompt evaluation",
+    "Dehydration: no wet diapers, dry mouth, sunken soft spot",
+    "Injury after a fall — especially if vomiting or acting differently"
+  ],
+  "callDoctorIf": [
+    "Mild fever in an older infant with clear fluids and normal behavior — call for guidance",
+    "Rash without breathing difficulty — photo for nurse line often enough",
+    "Feeding or sleep questions that are not urgent",
+    "You are unsure but baby is stable — call pediatrician first; they will say if you need ER"
+  ],
+  "reviewer": {
+    "name": "Pending physician review",
+    "credentials": "",
+    "specialty": "Neonatology / Pediatrics",
+    "reviewedAt": "2026-07-01"
+  },
+  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately.",
+  "triage": {
+    "intro": "Answer a few quick questions. When in doubt, seek emergency care.",
+    "startId": "breathing",
+    "outcomes": {
+      "green": {
+        "title": "Call your pediatrician",
+        "body": "No emergency signs from your answers. Call your pediatrician's office or nurse line for guidance. Monitor closely and call back if anything changes."
+      },
+      "yellow": {
+        "title": "Urgent visit today",
+        "body": "Some symptoms need same-day evaluation even if not an ER emergency. Call your pediatrician now for an urgent appointment or after-hours guidance."
+      },
+      "red": {
+        "title": "Go to ER now",
+        "body": "These symptoms can be serious in young babies. Call your local emergency number or go to the nearest emergency department. Call your pediatrician en route if you can."
+      }
+    },
+    "nodes": {
+      "breathing": {
+        "question": "Is your baby having trouble breathing, choking, or blue/gray lips?",
+        "yes": { "outcome": "red" },
+        "no": { "goto": "fever_young" }
+      },
+      "fever_young": {
+        "question": "Is your baby under 3 months with fever 100.4°F (38°C) or higher?",
+        "yes": { "outcome": "red" },
+        "no": { "goto": "responsive" }
+      },
+      "responsive": {
+        "question": "Is your baby hard to wake, limp, having a seizure, or injured after a significant fall?",
+        "yes": { "outcome": "red" },
+        "no": { "goto": "dehydration" }
+      },
+      "dehydration": {
+        "question": "Are there signs of dehydration (no wet diapers 12+ hours, sunken soft spot, no tears)?",
+        "yes": { "outcome": "yellow" },
+        "no": { "goto": "vomit" }
+      },
+      "vomit": {
+        "question": "Is there forceful vomiting, green (bile) vomit, or bloody vomit?",
+        "yes": { "outcome": "yellow" },
+        "no": { "outcome": "green" }
+      }
+    }
+  }
+}

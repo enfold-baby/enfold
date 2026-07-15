@@ -1,0 +1,330 @@
+# BloomDue Baby — Project Kickoff
+
+> **Read this first** when starting a fresh conversation in this repo.  
+> **Domain:** [bloomdue.baby](https://bloomdue.baby)  
+> **Folder:** `/Users/globinary/apps/globinary-games-grok/bloomdue_baby`  
+> **Stack:** Flutter + Dart · Android + iOS · free globally  
+> **Current:** `0.1.0+4` · Drift schema v8 · 84 tests · VPS API live
+
+**Resuming work?** → [`feature/SESSION.md`](./feature/SESSION.md) · **What's next?** → [`feature/todos/README.md`](./feature/todos/README.md) · **Keep docs fresh:** [`feature/MAINTAIN.md`](./feature/MAINTAIN.md)
+
+---
+
+## Name decision: keep BloomDue ✅
+
+**Recommendation: do NOT rename.** `BloomDue` / `bloomdue.baby` works well.
+
+| Factor | Verdict |
+|---|---|
+| **Meaning** | *Bloom* = growth, baby developing · *Due* = pregnancy due date |
+| **Domain** | `.baby` TLD is perfect and rare — huge brand win |
+| **Memorable** | Short, warm, not clinical-cold |
+| **Pronunciation** | Clear in English; works internationally |
+| **App store** | `BloomDue Baby` or just `BloomDue` as display name |
+| **Bundle ID** | `baby.bloomdue.app` (reverse domain of bloomdue.baby) |
+
+**Display name:** **BloomDue**  
+**Tagline ideas:** *Grow with confidence.* / *From bump to toddler.* / *Know what's normal.*
+
+Only reconsider if trademark conflict appears during store submission.
+
+---
+
+## Mission
+
+A **free** Flutter app for parents — pregnancy through ~3 years — that helps families:
+
+1. **Log** feeds, diapers, sleep, meds (2 taps at 3am)
+2. **Learn** doctor-reviewed "is this normal?" content
+3. **Reassure** before panic — when to watch vs when to call
+4. **Share** with partner / caregivers in real time
+5. **Export** a simple PDF for pediatric visits
+
+**Not a diagnosis tool.** Educational companion reviewed by physicians.
+
+### Why this exists
+
+- Parents flood doctors with simple fears because they don't know what's normal
+- Wife is a **neonatologist**; network of neonat + pediatricians will review content
+- App will be **fully free** for parents worldwide
+- Builders are also parents — dogfood the product
+
+---
+
+## Unfair advantages (moat)
+
+| Advantage | Why it matters |
+|---|---|
+| Neonatology expertise | NICU, preemies, discharge teaching — underserved in consumer apps |
+| Pediatrician review network | Trust + medically sound triage content |
+| Free forever (core) | vs Nara/Huckleberry $5–12/mo |
+| Reassurance-first UX | Most apps optimize logging; we optimize *calm* |
+| `.baby` domain | Instant brand recognition |
+
+---
+
+## Competitive landscape (research summary, 2026)
+
+| App | Strength | Weakness | Steal | Avoid |
+|---|---|---|---|---|
+| **Nara Baby** | Clean UI, pregnancy→baby, meds | Paywall, narrow | Visual simplicity | Locking basics |
+| **Pebbi** | Multi-carer sync, offline, privacy | Less medical depth | 2-tap log, handover | — |
+| **Huckleberry** | Sleep AI predictions | Expensive, anxiety-inducing | — | Prediction guilt |
+| **Baby Connect** | Medical PDF export, exhaustive | Ugly, overwhelming | Doctor export | Complexity default |
+| **Glow Baby** | Pregnancy continuity, community | Ads, data sharing | Week-by-week | Privacy trade-offs |
+| **CDC Milestones** | Free evidence milestones | No daily logging | Milestone source | — |
+| **MyPreemie** | NICU-specific | Narrow, dated | Preemie content shape | — |
+
+**Market gap BloomDue fills:**  
+*Free + beautiful + doctor-backed reassurance + full journey (pregnancy → toddler) + neonat-informed.*
+
+---
+
+## UX principles (non-negotiable)
+
+Research shows baby trackers can **increase postpartum anxiety** when they push obsessive logging (Parents.com, JMIR studies, parent forums).
+
+BloomDue must be **calm technology:**
+
+1. **Simple by default** — 3 core logs visible; depth is optional
+2. **No guilt** — missed logs get zero shame messages
+3. **Reassure before charts** — "You're doing fine" before statistics
+4. **Triage not diagnosis** — "Watch for X" / "Call if Y" / "This is common"
+5. **2-tap logging at 3am** — one-handed, big targets
+6. **Offline-first** — hospitals have bad signal
+7. **Partner sync** — both parents see same baby (separate accounts)
+
+---
+
+## User journey phases (one app, shifting UI)
+
+```
+┌─────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
+│  PREGNANCY  │ → │ NEWBORN 0-3m │ → │ INFANT 3-12m │ → │ TODDLER 1-3y │
+└─────────────┘   └──────────────┘   └──────────────┘   └──────────────┘
+ Week / due date    Feed diaper sleep   Solids milestones   Words behavior
+ Kicks symptoms     Warning signs       Growth vaccines     Potty naps
+ Appointments       NICU / preemie      Allergies           Tantrums
+ Hospital bag       "Is this normal?"   Doctor export       Milestones
+```
+
+---
+
+## MVP scope (v0.1 — target 8–12 weeks)
+
+### In scope
+
+| Module | Features |
+|---|---|
+| **Auth** | Email or anonymous → upgrade; partner invite code |
+| **Pregnancy** | Due date, current week, kick counter, appointment notes |
+| **Baby profile** | Name, birth date, sex, preemie toggle (corrected age) |
+| **Daily log** | Feed (breast L/R, bottle ml), diaper (wet/dirty), sleep (start/end) |
+| **Learn** | 25–30 doctor-written cards ("Is this normal?") |
+| **Triage** | Simple decision trees → green / yellow / red (call doctor) |
+| **Sync** | Real-time partner view of today's log |
+| **Export** | 7-day PDF summary for pediatric visit |
+| **Settings** | Metric/imperial, language (English first) |
+
+### Out of scope for MVP
+
+- AI sleep predictions
+- Community forums
+- Wearable integrations
+- Romanian localization (v0.2 unless prioritized)
+- Monetization / ads
+
+---
+
+## Doctor content pipeline
+
+Content is the product — not an afterthought.
+
+1. **Topic list** — doctors propose 25 MVP topics
+2. **Template per card:**
+   - Title (parent language)
+   - What's normal
+   - Watch for (yellow flags)
+   - Call doctor if (red flags)
+   - Reviewed by [Name, MD] · [Specialty] · [Date]
+3. **Review cycle** — quarterly refresh
+4. **Storage** — JSON or CMS (Supabase tables / markdown in repo initially)
+5. **Disclaimer** on every medical card
+
+### MVP topic starters (neonat/peds)
+
+- How many wet diapers day 1–7?
+- Spit-up vs vomiting
+- Jaundice — what yellow is OK?
+- Cluster feeding — normal or starving?
+- Fever in newborn — when is it emergency?
+- Reflux vs GERD vs normal
+- Umbilical cord care
+- NICU discharge — home monitoring
+- Preemie corrected milestones
+- Breastfeeding vs formula — no guilt framing
+- Sleep safety (AAP safe sleep)
+- Rash — benign vs concerning
+- Crying scales — purple crying period
+- Vaccine reactions — expected vs call
+- When to go to ER vs call pediatrician
+
+---
+
+## Technical architecture (current)
+
+| Layer | Choice |
+|---|---|
+| **Framework** | Flutter 3.x · Dart 3.x |
+| **State** | Riverpod |
+| **Local DB** | Drift (SQLite) — offline-first, schema v8 |
+| **Backend** | VPS FastAPI + PostgreSQL (`api.bloomdue.baby`) |
+| **Auth** | Magic-code email → JWT |
+| **Sync** | Push pending creates + pull 2-day lookback |
+| **Content** | Bundled JSON (`content/cards/`, 25 cards) |
+| **PDF export** | `pdf` + `printing` |
+| **Push** | FCM scaffold prepared — see `feature/todos/FCM_PARTNER_PUSH.md` |
+| **i18n** | English only (v0.2 Romanian planned) |
+
+Full inventory → [`feature/features/STATUS.md`](./feature/features/STATUS.md)
+
+### Suggested project structure
+
+```
+bloomdue_baby/
+├── lib/
+│   ├── main.dart
+│   ├── app.dart
+│   ├── core/           # theme, router, constants
+│   ├── features/
+│   │   ├── pregnancy/
+│   │   ├── baby_log/   # feed, diaper, sleep
+│   │   ├── learn/      # education cards
+│   │   ├── triage/     # decision trees
+│   │   ├── sync/       # partner sharing
+│   │   └── export/     # PDF
+│   ├── models/
+│   ├── services/
+│   └── widgets/
+├── content/            # doctor-reviewed JSON (git-tracked)
+├── assets/
+├── android/
+├── ios/
+└── docs/
+```
+
+### Flutter packages (starter set — verify on pub.dev at implementation)
+
+| Package | Purpose |
+|---|---|
+| `flutter_riverpod` | State management |
+| `drift` + `sqlite3_flutter_libs` | Offline DB |
+| `supabase_flutter` | Auth + sync |
+| `go_router` | Navigation |
+| `intl` | Dates, formatting |
+| `pdf` / `printing` | Visit export |
+| `google_fonts` | Typography |
+| `flutter_svg` | Icons/illustrations |
+
+---
+
+## Medical & legal guardrails
+
+| ✅ Do | ❌ Don't |
+|---|---|
+| "Educational information reviewed by physicians" | Diagnose conditions |
+| Named reviewers with credentials + date | Anonymous medical blog tone |
+| "When to seek care" checklists | Replace emergency services |
+| Prominent disclaimer on app + each card | AI-generated medical advice (v0.1) |
+| Geo-aware emergency numbers (v0.2+) | One global "call 911" only |
+
+**Footer disclaimer (draft):**  
+*BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately.*
+
+---
+
+## Design direction
+
+| Attribute | Direction |
+|---|---|
+| **Feel** | Calm, warm, trustworthy — not clinical hospital white |
+| **Colors** | Soft sage, cream, muted coral accents — avoid alarm-red default |
+| **Typography** | Rounded sans (e.g. Nunito, DM Sans) — readable at 3am |
+| **Iconography** | Simple line icons — feed, moon, droplet |
+| **Dark mode** | Yes — parents log at night |
+| **Accessibility** | Large tap targets (48dp+), screen reader labels |
+
+---
+
+## Monetization
+
+**v0.1 → v1.0: free.** Mission-first.
+
+Future options (only if needed for sustainability):
+- Institutional partnerships (hospitals distribute app)
+- Grants / NGO funding
+- Optional "support development" tip jar
+- **Never:** ads, selling baby data, paywalling safety content
+
+---
+
+## Roadmap sketch
+
+| Version | Focus |
+|---|---|
+| **0.1** | Core app — **mostly shipped** (see `feature/features/STATUS.md`) |
+| **0.2** | Growth charts, Romanian i18n, sync polish |
+| **0.3** | NICU/preemie module, fever log |
+| **0.4** | Toddler phase, potty, behavior |
+| **1.0** | Play Store + App Store + bloomdue.baby web landing |
+
+Detailed roadmap → [`feature/roadmaps/VERSION.md`](./feature/roadmaps/VERSION.md)
+
+---
+
+## Open questions for founders (answer in fresh chat)
+
+1. **Display name:** BloomDue or BloomDue Baby?
+2. **MVP languages:** English only first, or English + Romanian?
+3. **Auth:** Require account day 1, or anonymous → optional account?
+4. **First platform test device:** Android (S24) same as Please Don't?
+5. **Doctor content:** Who writes first 25 cards? Timeline?
+6. **Preemie/NICU in MVP?** Or v0.3? (Recommend v0.3 unless wife insists MVP)
+
+---
+
+## First implementation steps (when coding starts)
+
+1. `flutter create` project in this folder (`bloomdue` package name)
+2. Bundle ID: `baby.bloomdue.app`
+3. Theme + router shell
+4. Drift schema: `Baby`, `FeedLog`, `DiaperLog`, `SleepLog`
+5. One 3am log screen (prove UX)
+6. One learn card screen (prove content model)
+7. Supabase project + partner invite spike
+8. Doctor content JSON schema + 3 sample cards
+
+---
+
+## Related projects (same monorepo parent)
+
+| Project | Path | Domain |
+|---|---|---|
+| Please Don't (game) | `../please_dont` | globinary.games |
+| BloomDue Baby | this folder | bloomdue.baby |
+
+Separate repos within `globinary-games-grok` workspace — no code sharing required initially.
+
+---
+
+## Fresh conversation prompt (copy-paste)
+
+```
+I'm building BloomDue Baby — read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md.
+Domain: bloomdue.baby. Pick up where we left off.
+Update feature/SESSION.md and related docs as we ship work (see feature/MAINTAIN.md).
+```
+
+---
+
+*Created: 2026-06-30 · Author: Grok + founder session*
