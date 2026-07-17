@@ -1,15 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
-  <rect width="1200" height="630" fill="#faf7f2"/>
-  <circle cx="180" cy="120" r="220" fill="#5c7f71" fill-opacity="0.12"/>
-  <circle cx="1020" cy="520" r="260" fill="#c96b7e" fill-opacity="0.14"/>
-  <path d="M120 470 Q 600 80 1080 470" stroke="#5c7f71" stroke-opacity="0.25" stroke-width="4" fill="none" stroke-linecap="round"/>
-  <g transform="translate(96, 196)">
-    <path d="M48 88c0-18-7.8-28.2-22.2-33.6" stroke="#5c7f71" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
-    <path d="M48 88c0-21 6.6-31.4 22.8-36.6" stroke="#5c7f71" stroke-width="4" stroke-linecap="round" opacity="0.45"/>
-    <path d="M48 55.5c-7.8 0-13.5-5.7-13.5-12.9 0-4.5 2.4-8.7 6.6-11.1C40.2 22.4 43.8 18 48 18s7.8 4.4 5.4 13.5c4.2 2.4 6.6 6.6 6.6 11.1 0 7.2-5.7 12.9-13.5 12.9Z" fill="#c96b7e"/>
-    <circle cx="48" cy="40.5" r="6" fill="#faf7f2"/>
+  <rect width="1200" height="630" fill="#FAF7F2"/>
+  <circle cx="64" cy="24" r="250" fill="#E4EEE8"/>
+  <circle cx="1135" cy="80" r="260" fill="#F6E7EA"/>
+  <circle cx="1080" cy="660" r="250" fill="#E8EDF3" fill-opacity=".7"/>
+
+  <g transform="translate(72 62)">
+    <path d="M22 44c0-9-3.9-14.1-11.1-16.8M22 44c0-10.5 3.3-15.7 11.4-18.3" stroke="#C96B7E" stroke-width="2.4" stroke-linecap="round" opacity=".45"/>
+    <path d="M22 27.8c-3.9 0-6.8-2.9-6.8-6.5 0-2.2 1.2-4.3 3.3-5.5C18 11.2 19.9 9 22 9s3.9 2.2 2.7 6.8c2.1 1.2 3.3 3.3 3.3 5.5 0 3.6-2.9 6.5-6.8 6.5Z" fill="#C96B7E"/>
+    <circle cx="22" cy="20.3" r="3" fill="#FAF7F2"/>
+    <text x="50" y="30" fill="#3D3229" font-family="Georgia, serif" font-size="34" font-weight="700">BloomDue</text>
   </g>
-  <text x="170" y="300" fill="#3d3229" font-family="Georgia, serif" font-size="72" font-weight="600">BloomDue</text>
-  <text x="170" y="370" fill="#6b5e54" font-family="Arial, sans-serif" font-size="34">Grow with confidence.</text>
-  <text x="170" y="430" fill="#5c7f71" font-family="Arial, sans-serif" font-size="26" font-weight="700">Free calm baby care · bloomdue.baby</text>
+
+  <g transform="translate(72 190)">
+    <text fill="#3D3229" font-family="Georgia, serif" font-size="72" font-weight="700" letter-spacing="-2">
+      <tspan x="0" y="0">Baby care that</tspan>
+      <tspan x="0" y="82">feels </tspan><tspan fill="#C96B7E">calm.</tspan>
+    </text>
+    <text x="0" y="205" fill="#6B5E54" font-family="Arial, sans-serif" font-size="26">
+      <tspan x="0">Care logging, pregnancy tools, and gentle guidance</tspan>
+      <tspan x="0" dy="36">for the questions that arrive at 3am.</tspan>
+    </text>
+    <g transform="translate(0 285)">
+      <rect width="318" height="58" rx="29" fill="#5C7F71"/>
+      <text x="28" y="37" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="20" font-weight="700">Free · private beta · no ads</text>
+    </g>
+  </g>
+
+  <g transform="translate(760 84)">
+    <rect width="370" height="480" rx="56" fill="#F6E7EA" stroke="#FFFFFF" stroke-width="10"/>
+    <circle cx="185" cy="194" r="128" fill="#FFF7F2"/>
+    <circle cx="145" cy="184" r="66" fill="#2F354F"/>
+    <circle cx="224" cy="177" r="70" fill="#415F8D"/>
+    <circle cx="185" cy="225" r="48" fill="#F5A086"/>
+    <path d="M103 248c42-66 123-73 168 0v78H103v-78Z" fill="#C96B7E"/>
+
+    <g transform="translate(166 218) rotate(3)">
+      <rect width="170" height="270" rx="30" fill="#27312D"/>
+      <rect x="6" y="6" width="158" height="258" rx="25" fill="#FAF7F2"/>
+      <rect x="58" y="13" width="54" height="11" rx="6" fill="#27312D"/>
+      <text x="20" y="54" fill="#6B5E54" font-family="Arial, sans-serif" font-size="9" font-weight="700">Good morning</text>
+      <text x="20" y="77" fill="#3D3229" font-family="Georgia, serif" font-size="16" font-weight="700">Today with Noah</text>
+      <g transform="translate(18 96)">
+        <rect width="40" height="48" rx="12" fill="#FFFFFF"/>
+        <rect x="48" width="40" height="48" rx="12" fill="#FFFFFF"/>
+        <rect x="96" width="40" height="48" rx="12" fill="#FFFFFF"/>
+        <circle cx="20" cy="18" r="8" fill="#5C7F71"/>
+        <circle cx="68" cy="18" r="8" fill="#C96B7E"/>
+        <circle cx="116" cy="18" r="8" fill="#7A8FA8"/>
+        <text x="10" y="38" fill="#3D3229" font-family="Arial, sans-serif" font-size="7" font-weight="700">Feed</text>
+        <text x="54" y="38" fill="#3D3229" font-family="Arial, sans-serif" font-size="7" font-weight="700">Diaper</text>
+        <text x="105" y="38" fill="#3D3229" font-family="Arial, sans-serif" font-size="7" font-weight="700">Sleep</text>
+      </g>
+      <rect x="18" y="160" width="136" height="70" rx="14" fill="#E4EEE8"/>
+      <text x="30" y="180" fill="#4A675C" font-family="Arial, sans-serif" font-size="7" font-weight="700">FOR YOU TODAY</text>
+      <text x="30" y="202" fill="#3D3229" font-family="Georgia, serif" font-size="11" font-weight="700">Cluster feeding can</text>
+      <text x="30" y="216" fill="#3D3229" font-family="Georgia, serif" font-size="11" font-weight="700">be normal</text>
+    </g>
+  </g>
 </svg>
