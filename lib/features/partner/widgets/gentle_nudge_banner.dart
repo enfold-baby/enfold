@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../models/partner_nudge.dart';
 
 class GentleNudgeBanner extends StatelessWidget {
-  const GentleNudgeBanner({
-    super.key,
-    required this.nudge,
-    this.onDismiss,
-  });
+  const GentleNudgeBanner({super.key, required this.nudge, this.onDismiss});
 
   final PartnerNudge nudge;
   final VoidCallback? onDismiss;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
 
     return Container(
       key: const Key('partner_gentle_nudge'),
@@ -38,7 +34,7 @@ class GentleNudgeBanner extends StatelessWidget {
               children: [
                 Text(
                   'Gentle reminder',
-                  style: GoogleFonts.nunito(
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: nudge.type.color,
                   ),
@@ -46,9 +42,9 @@ class GentleNudgeBanner extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   nudge.message,
-                  style: GoogleFonts.nunito(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: 14,
-                    color: AppColors.barkSoft,
+                    color: AppColors.mutedText(brightness),
                     height: 1.4,
                   ),
                 ),
@@ -60,7 +56,7 @@ class GentleNudgeBanner extends StatelessWidget {
               key: const Key('dismiss_partner_nudge'),
               onPressed: onDismiss,
               icon: const Icon(Icons.close, size: 18),
-              color: AppColors.barkSoft,
+              color: AppColors.mutedText(brightness),
             ),
         ],
       ),

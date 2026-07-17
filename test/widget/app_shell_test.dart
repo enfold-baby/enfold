@@ -24,7 +24,7 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 500));
 
-    expect(find.text("Today's log"), findsOneWidget);
+    expect(find.text('Quick actions'), findsOneWidget);
     expect(find.text("You're doing fine."), findsOneWidget);
 
     await tester.tap(find.text('Logs'));

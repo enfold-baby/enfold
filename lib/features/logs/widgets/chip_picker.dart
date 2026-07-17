@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../core/theme/app_colors.dart';
 
 class ChipOption<T> {
@@ -29,15 +27,16 @@ class ChipPicker<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: GoogleFonts.nunito(
-            fontWeight: FontWeight.w700,
-            color: isDark ? AppColors.cream : AppColors.bark,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w800,
           ),
         ),
         const SizedBox(height: 10),
@@ -57,18 +56,25 @@ class ChipPicker<T> extends StatelessWidget {
                   onSelected(option.value);
                 },
                 selectedColor: AppColors.sage.withValues(alpha: 0.22),
-                labelStyle: GoogleFonts.nunito(
+                backgroundColor: AppColors.cardSurface(brightness),
+                showCheckmark: true,
+                checkmarkColor: isDark ? AppColors.cream : AppColors.sageDeep,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 9,
+                ),
+                labelStyle: theme.textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: selected == option.value
                       ? (isDark ? AppColors.cream : AppColors.sageDeep)
-                      : AppColors.barkSoft,
+                      : AppColors.mutedText(brightness),
                 ),
                 side: BorderSide(
                   color: selected == option.value
                       ? AppColors.sage
                       : (isDark
-                          ? AppColors.nightLine
-                          : AppColors.bark.withValues(alpha: 0.12)),
+                            ? AppColors.nightLine
+                            : AppColors.bark.withValues(alpha: 0.12)),
                 ),
               ),
           ],

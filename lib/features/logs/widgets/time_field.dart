@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -19,6 +18,8 @@ class TimeField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final format = DateFormat('EEE, MMM d · h:mm a');
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
 
     return OutlinedButton(
       onPressed: () async {
@@ -37,13 +38,7 @@ class TimeField extends StatelessWidget {
         if (time == null) return;
 
         onChanged(
-          DateTime(
-            date.year,
-            date.month,
-            date.day,
-            time.hour,
-            time.minute,
-          ),
+          DateTime(date.year, date.month, date.day, time.hour, time.minute),
         );
       },
       style: OutlinedButton.styleFrom(
@@ -55,20 +50,13 @@ class TimeField extends StatelessWidget {
         children: [
           Text(
             label,
-            style: GoogleFonts.nunito(
-              fontSize: 12,
+            style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w700,
-              color: AppColors.barkSoft,
+              color: AppColors.mutedText(brightness),
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            format.format(value),
-            style: GoogleFonts.nunito(
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
+          Text(format.format(value), style: theme.textTheme.titleMedium),
         ],
       ),
     );

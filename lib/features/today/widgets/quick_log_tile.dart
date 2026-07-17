@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../widgets/bloom_surface.dart';
 import '../models/log_type.dart';
 
 class QuickLogTile extends StatelessWidget {
@@ -11,61 +11,77 @@ class QuickLogTile extends StatelessWidget {
     required this.color,
     required this.onTap,
     this.onLongPress,
+    this.supportingText = 'View log · hold to add',
   });
 
   final LogType type;
   final Color color;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
+  final String supportingText;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+    final isDark = brightness == Brightness.dark;
 
-    return Semantics(
-      button: true,
-      label: 'Log ${type.label}',
-      child: Material(
-        color: isDark ? AppColors.nightElevated : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        elevation: isDark ? 0 : 1,
-        shadowColor: AppColors.bark.withValues(alpha: 0.12),
-        child: InkWell(
-          onTap: onTap,
-          onLongPress: onLongPress,
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 112),
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: isDark ? AppColors.nightLine : AppColors.bark.withValues(alpha: 0.08),
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return BloomSurface(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      semanticLabel: '${type.label}. $supportingText',
+      padding: const EdgeInsets.all(16),
+      radius: 22,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 112),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
                 Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-                  child: Icon(type.icon, color: AppColors.cream, size: 26),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  type.label,
-                  style: GoogleFonts.nunito(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.cream : AppColors.bark,
+                  width: 46,
+                  height: 46,
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? color.withValues(alpha: 0.2)
+                        : _softColor(type),
+                    borderRadius: BorderRadius.circular(16),
                   ),
+                  child: Icon(type.icon, color: color, size: 24),
+                ),
+                const Spacer(),
+                Icon(
+                  Icons.arrow_outward_rounded,
+                  size: 18,
+                  color: AppColors.mutedText(brightness),
                 ),
               ],
             ),
-          ),
+            const Spacer(),
+            Text(type.label, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 2),
+            Text(
+              supportingText,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: AppColors.mutedText(brightness),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+  Color _softColor(LogType type) => switch (type) {
+    LogType.feed => AppColors.sageMist,
+    LogType.diaper => AppColors.bloomMist,
+    LogType.sleep => AppColors.sleepMist,
+    LogType.medication => AppColors.amberMist,
+    LogType.pumping => AppColors.pumpLavender.withValues(alpha: 0.14),
+    LogType.tummyTime => AppColors.tummyCoral.withValues(alpha: 0.14),
+  };
 }

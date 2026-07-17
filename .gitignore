@@ -74,6 +74,10 @@ app.*.map.json
 agent-tools/
 *.log
 
+# Licensed Adobe Stock source packages are local-only. Commit only the
+# transformed app illustrations exported from these originals.
+/design_assets/adobe_stock/source/
+
 # Release artifacts (build locally or in CI)
 *.apk
 *.aab

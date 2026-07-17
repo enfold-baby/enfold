@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/units/volume_units.dart';
@@ -28,7 +27,8 @@ class ActivityEntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
     final tummyMinutes = tummyMinutesToday(tummyLogs);
     final pumpedMl = _pumpedMlToday(pumpingLogs);
 
@@ -91,18 +91,20 @@ class ActivityEntryCard extends StatelessWidget {
                       children: [
                         Text(
                           'Tummy & pumping',
-                          style: GoogleFonts.nunito(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 16,
+                              ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           subtitle,
-                          style: GoogleFonts.nunito(
-                            fontSize: 13,
-                            color: AppColors.barkSoft,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                fontSize: 13,
+                                color: AppColors.mutedText(brightness),
+                              ),
                         ),
                       ],
                     ),

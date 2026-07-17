@@ -1,119 +1,108 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../widgets/bloom_section_header.dart';
+import '../../../widgets/bloom_surface.dart';
 import '../models/log_type.dart';
 import '../models/today_summary.dart';
 
 class TodaySummaryCards extends StatelessWidget {
-  const TodaySummaryCards({
-    super.key,
-    required this.summary,
-  });
+  const TodaySummaryCards({super.key, required this.summary});
 
   final TodaySummary summary;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final brightness = Theme.of(context).brightness;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Today so far',
-          style: GoogleFonts.nunito(
-            fontSize: 13,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 1.2,
-            color: AppColors.sage,
-          ),
+        const BloomSectionHeader(
+          title: 'Today so far',
+          subtitle: 'A small snapshot, never a score.',
         ),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _SummaryCard(
-                key: const Key('today_summary_feed'),
-                type: LogType.feed,
-                value: '${summary.feedCount}',
-                label: summary.feedCount == 1 ? 'feed' : 'feeds',
-                isDark: isDark,
-              ),
+        BloomSurface(
+          color: AppColors.softSurface(brightness),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 18),
+          child: IntrinsicHeight(
+            child: Row(
+              children: [
+                Expanded(
+                  child: _SummaryMetric(
+                    key: const Key('today_summary_feed'),
+                    type: LogType.feed,
+                    value: '${summary.feedCount}',
+                    label: summary.feedCount == 1 ? 'feed' : 'feeds',
+                  ),
+                ),
+                const VerticalDivider(width: 1),
+                Expanded(
+                  child: _SummaryMetric(
+                    key: const Key('today_summary_diaper'),
+                    type: LogType.diaper,
+                    value: '${summary.diaperCount}',
+                    label: summary.diaperCount == 1 ? 'diaper' : 'diapers',
+                  ),
+                ),
+                const VerticalDivider(width: 1),
+                Expanded(
+                  child: _SummaryMetric(
+                    key: const Key('today_summary_sleep'),
+                    type: LogType.sleep,
+                    value: summary.sleepLabel,
+                    label: 'sleep',
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _SummaryCard(
-                key: const Key('today_summary_diaper'),
-                type: LogType.diaper,
-                value: '${summary.diaperCount}',
-                label: summary.diaperCount == 1 ? 'diaper' : 'diapers',
-                isDark: isDark,
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _SummaryCard(
-                key: const Key('today_summary_sleep'),
-                type: LogType.sleep,
-                value: summary.sleepLabel,
-                label: 'sleep',
-                isDark: isDark,
-              ),
-            ),
-          ],
+          ),
         ),
       ],
     );
   }
 }
 
-class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({
+class _SummaryMetric extends StatelessWidget {
+  const _SummaryMetric({
     super.key,
     required this.type,
     required this.value,
     required this.label,
-    required this.isDark,
   });
 
   final LogType type;
   final String value;
   final String label;
-  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.nightElevated : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark
-              ? AppColors.nightLine
-              : AppColors.bark.withValues(alpha: 0.08),
-        ),
-      ),
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(type.icon, color: type.color, size: 22),
+          Icon(type.icon, color: type.color, size: 21),
           const SizedBox(height: 8),
           Text(
             value,
-            style: GoogleFonts.fraunces(
-              fontSize: 22,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontFamily: theme.textTheme.headlineMedium?.fontFamily,
               fontWeight: FontWeight.w600,
-              color: isDark ? AppColors.cream : AppColors.bark,
             ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 1),
           Text(
             label,
-            style: GoogleFonts.nunito(
-              fontSize: 12,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: AppColors.mutedText(brightness),
               fontWeight: FontWeight.w700,
-              color: AppColors.barkSoft,
             ),
           ),
         ],

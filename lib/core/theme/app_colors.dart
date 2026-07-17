@@ -14,6 +14,10 @@ abstract final class AppColors {
   static const Color medicationAmber = Color(0xFFC49A4A);
   static const Color pumpLavender = Color(0xFF8B7BA8);
   static const Color tummyCoral = Color(0xFFD4846A);
+  static const Color sageMist = Color(0xFFE4EEE8);
+  static const Color bloomMist = Color(0xFFF6E7EA);
+  static const Color sleepMist = Color(0xFFE8EDF3);
+  static const Color amberMist = Color(0xFFF5EEDC);
 
   // Dark surfaces — warm sage-tinted, not flat gray
   static const Color night = Color(0xFF141A17);
@@ -33,4 +37,12 @@ abstract final class AppColors {
   /// Inactive bottom-nav icons and labels in dark mode.
   static Color navUnselected(Brightness brightness) =>
       brightness == Brightness.dark ? nightNavUnselected : barkSoft;
+
+  /// Default raised card surface.
+  static Color cardSurface(Brightness brightness) =>
+      brightness == Brightness.dark ? nightElevated : Colors.white;
+
+  /// Softer inset surface used for grouped content.
+  static Color softSurface(Brightness brightness) =>
+      brightness == Brightness.dark ? nightCard : creamDeep;
 }

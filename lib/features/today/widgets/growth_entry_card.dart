@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/units/growth_units.dart';
@@ -22,7 +21,8 @@ class GrowthEntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
 
     String subtitle;
     if (latestMeasurement?.weightKg != null) {
@@ -72,7 +72,7 @@ class GrowthEntryCard extends StatelessWidget {
                   children: [
                     Text(
                       'Growth & milestones',
-                      style: GoogleFonts.nunito(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
                         fontSize: 16,
                       ),
@@ -80,15 +80,15 @@ class GrowthEntryCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: GoogleFonts.nunito(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 13,
-                        color: AppColors.barkSoft,
+                        color: AppColors.mutedText(brightness),
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: AppColors.barkSoft),
+              Icon(Icons.chevron_right, color: AppColors.mutedText(brightness)),
             ],
           ),
         ),

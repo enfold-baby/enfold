@@ -27,9 +27,21 @@ void main() {
       await tester.pump();
 
       expect(find.text("You're doing fine."), findsOneWidget);
+      expect(find.text('Quick actions'), findsOneWidget);
+      expect(find.byKey(const Key('log_feed')), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('Today so far'), 120);
       expect(find.text('Today so far'), findsOneWidget);
-      expect(find.text('Growth & milestones'), findsOneWidget);
       expect(find.byKey(const Key('today_summary_feed')), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text('Nothing logged yet today. Tap a button when you\'re ready.'),
+        120,
+      );
+      expect(find.text('Recent'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('today_growth_card')),
+        120,
+      );
+      expect(find.text('Growth & milestones'), findsOneWidget);
       expect(find.byKey(const Key('today_growth_card')), findsOneWidget);
       expect(find.byKey(const Key('today_medication_card')), findsOneWidget);
       await tester.scrollUntilVisible(
@@ -37,21 +49,6 @@ void main() {
         120,
       );
       expect(find.byKey(const Key('today_activity_card')), findsOneWidget);
-      await tester.scrollUntilVisible(
-        find.text('Quick actions'),
-        120,
-      );
-      expect(find.text('Quick actions'), findsOneWidget);
-      await tester.scrollUntilVisible(
-        find.byKey(const Key('log_feed')),
-        120,
-      );
-      expect(find.byKey(const Key('log_feed')), findsOneWidget);
-      await tester.scrollUntilVisible(
-        find.text('Nothing logged yet today. Tap a button when you\'re ready.'),
-        120,
-      );
-      expect(find.text('Recent'), findsOneWidget);
     });
 
     testWidgets('long press opens feed add form', (tester) async {

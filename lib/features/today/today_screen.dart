@@ -1,28 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
-import 'models/care_log_entry.dart';
-import 'models/log_type.dart';
 import '../../services/auth/auth_providers.dart';
 import '../../services/database/database_provider.dart';
-import '../../services/sync/sync_service.dart';
 import '../../services/sync/sync_providers.dart';
-import '../settings/providers/units_providers.dart';
-import '../settings/widgets/export_section.dart';
-import 'models/today_summary.dart';
-import 'providers/today_log_provider.dart';
+import '../../services/sync/sync_service.dart';
+import '../../widgets/bloom_brand_mark.dart';
+import '../../widgets/bloom_illustrations.dart';
+import '../../widgets/bloom_section_header.dart';
+import '../../widgets/bloom_surface.dart';
+import '../growth/providers/growth_providers.dart';
 import '../logs/widgets/log_entry_actions.dart';
 import '../logs/widgets/log_entry_tile.dart';
-import '../growth/providers/growth_providers.dart';
 import '../medication/providers/medication_providers.dart';
 import '../medication/widgets/medication_entry_card.dart';
 import '../partner/providers/partner_providers.dart';
 import '../partner/widgets/gentle_nudge_banner.dart';
 import '../pumping/providers/pumping_providers.dart';
+import '../settings/providers/units_providers.dart';
+import '../settings/widgets/export_section.dart';
 import '../tummy_time/providers/tummy_time_providers.dart';
+import 'models/care_log_entry.dart';
+import 'models/log_type.dart';
+import 'models/today_summary.dart';
+import 'providers/today_log_provider.dart';
 import 'widgets/activity_entry_card.dart';
 import 'widgets/growth_entry_card.dart';
 import 'widgets/quick_log_tile.dart';
@@ -67,117 +71,115 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
         ref.read(syncActionsProvider).syncIfSignedIn();
       });
     }
-    if (!isSignedIn) {
-      _autoSynced = false;
-    }
-    final useImperial = ref.watch(useImperialUnitsProvider).valueOrNull ?? false;
+    if (!isSignedIn) _autoSynced = false;
+
+    final useImperial =
+        ref.watch(useImperialUnitsProvider).valueOrNull ?? false;
     final growthMeasurements =
         ref.watch(growthMeasurementsProvider).valueOrNull ?? const [];
     final milestoneStatuses =
         ref.watch(milestoneStatusesProvider).valueOrNull ?? const [];
-    final milestonesAchieved =
-        milestoneStatuses.where((status) => status.isAchieved).length;
+    final milestonesAchieved = milestoneStatuses
+        .where((status) => status.isAchieved)
+        .length;
     final medicationLogs =
         ref.watch(todayMedicationLogsProvider).valueOrNull ?? const [];
-    final tummyLogs =
-        ref.watch(todayTummyLogsProvider).valueOrNull ?? const [];
+    final tummyLogs = ref.watch(todayTummyLogsProvider).valueOrNull ?? const [];
     final pumpingLogs =
         ref.watch(todayPumpingLogsProvider).valueOrNull ?? const [];
     final partnerNudge = ref.watch(partnerNudgeProvider).valueOrNull;
     final showPartnerNudge =
         partnerNudge != null && partnerNudge.type != _dismissedNudgeType;
-    final showAttribution =
-        ref.watch(hasPartnerProvider).valueOrNull ?? false;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final showAttribution = ref.watch(hasPartnerProvider).valueOrNull ?? false;
     final now = DateTime.now();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Today's log"),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const BloomBrandMark(size: 30, showBackdrop: false),
+            const SizedBox(width: 8),
+            Text('BloomDue', style: Theme.of(context).textTheme.titleLarge),
+          ],
+        ),
         actions: [
-          IconButton(
+          IconButton.filledTonal(
             key: const Key('export_pdf_app_bar'),
             tooltip: 'Export 7-day PDF',
             onPressed: () => _exportPdf(context, ref),
-            icon: const Icon(Icons.picture_as_pdf_outlined),
+            icon: const Icon(Icons.ios_share_outlined),
           ),
+          const SizedBox(width: 12),
         ],
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
           children: [
-            Text(
-              TodayScreen.greetingForHour(now.hour),
-              style: GoogleFonts.nunito(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: AppColors.barkSoft,
-              ),
+            _TodayHero(
+              greeting: TodayScreen.greetingForHour(now.hour),
+              syncCopy: isSignedIn ? _partnerSyncCopy(lastSync) : null,
             ),
-            const SizedBox(height: 4),
-            Text(
-              "You're doing fine.",
-              style: GoogleFonts.fraunces(
-                fontSize: 26,
-                fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.cream : AppColors.bark,
-              ),
+            const SizedBox(height: 26),
+            const BloomSectionHeader(
+              title: 'Quick actions',
+              subtitle: 'Open a log, or hold a tile to add details.',
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Tap to open logs. Long-press to log with detail.',
-              style: GoogleFonts.nunito(
-                fontSize: 15,
-                height: 1.45,
-                color: AppColors.barkSoft,
-              ),
-            ),
-            if (isSignedIn) ...[
-              const SizedBox(height: 8),
-              Text(
-                _partnerSyncCopy(lastSync),
-                key: const Key('partner_sync_status'),
-                style: GoogleFonts.nunito(
-                  fontSize: 13,
-                  color: AppColors.sage,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
+            _quickActionGrid(),
+            const SizedBox(height: 28),
             logsAsync.when(
               loading: () => const SizedBox(
-                height: 108,
+                height: 132,
                 child: Center(child: CircularProgressIndicator()),
               ),
-              error: (_, __) => const SizedBox.shrink(),
-              data: (logs) => TodaySummaryCards(
-                summary: TodaySummary.fromEntries(logs),
-              ),
+              error: (_, _) => const SizedBox.shrink(),
+              data: (logs) =>
+                  TodaySummaryCards(summary: TodaySummary.fromEntries(logs)),
             ),
             if (showPartnerNudge) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
               GentleNudgeBanner(
-                nudge: partnerNudge!,
+                nudge: partnerNudge,
                 onDismiss: () =>
                     setState(() => _dismissedNudgeType = partnerNudge.type),
               ),
             ],
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),
+            const BloomSectionHeader(
+              title: 'Recent',
+              subtitle: 'The latest care moments, all in one place.',
+            ),
+            const SizedBox(height: 12),
+            ..._recentLogSection(
+              logsAsync: logsAsync,
+              isSignedIn: isSignedIn,
+              useImperial: useImperial,
+              showAttribution: showAttribution,
+              currentUserId: session?.user.id,
+            ),
+            const SizedBox(height: 30),
+            const BloomSectionHeader(
+              title: 'More care',
+              subtitle: 'Growth, medication, tummy time, and pumping.',
+            ),
+            const SizedBox(height: 12),
             GrowthEntryCard(
-              latestMeasurement:
-                  growthMeasurements.isEmpty ? null : growthMeasurements.first,
+              latestMeasurement: growthMeasurements.isEmpty
+                  ? null
+                  : growthMeasurements.first,
               milestonesAchieved: milestonesAchieved,
               useImperial: useImperial,
               onTap: () => context.push(AppRoutes.growth),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             MedicationEntryCard(
               todayLogs: medicationLogs,
               onTap: () => context.push(AppRoutes.logMedication),
               onAdd: () => context.push(AppRoutes.logMedicationAdd),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             ActivityEntryCard(
               tummyLogs: tummyLogs,
               pumpingLogs: pumpingLogs,
@@ -187,79 +189,81 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               onAddTummy: () => context.push(AppRoutes.logTummyAdd),
               onAddPumping: () => context.push(AppRoutes.logPumpingAdd),
             ),
-            const SizedBox(height: 28),
-            Text(
-              'Quick actions',
-              key: const Key('today_quick_actions_heading'),
-              style: GoogleFonts.nunito(
-                fontSize: 13,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.2,
-                color: AppColors.sage,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: QuickLogTile(
-                    key: const Key('log_feed'),
-                    type: LogType.feed,
-                    color: AppColors.sage,
-                    onTap: () => _openLogList(context, LogType.feed),
-                    onLongPress: () => _openLogForm(context, LogType.feed),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: QuickLogTile(
-                    key: const Key('log_diaper'),
-                    type: LogType.diaper,
-                    color: AppColors.bloom,
-                    onTap: () => _openLogList(context, LogType.diaper),
-                    onLongPress: () => _openLogForm(context, LogType.diaper),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: QuickLogTile(
-                    key: const Key('log_sleep'),
-                    type: LogType.sleep,
-                    color: AppColors.sleepBlue,
-                    onTap: () => _openLogList(context, LogType.sleep),
-                    onLongPress: () => _openLogForm(context, LogType.sleep),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            Text(
-              'Recent',
-              style: GoogleFonts.nunito(
-                fontSize: 13,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.2,
-                color: AppColors.sage,
-              ),
-            ),
-            const SizedBox(height: 12),
-            ..._recentLogSection(
-              logsAsync: logsAsync,
-              isDark: isDark,
-              isSignedIn: isSignedIn,
-              useImperial: useImperial,
-              showAttribution: showAttribution,
-              currentUserId: session?.user.id,
-            ),
           ],
         ),
       ),
     );
   }
 
+  Widget _quickActionGrid() {
+    return Column(
+      key: const Key('today_quick_actions_heading'),
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 148,
+                child: QuickLogTile(
+                  key: const Key('log_feed'),
+                  type: LogType.feed,
+                  color: AppColors.sage,
+                  onTap: () => _openLogList(context, LogType.feed),
+                  onLongPress: () => _openLogForm(context, LogType.feed),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: SizedBox(
+                height: 148,
+                child: QuickLogTile(
+                  key: const Key('log_diaper'),
+                  type: LogType.diaper,
+                  color: AppColors.bloom,
+                  onTap: () => _openLogList(context, LogType.diaper),
+                  onLongPress: () => _openLogForm(context, LogType.diaper),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 148,
+                child: QuickLogTile(
+                  key: const Key('log_sleep'),
+                  type: LogType.sleep,
+                  color: AppColors.sleepBlue,
+                  onTap: () => _openLogList(context, LogType.sleep),
+                  onLongPress: () => _openLogForm(context, LogType.sleep),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: SizedBox(
+                height: 148,
+                child: QuickLogTile(
+                  key: const Key('log_medication_quick'),
+                  type: LogType.medication,
+                  color: AppColors.medicationAmber,
+                  onTap: () => _openLogList(context, LogType.medication),
+                  onLongPress: () => _openLogForm(context, LogType.medication),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   List<Widget> _recentLogSection({
     required AsyncValue<List<CareLogEntry>> logsAsync,
-    required bool isDark,
     required bool isSignedIn,
     required bool useImperial,
     required bool showAttribution,
@@ -272,51 +276,22 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
           child: Center(child: CircularProgressIndicator()),
         ),
       ],
-      error: (error, _) => [
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.nightElevated : AppColors.creamDeep,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isDark
-                  ? AppColors.nightLine
-                  : AppColors.bark.withValues(alpha: 0.08),
-            ),
-          ),
-          child: Text(
-            'Could not load recent logs. Tap a button above to start logging.',
-            style: GoogleFonts.nunito(
-              fontSize: 15,
-              color: AppColors.barkSoft,
-            ),
-          ),
+      error: (error, _) => const [
+        _RecentPlaceholder(
+          icon: Icons.cloud_off_outlined,
+          title: 'Recent logs are resting',
+          message: 'You can still add a care moment above and try again later.',
         ),
       ],
       data: (logs) {
         if (logs.isEmpty) {
-          return [
-            Container(
-              key: const Key('empty_logs'),
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.nightElevated : AppColors.creamDeep,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isDark
-                      ? AppColors.nightLine
-                      : AppColors.bark.withValues(alpha: 0.08),
-                ),
-              ),
-              child: Text(
-                'Nothing logged yet today. Tap a button when you\'re ready.',
-                style: GoogleFonts.nunito(
-                  fontSize: 15,
-                  color: AppColors.barkSoft,
-                ),
-              ),
+          return const [
+            _RecentPlaceholder(
+              key: Key('empty_logs'),
+              icon: Icons.nights_stay_outlined,
+              title: 'A quiet start',
+              message:
+                  'Nothing logged yet today. Tap a button when you\'re ready.',
             ),
           ];
         }
@@ -366,12 +341,184 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
   }
 
   String _partnerSyncCopy(SyncResult? lastSync) {
-    if (lastSync == null) return 'Signed in · syncing with partner…';
-    if (!lastSync.ok) return 'Sync issue · tap Settings → Sync now';
+    if (lastSync == null) return 'Syncing shared care…';
+    if (!lastSync.ok) return 'Sync needs a little attention';
     if (lastSync.pulled > 0) {
-      return 'Includes ${lastSync.pulled} log${lastSync.pulled == 1 ? '' : 's'} from partner';
+      return '${lastSync.pulled} new partner log${lastSync.pulled == 1 ? '' : 's'}';
     }
-    return 'Shared log stays up to date when you sync';
+    return 'Shared care is up to date';
   }
+}
 
+class _TodayHero extends StatelessWidget {
+  const _TodayHero({required this.greeting, this.syncCopy});
+
+  final String greeting;
+  final String? syncCopy;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+    final isDark = brightness == Brightness.dark;
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(22, 22, 16, 22),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [AppColors.nightElevated, AppColors.nightCard]
+              : [AppColors.sageMist, AppColors.bloomMist],
+        ),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: isDark
+              ? AppColors.nightLine
+              : Colors.white.withValues(alpha: 0.85),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  greeting.toUpperCase(),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: isDark ? AppColors.nightAccent : AppColors.sageDeep,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.1,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "You're doing fine.",
+                  style: theme.textTheme.headlineMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'One calm care moment at a time.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.mutedText(brightness),
+                  ),
+                ),
+                if (syncCopy != null) ...[
+                  const SizedBox(height: 12),
+                  Container(
+                    key: const Key('partner_sync_status'),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardSurface(
+                        brightness,
+                      ).withValues(alpha: 0.78),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.sync_rounded,
+                          color: AppColors.sage,
+                          size: 15,
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            syncCopy!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: AppColors.mutedText(brightness),
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: SizedBox(
+              width: 104,
+              height: 116,
+              child: Image.asset(
+                BloomIllustrations.familyCare,
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+                color: isDark
+                    ? AppColors.nightCard.withValues(alpha: 0.72)
+                    : null,
+                colorBlendMode: isDark ? BlendMode.multiply : null,
+                excludeFromSemantics: true,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecentPlaceholder extends StatelessWidget {
+  const _RecentPlaceholder({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.message,
+  });
+
+  final IconData icon;
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+
+    return BloomSurface(
+      color: AppColors.softSurface(brightness),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: AppColors.sage.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(icon, color: AppColors.sage),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: theme.textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text(
+                  message,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.mutedText(brightness),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

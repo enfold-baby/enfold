@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../today/models/care_log_entry.dart';
@@ -18,7 +17,8 @@ class MedicationEntryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final brightness = Theme.of(context).brightness;
+    final isDark = brightness == Brightness.dark;
     final count = todayLogs.length;
     final latest = todayLogs.isEmpty ? null : todayLogs.first;
 
@@ -31,7 +31,9 @@ class MedicationEntryCard extends StatelessWidget {
           ? 'Today: $name'
           : 'Today: $count doses · latest $name';
     } else {
-      subtitle = count == 1 ? '1 dose logged today' : '$count doses logged today';
+      subtitle = count == 1
+          ? '1 dose logged today'
+          : '$count doses logged today';
     }
 
     return Material(
@@ -72,7 +74,7 @@ class MedicationEntryCard extends StatelessWidget {
                   children: [
                     Text(
                       'Meds & vitamins',
-                      style: GoogleFonts.nunito(
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
                         fontSize: 16,
                       ),
@@ -80,9 +82,9 @@ class MedicationEntryCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: GoogleFonts.nunito(
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 13,
-                        color: AppColors.barkSoft,
+                        color: AppColors.mutedText(brightness),
                       ),
                     ),
                   ],
@@ -95,7 +97,7 @@ class MedicationEntryCard extends StatelessWidget {
                 icon: const Icon(Icons.add_circle_outline),
                 color: AppColors.medicationAmber,
               ),
-              const Icon(Icons.chevron_right, color: AppColors.barkSoft),
+              Icon(Icons.chevron_right, color: AppColors.mutedText(brightness)),
             ],
           ),
         ),
