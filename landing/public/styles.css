@@ -1183,6 +1183,10 @@ p {
   text-transform: uppercase;
 }
 
+.care-scenes-mobile {
+  display: none;
+}
+
 /* Journey */
 
 .journey {
@@ -1973,23 +1977,129 @@ p {
   }
 
   .care-scenes {
+    display: none;
+  }
+
+  .care-scenes-mobile {
+    display: block;
     width: calc(100% + 1.25rem);
     margin-left: -0.625rem;
-    border-width: 0.35rem;
+  }
+
+  .care-scenes-track {
+    display: flex;
+    gap: 0.85rem;
+    overflow-x: auto;
+    padding: 0.3rem 0.625rem 1rem;
+    scroll-padding-inline: 0.625rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .care-scenes-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .care-scenes-track:focus-visible {
     border-radius: 1.5rem;
+    outline: 3px solid rgba(92, 127, 113, 0.32);
+    outline-offset: 0.15rem;
   }
 
-  .care-scenes img {
-    min-height: 12rem;
-    object-fit: cover;
-    object-position: center;
+  .care-scene-card {
+    flex: 0 0 min(78vw, 18rem);
+    overflow: hidden;
+    border: 0.35rem solid rgba(255, 253, 249, 0.92);
+    border-radius: 1.65rem;
+    background: #fff;
+    box-shadow: 0 1rem 2.4rem rgba(62, 49, 39, 0.1);
+    scroll-snap-align: start;
   }
 
-  .care-scenes figcaption {
+  .care-scene-art {
+    aspect-ratio: 1.05;
+    background-color: #fff;
+    background-image: url("/images/family-care-scenes.webp");
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: 400% auto;
+  }
+
+  .care-scene-art--comfort {
+    background-position-x: 0%;
+  }
+
+  .care-scene-art--bonding {
+    background-position-x: 33.333%;
+  }
+
+  .care-scene-art--feeding {
+    background-position-x: 66.667%;
+  }
+
+  .care-scene-art--steps {
+    background-position-x: 100%;
+  }
+
+  .care-scene-caption {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.75rem;
+    min-height: 5.35rem;
+    padding: 1rem 1.05rem 1.1rem;
+    border-top: 1px solid rgba(92, 127, 113, 0.1);
+  }
+
+  .care-scene-caption > span {
+    display: grid;
+    width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    color: var(--sage-deep);
+    background: var(--sage-mist);
+    font-size: 0.62rem;
+    font-weight: 800;
+    place-items: center;
+  }
+
+  .care-scene-caption div {
+    display: grid;
     gap: 0.2rem;
-    padding-inline: 0.4rem;
-    font-size: 0.48rem;
-    letter-spacing: 0.06em;
+  }
+
+  .care-scene-caption strong {
+    color: var(--bark);
+    font-size: 0.9rem;
+    letter-spacing: 0.07em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .care-scene-caption small {
+    color: var(--bark-soft);
+    font-size: 0.74rem;
+    line-height: 1.4;
+  }
+
+  .care-scenes-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding-inline: 0.85rem;
+    color: var(--sage-deep);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .care-scenes-arrow {
+    font-size: 1.15rem;
+    letter-spacing: 0;
+    line-height: 1;
   }
 
   .journey-badge {
