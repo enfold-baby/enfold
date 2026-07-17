@@ -1,0 +1,81 @@
+import uuid
+from datetime import date, datetime
+
+from pydantic import BaseModel, EmailStr, Field
+
+
+class MagicCodeRequest(BaseModel):
+    email: EmailStr
+
+
+class MagicCodeVerify(BaseModel):
+    email: EmailStr
+    code: str = Field(min_length=4, max_length=12)
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+class UserResponse(BaseModel):
+    id: uuid.UUID
+    email: EmailStr
+    display_name: str
+
+
+class MeResponse(BaseModel):
+    user: UserResponse
+
+
+class ChildCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    birth_date: date | None = None
+
+
+class ChildResponse(BaseModel):
+    id: uuid.UUID
+    family_id: uuid.UUID
+    name: str
+    birth_date: date | None
+    created_at: datetime
+
+
+class CareEventCreate(BaseModel):
+    id: uuid.UUID | None = None
+    child_id: uuid.UUID
+    type: str = Field(pattern="^(feeding|diaper|sleep|pumping|medication|note)$")
+    occurred_at: datetime
+    details: dict = Field(default_factory=dict)
+    note: str = ""
+    client_updated_at: datetime | None = None
+
+
+class CareEventUpdate(BaseModel):
+    type: str | None = Field(
+        default=None,
+        pattern="^(feeding|diaper|sleep|pumping|medication|note)$",
+    )
+    occurred_at: datetime | None = None
+    details: dict | None = None
+    note: str | None = None
+    client_updated_at: datetime | None = None
+
+
+class CareEventResponse(BaseModel):
+    id: uuid.UUID
+    child_id: uuid.UUID
+    family_id: uuid.UUID
+    type: str
+    occurred_at: datetime
+    details: dict
+    note: str
+    created_by_user_id: uuid.UUID | None = None
+    created_by_display_name: str = ""
+    created_at: datetime
+    updated_at: datetime
+
+
+class DeviceRegister(BaseModel):
+    platform: str = Field(min_length=1, max_length=32)
+    fcm_token: str = Field(min_length=1)

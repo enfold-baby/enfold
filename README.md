@@ -37,10 +37,23 @@ flutter run
 ./scripts/build_beta.sh
 ```
 
+## Repo layout
+
+| Path | What |
+|---|---|
+| `lib/`, `android/`, `ios/` | Flutter mobile app (this is the app) |
+| `landing/` | Marketing site for https://bloomdue.baby (prod snapshot) |
+| `backend/` | FastAPI for https://api.bloomdue.baby (prod snapshot) |
+| `docker-compose.prod.yml` | VPS stack: landing + API + Postgres + Redis |
+| `docs/PLATFORM_README.md` | Platform deploy notes from the VPS repo |
+
 ## Deploy
 
 | Target | Script |
 |---|---|
+| Full platform (VPS) | `./deploy-bloomdue-app.sh` |
 | Landing page | `landing/deploy.sh` |
 | API email (SMTP) | `deploy/api-email/deploy_smtp.sh` |
 | API partner (FCM attrs) | `deploy/api-partner/deploy_partner.sh` |
+
+Never commit `.env` — use `.env.example` / `.env.prod.example` only.

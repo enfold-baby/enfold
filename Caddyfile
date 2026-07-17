@@ -1,0 +1,10 @@
+{$SITE_ADDRESS} {
+	handle /api/* {
+		uri strip_prefix /api
+		reverse_proxy backend:8000
+	}
+
+	handle {
+		respond "Bloomdue API is running. Mobile apps should use /api." 200
+	}
+}

@@ -16,6 +16,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+!.env.prod.example
 *.pem
 *.p12
 *.keystore
@@ -24,6 +25,21 @@ key.properties
 **/google-services.json
 **/GoogleService-Info.plist
 firebase_options.dart
+
+# Python API (backend/)
+*.pyc
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Platform Docker runtime dirs (if run from repo root)
+postgres_data/
+redis_data/
+caddy_data/
+caddy_config/
 
 # Flutter / Dart
 .dart_tool/
