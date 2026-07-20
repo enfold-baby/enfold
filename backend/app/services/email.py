@@ -41,6 +41,42 @@ class EmailSender:
         if self.settings.dev_magic_code_log:
             print(f"Bloomdue magic code for {email}: {code}")
 
+    async def send_beta_request(
+        self,
+        *,
+        applicant_email: str,
+        name: str,
+        platform: str,
+        message: str,
+    ) -> None:
+        if self.smtp_configured:
+            await asyncio.to_thread(
+                self._send_beta_request_smtp,
+                applicant_email=applicant_email,
+                name=name,
+                platform=platform,
+                message=message,
+            )
+            return
+        if self.settings.dev_magic_code_log:
+            print(
+                "Bloomdue beta request "
+                f"from={applicant_email} name={name!r} platform={platform!r} message={message!r}"
+            )
+            return
+        raise RuntimeError("Email delivery is not configured")
+
+    async def send_beta_auto_reply(self, *, applicant_email: str, name: str) -> None:
+        if self.smtp_configured:
+            await asyncio.to_thread(
+                self._send_beta_auto_reply_smtp,
+                applicant_email=applicant_email,
+                name=name,
+            )
+            return
+        if self.settings.dev_magic_code_log:
+            print(f"Bloomdue beta auto-reply to {applicant_email}")
+
     def _send_magic_code_smtp(self, email: str, code: str) -> None:
         s = self.settings
         msg = EmailMessage()
@@ -53,7 +89,60 @@ class EmailSender:
             "If you didn't request this, you can ignore this email.\n\n"
             "Questions? hello@bloomdue.baby"
         )
+        self._smtp_send(msg)
 
+    def _send_beta_request_smtp(
+        self,
+        *,
+        applicant_email: str,
+        name: str,
+        platform: str,
+        message: str,
+    ) -> None:
+        s = self.settings
+        to_addr = (s.beta_request_to_email or s.smtp_from_email or "hello@bloomdue.baby").strip()
+        display_name = name.strip() or "(not provided)"
+        note = message.strip() or "(none)"
+        platform_label = platform.strip() or "unspecified"
+
+        msg = EmailMessage()
+        msg["Subject"] = f"Beta request · {display_name if name.strip() else applicant_email}"
+        msg["From"] = f"{s.smtp_from_name} <{s.smtp_from_email}>"
+        msg["To"] = to_addr
+        msg["Reply-To"] = applicant_email
+        msg.set_content(
+            "New BloomDue private beta request\n"
+            "================================\n\n"
+            f"Name: {display_name}\n"
+            f"Email: {applicant_email}\n"
+            f"Platform: {platform_label}\n"
+            f"Message:\n{note}\n\n"
+            "Reply to this email to respond to the applicant.\n"
+        )
+        self._smtp_send(msg)
+
+    def _send_beta_auto_reply_smtp(self, *, applicant_email: str, name: str) -> None:
+        s = self.settings
+        greeting = f"Hi {name.strip()}," if name.strip() else "Hi,"
+        msg = EmailMessage()
+        msg["Subject"] = "We received your BloomDue beta request"
+        msg["From"] = f"{s.smtp_from_name} <{s.smtp_from_email}>"
+        msg["To"] = applicant_email
+        msg.set_content(
+            f"{greeting}\n\n"
+            "Thanks for asking to join the BloomDue private beta — we got your request.\n\n"
+            "We’ll review it and follow up at this email address when a spot is ready. "
+            "BloomDue is free during private beta: no ads, no guilt, no complicated setup.\n\n"
+            "If you didn’t request this, you can ignore this message.\n\n"
+            "Warmly,\n"
+            "The BloomDue team\n"
+            "hello@bloomdue.baby\n"
+            "https://bloomdue.baby/\n"
+        )
+        self._smtp_send(msg)
+
+    def _smtp_send(self, msg: EmailMessage) -> None:
+        s = self.settings
         context = ssl.create_default_context()
         if s.smtp_use_ssl:
             with smtplib.SMTP_SSL(

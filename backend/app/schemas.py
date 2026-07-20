@@ -79,3 +79,16 @@ class CareEventResponse(BaseModel):
 class DeviceRegister(BaseModel):
     platform: str = Field(min_length=1, max_length=32)
     fcm_token: str = Field(min_length=1)
+
+
+class BetaRequestCreate(BaseModel):
+    email: EmailStr
+    name: str = Field(default="", max_length=120)
+    platform: str = Field(default="android", max_length=32)
+    message: str = Field(default="", max_length=1000)
+    # Honeypot — bots fill this; humans leave it empty.
+    website: str = Field(default="", max_length=200)
+
+
+class BetaRequestResponse(BaseModel):
+    status: str = "sent"

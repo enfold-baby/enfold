@@ -49,7 +49,7 @@
       crossorigin
     />
     <link rel="preload" href="/images/family-care-hero.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="/styles.css?v=20260720-legal" />
+    <link rel="stylesheet" href="/styles.css?v=20260720-beta" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -96,11 +96,7 @@
         <a href="https://due.bloomdue.baby">Due countdown</a>
       </nav>
 
-      <a
-        class="button button-small button-primary header-cta"
-        href="mailto:hello@bloomdue.baby?subject=BloomDue%20beta%20access"
-        >Join the beta</a
-      >
+      <a class="button button-small button-primary header-cta" href="#join-beta">Join the beta</a>
     </header>
 
     <main id="main">
@@ -113,9 +109,7 @@
             get clear guidance when you wonder, “is this normal?”
           </p>
           <div class="hero-actions">
-            <a
-              class="button button-primary"
-              href="mailto:hello@bloomdue.baby?subject=BloomDue%20beta%20access"
+            <a class="button button-primary" href="#join-beta"
               >Request beta access
               <svg viewBox="0 0 20 20" aria-hidden="true">
                 <path d="m7 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -444,19 +438,108 @@
         </div>
       </section>
 
-      <section class="final-cta section-shell section-space">
+      <section id="join-beta" class="final-cta section-shell section-space" aria-labelledby="join-beta-title">
         <div class="final-cta-inner">
           <span class="final-flower final-flower--one" aria-hidden="true"></span>
           <span class="final-flower final-flower--two" aria-hidden="true"></span>
           <p class="eyebrow">Come grow with us</p>
-          <h2>A calmer care rhythm starts here.</h2>
-          <p>BloomDue is free during private beta. No ads, no guilt, no complicated setup.</p>
-          <a
-            class="button button-primary"
-            href="mailto:hello@bloomdue.baby?subject=BloomDue%20beta%20access"
-            >Request beta access
-            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          </a>
+          <h2 id="join-beta-title">A calmer care rhythm starts here.</h2>
+          <p>
+            BloomDue is free during private beta. Leave your email and we’ll follow up with access —
+            no ads, no guilt, no complicated setup.
+          </p>
+
+          <div id="beta-form-success" class="beta-success" hidden>
+            <p class="beta-success-title">You’re on the list 💚</p>
+            <p>
+              Thanks — we received your request and sent a short confirmation to your inbox. We’ll
+              be in touch when a beta spot is ready.
+            </p>
+          </div>
+
+          <form id="beta-request-form" class="beta-form" novalidate>
+            <div class="beta-form-grid">
+              <label class="beta-field">
+                <span>Email <abbr title="required">*</abbr></span>
+                <input
+                  id="beta-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  inputmode="email"
+                  required
+                  maxlength="254"
+                  placeholder="you@example.com"
+                />
+              </label>
+              <label class="beta-field">
+                <span>Name <span class="beta-optional">(optional)</span></span>
+                <input
+                  id="beta-name"
+                  name="name"
+                  type="text"
+                  autocomplete="name"
+                  maxlength="120"
+                  placeholder="How should we greet you?"
+                />
+              </label>
+              <label class="beta-field">
+                <span>Platform</span>
+                <select id="beta-platform" name="platform">
+                  <option value="android" selected>Android</option>
+                  <option value="ios">iOS</option>
+                  <option value="both">Both</option>
+                </select>
+              </label>
+              <label class="beta-field beta-field--full">
+                <span>Anything else? <span class="beta-optional">(optional)</span></span>
+                <textarea
+                  id="beta-message"
+                  name="message"
+                  rows="3"
+                  maxlength="1000"
+                  placeholder="Stage of the journey, partner needs, or questions…"
+                ></textarea>
+              </label>
+            </div>
+
+            <!-- Honeypot: leave empty -->
+            <label class="beta-hp" aria-hidden="true">
+              <span>Website</span>
+              <input
+                id="beta-website"
+                name="website"
+                type="text"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </label>
+
+            <p id="beta-form-error" class="beta-form-error" role="alert" hidden></p>
+
+            <div class="beta-form-actions">
+              <button class="button button-primary" type="submit" id="beta-submit">
+                Request beta access
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path
+                    d="m7 4 6 6-6 6"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <p class="beta-form-note">
+                We’ll email you at the address you provide. See our
+                <a href="/privacy/">Privacy Policy</a>. Prefer mail?
+                <a href="mailto:hello@bloomdue.baby?subject=BloomDue%20beta%20access"
+                  >hello@bloomdue.baby</a
+                >
+              </p>
+            </div>
+          </form>
         </div>
       </section>
     </main>
@@ -499,6 +582,107 @@
       </div>
     </footer>
 
+    <script>
+      (function () {
+        var API = "https://api.bloomdue.baby/v1/beta-requests";
+        var form = document.getElementById("beta-request-form");
+        var success = document.getElementById("beta-form-success");
+        var errorEl = document.getElementById("beta-form-error");
+        var submitBtn = document.getElementById("beta-submit");
+        if (!form || !success || !errorEl || !submitBtn) return;
+
+        function showError(message) {
+          errorEl.hidden = false;
+          errorEl.textContent = message;
+        }
+
+        function clearError() {
+          errorEl.hidden = true;
+          errorEl.textContent = "";
+        }
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          clearError();
+
+          var email = (document.getElementById("beta-email").value || "").trim();
+          var name = (document.getElementById("beta-name").value || "").trim();
+          var platform = (document.getElementById("beta-platform").value || "android").trim();
+          var message = (document.getElementById("beta-message").value || "").trim();
+          var website = (document.getElementById("beta-website").value || "").trim();
+
+          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showError("Please enter a valid email address.");
+            document.getElementById("beta-email").focus();
+            return;
+          }
+
+          submitBtn.disabled = true;
+          submitBtn.setAttribute("aria-busy", "true");
+          var original = submitBtn.innerHTML;
+          submitBtn.textContent = "Sending…";
+
+          fetch(API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({
+              email: email,
+              name: name,
+              platform: platform,
+              message: message,
+              website: website,
+            }),
+          })
+            .then(function (res) {
+              return res.json().catch(function () {
+                return {};
+              }).then(function (data) {
+                return { ok: res.ok, status: res.status, data: data };
+              });
+            })
+            .then(function (result) {
+              if (result.ok) {
+                form.hidden = true;
+                success.hidden = false;
+                success.focus && success.focus();
+                if (window.sa_event) {
+                  try {
+                    window.sa_event("beta_request_submitted");
+                  } catch (e) {}
+                }
+                return;
+              }
+              var detail =
+                (result.data && (result.data.detail || result.data.message)) ||
+                "Something went wrong. Please try again or email hello@bloomdue.baby.";
+              if (Array.isArray(detail)) {
+                detail = detail
+                  .map(function (item) {
+                    return item.msg || JSON.stringify(item);
+                  })
+                  .join(" ");
+              }
+              if (result.status === 429) {
+                detail =
+                  (typeof detail === "string" && detail) ||
+                  "Too many requests. Please try again later.";
+              }
+              showError(typeof detail === "string" ? detail : "Please try again.");
+              submitBtn.disabled = false;
+              submitBtn.removeAttribute("aria-busy");
+              submitBtn.innerHTML = original;
+            })
+            .catch(function () {
+              showError(
+                "Network error. Check your connection, or email hello@bloomdue.baby."
+              );
+              submitBtn.disabled = false;
+              submitBtn.removeAttribute("aria-busy");
+              submitBtn.innerHTML = original;
+            });
+        });
+      })();
+    </script>
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
     <noscript
       ><img

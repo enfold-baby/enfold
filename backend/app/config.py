@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     smtp_from_name: str = "BloomDue"
     smtp_use_ssl: bool = False
 
+    # Where private-beta form submissions are delivered.
+    beta_request_to_email: str = "hello@bloomdue.baby"
+    beta_request_rate_limit_per_ip: int = 5
+    beta_request_rate_limit_window_seconds: int = 3600
+
     ms_graph_tenant_id: str = ""
     ms_graph_client_id: str = ""
     ms_graph_client_secret: str = ""

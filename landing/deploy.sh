@@ -4,7 +4,7 @@ set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 PUBLIC="$ROOT/public"
-REMOTE_HOST="${REMOTE_HOST:-ubuntu@135.125.226.37}"
+REMOTE_HOST="${REMOTE_HOST:-u_bloomdue@135.125.226.37}"
 REMOTE_TMP="/tmp/bloomdue-landing-new"
 REMOTE_PUBLIC="/home/u_bloomdue/bloomdue-platform/landing/public"
 COMPOSE_DIR="/home/u_bloomdue/bloomdue-platform"
@@ -36,10 +36,9 @@ printf '==> Uploading landing assets\n'
 scp_cmd -r "$PUBLIC"/* "$REMOTE_HOST:$REMOTE_TMP/"
 
 printf '==> Installing files and rebuilding landing container\n'
-ssh_cmd "sudo cp -r ${REMOTE_TMP}/* ${REMOTE_PUBLIC}/ && \
-  sudo rm -f ${REMOTE_PUBLIC}/language.js && \
-  sudo chown -R u_bloomdue:u_bloomdue ${REMOTE_PUBLIC} && \
-  sudo -u u_bloomdue bash -c 'cd ${COMPOSE_DIR} && docker compose -f docker-compose.prod.yml --env-file .env build landing && docker compose -f docker-compose.prod.yml --env-file .env up -d landing' && \
+ssh_cmd "cp -r ${REMOTE_TMP}/* ${REMOTE_PUBLIC}/ && \
+  rm -f ${REMOTE_PUBLIC}/language.js && \
+  cd ${COMPOSE_DIR} && docker compose -f docker-compose.prod.yml --env-file .env build landing && docker compose -f docker-compose.prod.yml --env-file .env up -d landing && \
   echo DEPLOY_OK"
 
 printf '==> Done — https://bloomdue.baby/\n'
