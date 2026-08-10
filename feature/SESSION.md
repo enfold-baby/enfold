@@ -8,7 +8,7 @@
 ## Done this session
 
 - Contact email switched to **contact@globinary.io** (landing, legal, API, docs) + prod deploy
-- **Local docker** stack: `docker compose up -d` (postgres, redis, backend :8282, caddy :8280)
+- **Local docker** stack: `docker compose up -d` (postgres, redis, backend :8282, **landing :8283**, caddy :8280 → landing + `/api`)
 - **Debug API routing:** `ApiConfig` → Android emulator `10.0.2.2:8282`, release stays prod
 - Android **debug cleartext** HTTP for local API
 - **No past dates while expecting** — due date + appointment pickers; unit tests
@@ -24,18 +24,27 @@
 ## Local dev workflow
 
 ```bash
-# API
-docker compose up -d
-curl http://127.0.0.1:8282/health
+# Full local stack
+docker compose up -d --build
+curl http://127.0.0.1:8282/health          # API direct
+open http://127.0.0.1:8283/                # landing direct
+open http://127.0.0.1:8280/                # landing via Caddy (+ /api)
 
 # App (debug → local API automatically)
-flutter run -d emulator-5554   # or any Android emulator
+flutter run -d emulator-5554
 
 # Force prod API even in debug:
 # flutter run --dart-define=API_BASE_URL=https://api.bloomdue.baby
 ```
 
-Sign-in magic codes appear in: `docker compose logs -f backend`
+| Port | Service |
+|------|---------|
+| **8280** | Caddy → landing + `/api/*` → backend |
+| **8282** | Backend (direct) |
+| **8283** | Landing nginx (direct, live-mounted `landing/public`) |
+| 8285 / 8286 | Postgres / Redis |
+
+Sign-in magic codes: `docker compose logs -f backend`
 
 ## Quick resume prompt
 

@@ -584,7 +584,19 @@
 
     <script>
       (function () {
-        var API = "https://api.bloomdue.baby/v1/beta-requests";
+        // Prod API by default; local docker uses Caddy /api or direct backend :8282.
+        var API = (function () {
+          var h = location.hostname;
+          var local =
+            h === "localhost" || h === "127.0.0.1" || h === "10.0.2.2";
+          if (!local) return "https://api.bloomdue.baby/v1/beta-requests";
+          // Served via Caddy :8280 → same-origin /api
+          if (location.port === "8280" || location.port === "") {
+            return location.origin + "/api/v1/beta-requests";
+          }
+          // Landing-only container :8283 → hit backend on host
+          return "http://127.0.0.1:8282/v1/beta-requests";
+        })();
         var form = document.getElementById("beta-request-form");
         var success = document.getElementById("beta-form-success");
         var errorEl = document.getElementById("beta-form-error");

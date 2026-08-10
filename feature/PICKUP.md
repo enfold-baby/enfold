@@ -102,7 +102,7 @@ Do not touch due.bloomdue.baby.
 
 ```bash
 cd bloomdue_baby
-docker compose up -d           # API :8282  (magic codes in backend logs)
+docker compose up -d --build   # API :8282 · landing :8283 · Caddy :8280
 flutter pub get
 dart run build_runner build    # after Drift schema changes
 flutter test

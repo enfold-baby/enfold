@@ -1,10 +1,13 @@
-{$SITE_ADDRESS} {
+# Listen on :80 inside the container (compose maps host 8280 → 80).
+:80 {
+	# API behind /api/* (local full-stack convenience).
 	handle /api/* {
 		uri strip_prefix /api
 		reverse_proxy backend:8000
 	}
 
+	# Marketing landing (same origin as /api for beta form).
 	handle {
-		respond "Bloomdue API is running. Mobile apps should use /api." 200
+		reverse_proxy landing:3000
 	}
 }
