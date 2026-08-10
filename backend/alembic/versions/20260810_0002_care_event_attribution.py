@@ -3,11 +3,11 @@
 Revision ID: 20260810_0002
 Revises: 20260608_0001
 Create Date: 2026-08-10
+
+Idempotent: safe if columns already exist (e.g. from deploy/api-partner/migration.sql).
 """
 
 from alembic import op
-import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
 
 revision = "20260810_0002"
 down_revision = "20260608_0001"
@@ -16,26 +16,23 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.add_column(
-        "care_events",
-        sa.Column(
-            "created_by_user_id",
-            postgresql.UUID(as_uuid=True),
-            sa.ForeignKey("users.id", ondelete="SET NULL"),
-            nullable=True,
-        ),
+    # Postgres-native IF NOT EXISTS so stamp/upgrade never fails on half-applied DBs.
+    op.execute(
+        """
+        ALTER TABLE care_events
+          ADD COLUMN IF NOT EXISTS created_by_user_id UUID
+            REFERENCES users(id) ON DELETE SET NULL;
+        """
     )
-    op.add_column(
-        "care_events",
-        sa.Column(
-            "created_by_display_name",
-            sa.String(length=120),
-            nullable=False,
-            server_default="",
-        ),
+    op.execute(
+        """
+        ALTER TABLE care_events
+          ADD COLUMN IF NOT EXISTS created_by_display_name VARCHAR(120)
+            NOT NULL DEFAULT '';
+        """
     )
 
 
 def downgrade() -> None:
-    op.drop_column("care_events", "created_by_display_name")
-    op.drop_column("care_events", "created_by_user_id")
+    op.execute("ALTER TABLE care_events DROP COLUMN IF EXISTS created_by_display_name;")
+    op.execute("ALTER TABLE care_events DROP COLUMN IF EXISTS created_by_user_id;")
