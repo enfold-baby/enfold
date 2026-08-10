@@ -200,7 +200,8 @@ class EmailSender:
         if reply_to:
             message["replyTo"] = [{"emailAddress": {"address": reply_to}}]
 
-        payload = {"message": message, "saveToSentItems": "true"}
+        # Do not clutter the sender mailbox Sent folder (team inbox / Graph user).
+        payload = {"message": message, "saveToSentItems": "false"}
         async with httpx.AsyncClient(timeout=20) as client:
             response = await client.post(
                 endpoint,
