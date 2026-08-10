@@ -96,8 +96,13 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
             token: session.token,
             code: code,
           );
+      // Drop link to the previous solo-family child so sync re-binds to the
+      // shared family's baby (otherwise API returns "Child not found").
+      await ref.read(accountSwitchServiceProvider).unlinkServerChild();
       ref.invalidate(familyInfoProvider);
-      final syncResult = await ref.read(syncActionsProvider).syncIfSignedIn();
+      final syncResult = await ref
+          .read(syncActionsProvider)
+          .syncIfSignedIn(fullHistory: true);
       _showFeedback(
         syncResult.ok
             ? 'Joined family · pulled ${syncResult.pulled} partner logs.'

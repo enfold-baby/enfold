@@ -1,3 +1,4 @@
+import 'package:bloomdue_baby/services/api/api_exception.dart';
 import 'package:bloomdue_baby/services/api/bloomdue_api_client.dart';
 import 'package:bloomdue_baby/services/api/family_models.dart';
 import 'package:bloomdue_baby/services/auth/auth_session.dart';
@@ -136,4 +137,66 @@ void main() {
     final all = await db.select(db.careEvents).get();
     expect(all.map((e) => e.id).toSet(), {'partner-event-1', 'old-event'});
   });
+
+  test('pullRemote re-links when local serverChildId is from old family', () async {
+    const localBabyId = 'local-baby';
+    final staleId = 'stale-child';
+    final goodId = 'server-child-1';
+    await db.into(db.babies).insert(
+          BabiesCompanion.insert(
+            id: localBabyId,
+            name: 'Baby',
+            createdAt: DateTime.now(),
+            serverChildId: Value(staleId),
+          ),
+        );
+
+    final staleApi = _StaleThenGoodPullApi(staleId: staleId, goodId: goodId);
+    final staleSync = SyncService(api: staleApi, db: db);
+
+    final result = await staleSync.pullRemote(
+      session: const AuthSession(
+        token: 'token',
+        user: AuthUser(id: 'u1', email: 'a@b.com', displayName: ''),
+      ),
+    );
+
+    expect(result.ok, isTrue, reason: result.error);
+    expect(result.pulled, 1);
+    final baby = await (db.select(db.babies)..limit(1)).getSingle();
+    expect(baby.serverChildId, goodId);
+  });
+}
+
+class _StaleThenGoodPullApi extends BloomdueApiClient {
+  _StaleThenGoodPullApi({required this.staleId, required this.goodId})
+      : super(httpClient: http.Client());
+
+  final String staleId;
+  final String goodId;
+
+  @override
+  Future<List<ChildProfile>> listChildren(String token) async {
+    return [ChildProfile(id: goodId, name: 'Partner Baby', familyId: 'fam')];
+  }
+
+  @override
+  Future<List<RemoteCareEvent>> listCareEvents({
+    required String token,
+    required String childId,
+  }) async {
+    if (childId == staleId) {
+      throw ApiException('Child not found', statusCode: 404);
+    }
+    return [
+      RemoteCareEvent(
+        id: 'partner-event-1',
+        childId: goodId,
+        type: 'feeding',
+        occurredAt: DateTime.now(),
+        details: const {},
+        note: 'ok',
+      ),
+    ];
+  }
 }
