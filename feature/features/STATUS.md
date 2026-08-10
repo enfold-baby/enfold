@@ -38,7 +38,7 @@
 - Gentle partner nudge banner (dismissible per session)
 - Auto-sync on open when signed in
 - PDF export shortcut in app bar
-- 🔲 Pull-to-refresh sync (nice next polish)
+- ✅ Pull-to-refresh sync (sync + reload local streams)
 
 ## Learn
 
@@ -119,6 +119,8 @@
 | Terms of Use `/terms/` | ✅ |
 | Join-beta form `#join-beta` | ✅ → API + `contact@globinary.io` |
 | Cookie consent banner | ❌ not needed (Simple Analytics only) |
+| Open startup `/open/` | ✅ Public transparency + metrics |
+| Product roadmap `/roadmap/` | ✅ Shipped / next / later |
 | `due.bloomdue.baby` | ✅ Live — do not touch |
 
 ## Push (prepared)

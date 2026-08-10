@@ -8,7 +8,7 @@
 | Priority | Item | Doc | Effort |
 |---|---|---|---|
 | ✅ | ~~No past dates while expecting~~ | [DATE_PICKER_NO_PAST.md](./DATE_PICKER_NO_PAST.md) | Shipped 2026-08-10 |
-| 🟡 P3 | **Pull-to-refresh sync on Today** | — | Small |
+| ✅ | ~~Pull-to-refresh sync on Today~~ | — | Shipped 2026-08-10 |
 | 🟠 P2 | **In-app APK version update (AD-style)** | [APP_VERSION_UPDATE.md](./APP_VERSION_UPDATE.md) | Medium — Android sideload beta |
 | 🟠 P2 | **Account switching / local data isolation** | [ACCOUNT_SWITCHING.md](./ACCOUNT_SWITCHING.md) | Medium — before public beta |
 | 🟠 P2 | **Store release (signed builds)** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Medium — blocked on DUNS/accounts |

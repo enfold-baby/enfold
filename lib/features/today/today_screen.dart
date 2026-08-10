@@ -114,85 +114,122 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
         ],
       ),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-          children: [
-            _TodayHero(
-              greeting: TodayScreen.greetingForHour(now.hour),
-              syncCopy: isSignedIn ? _partnerSyncCopy(lastSync) : null,
-            ),
-            const SizedBox(height: 26),
-            const BloomSectionHeader(
-              title: 'Quick actions',
-              subtitle: 'Open a log, or hold a tile to add details.',
-            ),
-            const SizedBox(height: 12),
-            _quickActionGrid(),
-            const SizedBox(height: 28),
-            logsAsync.when(
-              loading: () => const SizedBox(
-                height: 132,
-                child: Center(child: CircularProgressIndicator()),
+        child: RefreshIndicator(
+          key: const Key('today_pull_to_refresh'),
+          color: AppColors.sage,
+          onRefresh: _refreshToday,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+            children: [
+              _TodayHero(
+                greeting: TodayScreen.greetingForHour(now.hour),
+                syncCopy: isSignedIn ? _partnerSyncCopy(lastSync) : null,
               ),
-              error: (_, _) => const SizedBox.shrink(),
-              data: (logs) =>
-                  TodaySummaryCards(summary: TodaySummary.fromEntries(logs)),
-            ),
-            if (showPartnerNudge) ...[
-              const SizedBox(height: 18),
-              GentleNudgeBanner(
-                nudge: partnerNudge,
-                onDismiss: () =>
-                    setState(() => _dismissedNudgeType = partnerNudge.type),
+              const SizedBox(height: 26),
+              const BloomSectionHeader(
+                title: 'Quick actions',
+                subtitle: 'Open a log, or hold a tile to add details.',
+              ),
+              const SizedBox(height: 12),
+              _quickActionGrid(),
+              const SizedBox(height: 28),
+              logsAsync.when(
+                loading: () => const SizedBox(
+                  height: 132,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (_, _) => const SizedBox.shrink(),
+                data: (logs) =>
+                    TodaySummaryCards(summary: TodaySummary.fromEntries(logs)),
+              ),
+              if (showPartnerNudge) ...[
+                const SizedBox(height: 18),
+                GentleNudgeBanner(
+                  nudge: partnerNudge,
+                  onDismiss: () =>
+                      setState(() => _dismissedNudgeType = partnerNudge.type),
+                ),
+              ],
+              const SizedBox(height: 28),
+              const BloomSectionHeader(
+                title: 'Recent',
+                subtitle: 'The latest care moments, all in one place.',
+              ),
+              const SizedBox(height: 12),
+              ..._recentLogSection(
+                logsAsync: logsAsync,
+                isSignedIn: isSignedIn,
+                useImperial: useImperial,
+                showAttribution: showAttribution,
+                currentUserId: session?.user.id,
+              ),
+              const SizedBox(height: 30),
+              const BloomSectionHeader(
+                title: 'More care',
+                subtitle: 'Growth, medication, tummy time, and pumping.',
+              ),
+              const SizedBox(height: 12),
+              GrowthEntryCard(
+                latestMeasurement: growthMeasurements.isEmpty
+                    ? null
+                    : growthMeasurements.first,
+                milestonesAchieved: milestonesAchieved,
+                useImperial: useImperial,
+                onTap: () => context.push(AppRoutes.growth),
+              ),
+              const SizedBox(height: 14),
+              MedicationEntryCard(
+                todayLogs: medicationLogs,
+                onTap: () => context.push(AppRoutes.logMedication),
+                onAdd: () => context.push(AppRoutes.logMedicationAdd),
+              ),
+              const SizedBox(height: 14),
+              ActivityEntryCard(
+                tummyLogs: tummyLogs,
+                pumpingLogs: pumpingLogs,
+                useImperial: useImperial,
+                onTapTummy: () => context.push(AppRoutes.logTummy),
+                onTapPumping: () => context.push(AppRoutes.logPumping),
+                onAddTummy: () => context.push(AppRoutes.logTummyAdd),
+                onAddPumping: () => context.push(AppRoutes.logPumpingAdd),
               ),
             ],
-            const SizedBox(height: 28),
-            const BloomSectionHeader(
-              title: 'Recent',
-              subtitle: 'The latest care moments, all in one place.',
-            ),
-            const SizedBox(height: 12),
-            ..._recentLogSection(
-              logsAsync: logsAsync,
-              isSignedIn: isSignedIn,
-              useImperial: useImperial,
-              showAttribution: showAttribution,
-              currentUserId: session?.user.id,
-            ),
-            const SizedBox(height: 30),
-            const BloomSectionHeader(
-              title: 'More care',
-              subtitle: 'Growth, medication, tummy time, and pumping.',
-            ),
-            const SizedBox(height: 12),
-            GrowthEntryCard(
-              latestMeasurement: growthMeasurements.isEmpty
-                  ? null
-                  : growthMeasurements.first,
-              milestonesAchieved: milestonesAchieved,
-              useImperial: useImperial,
-              onTap: () => context.push(AppRoutes.growth),
-            ),
-            const SizedBox(height: 14),
-            MedicationEntryCard(
-              todayLogs: medicationLogs,
-              onTap: () => context.push(AppRoutes.logMedication),
-              onAdd: () => context.push(AppRoutes.logMedicationAdd),
-            ),
-            const SizedBox(height: 14),
-            ActivityEntryCard(
-              tummyLogs: tummyLogs,
-              pumpingLogs: pumpingLogs,
-              useImperial: useImperial,
-              onTapTummy: () => context.push(AppRoutes.logTummy),
-              onTapPumping: () => context.push(AppRoutes.logPumping),
-              onAddTummy: () => context.push(AppRoutes.logTummyAdd),
-              onAddPumping: () => context.push(AppRoutes.logPumpingAdd),
-            ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  /// Pull-to-refresh: sync with partner server when signed in, then reload local streams.
+  Future<void> _refreshToday() async {
+    final result = await ref.read(syncActionsProvider).syncIfSignedIn();
+    ref.invalidate(todayLogProvider);
+    ref.invalidate(todayMedicationLogsProvider);
+    ref.invalidate(todayTummyLogsProvider);
+    ref.invalidate(todayPumpingLogsProvider);
+    ref.invalidate(growthMeasurementsProvider);
+    ref.invalidate(milestoneStatusesProvider);
+    ref.invalidate(partnerNudgeProvider);
+    ref.invalidate(hasPartnerProvider);
+
+    try {
+      await ref.read(todayLogProvider.future);
+    } catch (_) {
+      // Offline / empty — still finish the indicator.
+    }
+
+    if (!mounted) return;
+    if (ref.read(authSessionProvider).valueOrNull != null &&
+        result.ok == false) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('Couldn’t sync right now. Your local logs are safe.'),
+          ),
+        );
+    }
   }
 
   Widget _quickActionGrid() {
