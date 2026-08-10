@@ -33,6 +33,10 @@ class OnboardingActions {
   Future<void> complete() async {
     await _ref.read(databaseProvider).settingsDao.setOnboardingCompleted(true);
     _ref.invalidate(onboardingCompletedProvider);
+    // Wait until the provider reflects the new value before notifying the
+    // router — otherwise redirect can still see the stale `false` and bounce
+    // back to onboarding (flaky in integration tests / fast taps).
+    await _ref.read(onboardingCompletedProvider.future);
     _ref.read(routerRefreshProvider).notify();
   }
 
