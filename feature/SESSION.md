@@ -1,59 +1,46 @@
 # Last session
 
 **Date:** 2026-08-10  
-**Version:** `0.1.0+9` · Drift schema **v9** · unit/widget tests under `test/`  
-**API:** `https://api.bloomdue.baby` · Landing: `https://bloomdue.baby`  
-**Git:** `main` @ `e78a99e` (local = GitHub = prod VPS)
+**Version:** `0.1.0+9` · Drift schema **v9**  
+**API prod:** `https://api.bloomdue.baby` · **API local:** `http://127.0.0.1:8282` (emulator `http://10.0.2.2:8282`)  
+**Contact:** `contact@globinary.io` (hello@bloomdue.baby retired)
 
-## Done (recent arc)
+## Done this session
 
-### Mobile app
-- Private beta at **`0.1.0+9`** — S24 APK at `~/Downloads/bloomdue-baby-0.1.0+9.apk`
-- Sync **create + edit + delete** to server shipped (PATCH/DELETE + pull reconciliation)
-- Theme persist (schema v9), brand icon, INTERNET permission for release APK
-- Demo screenshot tooling: `integration_test/demo_screenshots_test.dart` + `scripts/capture_demo_screenshots.sh`
-- Emulator captures with Damian demo day → `~/Downloads/bloomdue-x-screenshots/`
+- Contact email switched to **contact@globinary.io** (landing, legal, API, docs) + prod deploy
+- **Local docker** stack: `docker compose up -d` (postgres, redis, backend :8282, caddy :8280)
+- **Debug API routing:** `ApiConfig` → Android emulator `10.0.2.2:8282`, release stays prod
+- Android **debug cleartext** HTTP for local API
+- **No past dates while expecting** — due date + appointment pickers; unit tests
+- Magic codes: `DEV_MAGIC_CODE_LOG=true` prints to backend logs locally
 
-### Landing + legal + beta signup (prod)
-- Landing redesigned to match mobile v3 design + mobile care carousel
-- **Privacy** + **Terms** live (`/privacy/`, `/terms/`) — EN, controller Globinary SRL, contact `contact@globinary.io`
-- No cookie banner (Simple Analytics only)
-- Inline **#join-beta** form → `POST /v1/beta-requests` → SMTP to `contact@globinary.io` + auto-reply
-- Nginx redirect fix (no `:3000` bounce)
-- Landing/backend redeployed; monorepo synced local ↔ GitHub ↔ VPS
+## Next up (mobile)
 
-### Docs / ideas
-- **No past dates while expecting** logged → [`todos/DATE_PICKER_NO_PAST.md`](./todos/DATE_PICKER_NO_PAST.md)
+1. Pull-to-refresh sync on Today  
+2. Account switching isolation → `todos/ACCOUNT_SWITCHING.md`  
+3. Dogfood partner invite on emulator + local API  
+4. Store path when DUNS ready  
 
-## Next up (mobile-first)
+## Local dev workflow
 
-1. **Small UX win:** no past dates on pregnancy due/appointment pickers → [`todos/DATE_PICKER_NO_PAST.md`](./todos/DATE_PICKER_NO_PAST.md)
-2. **Pull-to-refresh sync** on Today (partner refresh)
-3. **Account switching / local isolation** → [`todos/ACCOUNT_SWITCHING.md`](./todos/ACCOUNT_SWITCHING.md)
-4. **Dogfood:** two-parent invite → join → edit/delete sync on real devices
-5. **Store path** (when DUNS ready) → [`todos/STORE_RELEASE.md`](./todos/STORE_RELEASE.md)
-6. **Content review** with neonat/pediatric clinicians → [`todos/CONTENT_REVIEW.md`](./todos/CONTENT_REVIEW.md)
-7. FCM partner push — deferred until Firebase → [`todos/FCM_PARTNER_PUSH.md`](./todos/FCM_PARTNER_PUSH.md)
+```bash
+# API
+docker compose up -d
+curl http://127.0.0.1:8282/health
 
-## Blockers / waiting on
+# App (debug → local API automatically)
+flutter run -d emulator-5554   # or any Android emulator
 
-- **DUNS** → Play Store / App Store org setup
-- Android still **debug keystore** for sideload (OK for friends/family)
-- FCM: no Firebase project yet
-- Formal physician sign-off on 25 learn cards
+# Force prod API even in debug:
+# flutter run --dart-define=API_BASE_URL=https://api.bloomdue.baby
+```
 
-## Deploy notes
-
-| Target | How |
-|---|---|
-| Landing | `landing/deploy.sh` as `u_bloomdue@135.125.226.37` (or scp + `docker compose … landing`) |
-| Backend | copy app files + `docker compose … backend` on VPS |
-| GitHub push from laptop | no local key for `Gl0deanR/bloomdue-baby`; push via VPS deploy key or add a laptop key |
+Sign-in magic codes appear in: `docker compose logs -f backend`
 
 ## Quick resume prompt
 
 ```
-Read feature/SESSION.md, feature/PICKUP.md, and feature/todos/README.md in bloomdue_baby.
-App is 0.1.0+9, Drift v9. Landing/legal/beta form are live on prod; monorepo is synced.
-Continue mobile app feature work. Prefer small shippable UX/features. Update SESSION.md and related docs as we go.
+Read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md in bloomdue_baby.
+Local docker API is the default in debug (10.0.2.2:8282). Contact is contact@globinary.io.
+Continue mobile features. Commit local no coauthor; user pushes to GitHub.
 ```

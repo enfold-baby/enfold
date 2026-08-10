@@ -1,7 +1,14 @@
 # Date pickers: no past dates while expecting
 
-> **Priority:** P3 · **Status:** Idea captured · **not started** — good next mobile UX ship  
-> **Source:** User feedback 2026-07-20 (mobile dogfood) · listed in SESSION / todos queue 2026-08-10
+> **Priority:** P3 · **Status:** ✅ Shipped 2026-08-10  
+> **Source:** User feedback 2026-07-20 (mobile dogfood)
+
+## Shipped
+
+- Due date pickers (onboarding expecting + Pregnancy screen): `firstDate` = local today  
+- Appointment date picker: today or future only  
+- Helpers + unit tests: `lib/features/pregnancy/expecting_date_bounds.dart`  
+- Care-log date pickers unchanged (past backfill still allowed)
 
 ## Intent
 
@@ -18,11 +25,11 @@ When the family is still in the **expecting / pregnancy** stage, date pickers sh
 
 ## Acceptance sketch
 
-- [ ] While profile/mode is **expecting**, due-date picker: `firstDate` ≥ today (or allow only future relative to “today” in local TZ).  
-- [ ] Appointment dates: no past days (or only “today” if we want same-day visits).  
-- [ ] Existing saved past due dates (edge case / late setup) still display; editing re-applies the constraint.  
-- [ ] Unit/widget tests for date bounds.  
-- [ ] No change to historical care-event logging.
+- [x] While profile/mode is **expecting**, due-date picker: `firstDate` ≥ today (or allow only future relative to “today” in local TZ).  
+- [x] Appointment dates: no past days (or only “today” if we want same-day visits).  
+- [x] Existing saved past due dates (edge case / late setup) still display; editing re-applies the constraint.  
+- [x] Unit/widget tests for date bounds.  
+- [x] No change to historical care-event logging.
 
 ## Notes
 

@@ -4,4 +4,6 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Allow HTTP to host machine API (10.0.2.2) during local docker dev. -->
+    <application android:usesCleartextTraffic="true" />
 </manifest>

@@ -8,6 +8,7 @@ import '../../core/theme/app_colors.dart';
 import '../../widgets/bloom_brand_mark.dart';
 import '../../widgets/bloom_illustrations.dart';
 import '../../widgets/bloom_surface.dart';
+import '../pregnancy/expecting_date_bounds.dart';
 import 'providers/onboarding_providers.dart';
 
 enum _OnboardingStep { welcome, journey, details }
@@ -60,11 +61,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Future<void> _pickDueDate() async {
+    final today = calendarToday();
+    // Expecting: no past due dates (local calendar day).
+    final initial = today.add(const Duration(days: 120));
     final picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().add(const Duration(days: 120)),
-      firstDate: DateTime.now().subtract(const Duration(days: 30)),
-      lastDate: DateTime.now().add(const Duration(days: 320)),
+      initialDate: initial,
+      firstDate: today,
+      lastDate: today.add(const Duration(days: 320)),
       helpText: 'Select due date',
     );
     if (picked != null) setState(() => _dueDate = picked);

@@ -11,7 +11,7 @@
 | Logs | Hub + per-type lists, filters, period bar | ✅ |
 | Learn | 25 cards, search/filter, triage flow | ✅ |
 | Pregnancy | Due date, week calc, kick counter, appointments | ✅ |
-| Pregnancy UX | No past dates while expecting (due/appointments) | 💡 idea → [todos/DATE_PICKER_NO_PAST.md](../todos/DATE_PICKER_NO_PAST.md) |
+| Pregnancy UX | No past dates while expecting (due/appointments) | ✅ |
 | Settings | Account, partner, profile, export, units, theme | ✅ |
 
 **Onboarding:** first-run flow (pregnancy vs baby born) → `lib/features/onboarding/`

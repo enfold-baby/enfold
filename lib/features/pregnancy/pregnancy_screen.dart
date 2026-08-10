@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../services/database/app_database.dart';
+import 'expecting_date_bounds.dart';
 import 'pregnancy_week_calculator.dart';
 import 'providers/pregnancy_providers.dart';
 
@@ -161,11 +162,18 @@ class PregnancyScreen extends ConsumerWidget {
     WidgetRef ref,
     DateTime? current,
   ) async {
+    final today = calendarToday();
+    // While expecting: do not allow past due dates. Keep a sensible far bound.
+    final last = today.add(const Duration(days: 320));
+    var initial = clampOnOrAfterToday(
+      current ?? today.add(const Duration(days: 120)),
+    );
+    if (initial.isAfter(last)) initial = last;
     final picked = await showDatePicker(
       context: context,
-      initialDate: current ?? DateTime.now().add(const Duration(days: 120)),
-      firstDate: DateTime.now().subtract(const Duration(days: 280)),
-      lastDate: DateTime.now().add(const Duration(days: 320)),
+      initialDate: initial,
+      firstDate: today,
+      lastDate: last,
       helpText: 'Select due date',
     );
     if (picked == null) return;
@@ -202,11 +210,13 @@ class PregnancyScreen extends ConsumerWidget {
             OutlinedButton(
               key: const Key('appointment_pick_date'),
               onPressed: () async {
+                final today = calendarToday();
+                // Appointments while expecting: today or future only.
                 final picked = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now().subtract(const Duration(days: 365)),
-                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                  initialDate: today,
+                  firstDate: today,
+                  lastDate: today.add(const Duration(days: 365)),
                 );
                 if (picked != null) scheduledAt = picked;
               },

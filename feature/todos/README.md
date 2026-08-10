@@ -7,7 +7,7 @@
 
 | Priority | Item | Doc | Effort |
 |---|---|---|---|
-| 🟡 P3 | **No past dates while expecting** | [DATE_PICKER_NO_PAST.md](./DATE_PICKER_NO_PAST.md) | Small — good next ship |
+| ✅ | ~~No past dates while expecting~~ | [DATE_PICKER_NO_PAST.md](./DATE_PICKER_NO_PAST.md) | Shipped 2026-08-10 |
 | 🟡 P3 | **Pull-to-refresh sync on Today** | — | Small |
 | 🟠 P2 | **Account switching / local data isolation** | [ACCOUNT_SWITCHING.md](./ACCOUNT_SWITCHING.md) | Medium — before public beta |
 | 🟠 P2 | **Store release (signed builds)** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Medium — blocked on DUNS/accounts |
@@ -28,6 +28,9 @@
 
 ## Recently completed ✅
 
+- No past dates while expecting (due + appointment pickers)
+- Local docker API for emulator (`10.0.2.2:8282` debug)
+- Contact email → `contact@globinary.io`
 - Landing legal pages (Privacy + Terms) + no cookie banner  
 - Join-beta form + `POST /v1/beta-requests` SMTP to `contact@globinary.io`  
 - Landing v3 redesign + mobile care carousel  

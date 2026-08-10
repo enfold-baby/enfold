@@ -12,9 +12,9 @@ Copy one of these into a fresh chat:
 ```
 Read feature/SESSION.md, feature/PICKUP.md, and feature/todos/README.md in bloomdue_baby.
 Flutter app at 0.1.0+9, Drift schema v9.
-API: https://api.bloomdue.baby · Landing: https://bloomdue.baby (legal + beta form live).
-Monorepo main is synced local/GitHub/prod.
-Continue mobile feature work. Update feature/SESSION.md and related docs as we ship.
+Debug API → http://10.0.2.2:8282 (Android emulator); release → https://api.bloomdue.baby.
+Local docker: docker compose up -d. Contact: contact@globinary.io.
+Continue mobile feature work. Commit local no coauthor; user pushes GitHub.
 ```
 
 ---
@@ -90,7 +90,7 @@ Do not touch due.bloomdue.baby.
 |---|---|
 | **Flutter** | Riverpod, go_router, Drift SQLite, offline-first |
 | **Version** | `0.1.0+9` · Drift **v9** |
-| **API** | `lib/services/api/bloomdue_api_client.dart` → `https://api.bloomdue.baby` |
+| **API** | `ApiConfig` — debug local docker / release prod (`lib/core/config/api_config.dart`) |
 | **Sync** | create + **edit + delete** + pull (`sync_service.dart`) |
 | **Auth** | Magic code email → JWT in secure storage |
 | **Partner** | Family invite/join, attribution, gentle nudge, FCM prep (no-op) |
@@ -102,12 +102,12 @@ Do not touch due.bloomdue.baby.
 
 ```bash
 cd bloomdue_baby
+docker compose up -d           # API :8282  (magic codes in backend logs)
 flutter pub get
 dart run build_runner build    # after Drift schema changes
 flutter test
-flutter run
-# emulator screenshots (optional):
-# ./scripts/capture_demo_screenshots.sh
+flutter run -d emulator-5554   # debug → 10.0.2.2:8282
+# force prod API in debug: --dart-define=API_BASE_URL=https://api.bloomdue.baby
 ```
 
 ## Build beta
