@@ -8,6 +8,7 @@ import '../../core/theme/app_colors.dart';
 import '../logs/widgets/log_period_bar.dart';
 import '../logs/widgets/paginated_log_list.dart';
 import 'providers/tummy_time_providers.dart';
+import '../../widgets/sync_refresh.dart';
 
 class TummyTimeLogsScreen extends ConsumerWidget {
   const TummyTimeLogsScreen({super.key});
@@ -26,7 +27,10 @@ class TummyTimeLogsScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: ListView(
+        child: SyncRefresh(
+          indicatorKey: const Key('tummy_logs_pull_to_refresh'),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
@@ -46,6 +50,7 @@ class TummyTimeLogsScreen extends ConsumerWidget {
                   'No tummy time logs in this period. Tap + to add one.',
             ),
           ],
+        ),
         ),
       ),
     );

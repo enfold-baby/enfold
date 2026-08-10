@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../services/database/app_database.dart';
+import '../../widgets/sync_refresh.dart';
 import 'expecting_date_bounds.dart';
 import 'pregnancy_week_calculator.dart';
 import 'providers/pregnancy_providers.dart';
@@ -39,7 +40,10 @@ class PregnancyScreen extends ConsumerWidget {
               : null;
           final kickCount = _kickCountForToday(profile, now);
 
-          return ListView(
+          return SyncRefresh(
+            indicatorKey: const Key('pregnancy_pull_to_refresh'),
+            child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
               Text(
@@ -143,6 +147,7 @@ class PregnancyScreen extends ConsumerWidget {
                   ),
                 ),
             ],
+          ),
           );
         },
       ),

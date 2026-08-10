@@ -195,33 +195,19 @@ class SyncService {
       final baby = await (_db.select(_db.babies)..limit(1)).getSingleOrNull();
       if (baby == null) return const SyncResult(pushed: 0);
 
-      var serverChildId = await _linkedServerChildId(
-        session: session,
-        baby: baby,
-        createIfMissing: false,
-      );
-      if (serverChildId == null) return const SyncResult(pushed: 0);
+      // After partners join, a family often has *multiple* server children
+      // (each device created one). Pull every child's events so partners see
+      // each other's logs; keep one primary child id for future pushes.
+      final children = await _api.listChildren(session.token);
+      if (children.isEmpty) return const SyncResult(pushed: 0);
 
-      List<RemoteCareEvent> remoteEvents;
-      try {
-        remoteEvents = await _api.listCareEvents(
-          token: session.token,
-          childId: serverChildId,
-        );
-      } on ApiException catch (e) {
-        if (!_isChildNotFound(e)) rethrow;
-        // Local serverChildId is from an old family (common after join).
-        final relinked = await _relinkServerChild(
-          session: session,
-          baby: baby,
-          createIfMissing: false,
-        );
-        if (relinked == null) return const SyncResult(pushed: 0);
-        remoteEvents = await _api.listCareEvents(
-          token: session.token,
-          childId: relinked,
-        );
-        serverChildId = relinked;
+      final primaryId = _pickPrimaryChildId(
+        children: children,
+        preferredId: baby.serverChildId,
+      );
+      if (baby.serverChildId != primaryId) {
+        await (_db.update(_db.babies)..where((b) => b.id.equals(baby.id)))
+            .write(BabiesCompanion(serverChildId: Value(primaryId)));
       }
 
       DateTime? since;
@@ -231,6 +217,22 @@ class SyncService {
         );
         since = DateTime(lookback.year, lookback.month, lookback.day);
       }
+
+      final byId = <String, RemoteCareEvent>{};
+      for (final child in children) {
+        try {
+          final events = await _api.listCareEvents(
+            token: session.token,
+            childId: child.id,
+          );
+          for (final event in events) {
+            byId[event.id] = event;
+          }
+        } on ApiException catch (e) {
+          if (!_isChildNotFound(e)) rethrow;
+        }
+      }
+      final remoteEvents = byId.values.toList();
 
       final pulled = await _db.careLogDao.upsertRemoteCareEvents(
         babyId: baby.id,
@@ -258,22 +260,43 @@ class SyncService {
     return msg.contains('child') || msg == 'not found';
   }
 
+  /// Prefer a still-valid linked child; otherwise oldest family child.
+  String _pickPrimaryChildId({
+    required List<ChildProfile> children,
+    required String? preferredId,
+  }) {
+    if (preferredId != null &&
+        preferredId.isNotEmpty &&
+        children.any((c) => c.id == preferredId)) {
+      return preferredId;
+    }
+    return children.first.id;
+  }
+
   Future<String?> _linkedServerChildId({
     required AuthSession session,
     required Baby baby,
     required bool createIfMissing,
   }) async {
-    final existing = baby.serverChildId;
-    if (existing != null && existing.isNotEmpty) return existing;
-    if (createIfMissing) {
-      return _ensureServerChild(
-        session,
-        baby: baby,
-        name: baby.name,
-        birthDate: baby.birthDate,
+    final children = await _api.listChildren(session.token);
+    if (children.isNotEmpty) {
+      final id = _pickPrimaryChildId(
+        children: children,
+        preferredId: baby.serverChildId,
       );
+      if (baby.serverChildId != id) {
+        await (_db.update(_db.babies)..where((b) => b.id.equals(baby.id)))
+            .write(BabiesCompanion(serverChildId: Value(id)));
+      }
+      return id;
     }
-    return _resolveAndPersistServerChild(session: session, baby: baby);
+    if (!createIfMissing) return null;
+    return _ensureServerChild(
+      session,
+      baby: baby,
+      name: baby.name,
+      birthDate: baby.birthDate,
+    );
   }
 
   Future<String?> _relinkServerChild({
@@ -284,28 +307,14 @@ class SyncService {
     await (_db.update(_db.babies)..where((b) => b.id.equals(baby.id))).write(
       const BabiesCompanion(serverChildId: Value(null)),
     );
-    if (createIfMissing) {
-      return _ensureServerChild(
-        session,
-        baby: baby,
-        name: baby.name,
-        birthDate: baby.birthDate,
-      );
-    }
-    return _resolveAndPersistServerChild(session: session, baby: baby);
-  }
-
-  Future<String?> _resolveAndPersistServerChild({
-    required AuthSession session,
-    required Baby baby,
-  }) async {
-    final children = await _api.listChildren(session.token);
-    if (children.isEmpty) return null;
-    final id = children.first.id;
-    await (_db.update(_db.babies)..where((b) => b.id.equals(baby.id))).write(
-      BabiesCompanion(serverChildId: Value(id)),
+    final refreshed = await (_db.select(_db.babies)
+          ..where((b) => b.id.equals(baby.id)))
+        .getSingle();
+    return _linkedServerChildId(
+      session: session,
+      baby: refreshed,
+      createIfMissing: createIfMissing,
     );
-    return id;
   }
 
   Future<String> _ensureServerChild(

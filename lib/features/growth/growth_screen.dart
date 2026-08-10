@@ -14,6 +14,7 @@ import 'utils/baby_age.dart';
 import 'widgets/measurement_summary_card.dart';
 import 'widgets/measurement_tile.dart';
 import 'widgets/milestone_tile.dart';
+import '../../widgets/sync_refresh.dart';
 
 class GrowthScreen extends ConsumerWidget {
   const GrowthScreen({super.key});
@@ -40,7 +41,10 @@ class GrowthScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: ListView(
+        child: SyncRefresh(
+          indicatorKey: const Key('growth_pull_to_refresh'),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
@@ -173,6 +177,7 @@ class GrowthScreen extends ConsumerWidget {
               },
             ),
           ],
+        ),
         ),
       ),
     );

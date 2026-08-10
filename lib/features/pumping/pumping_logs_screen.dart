@@ -9,6 +9,7 @@ import '../logs/widgets/log_period_bar.dart';
 import '../logs/widgets/paginated_log_list.dart';
 import '../logs/widgets/type_filter_chips.dart';
 import 'providers/pumping_providers.dart';
+import '../../widgets/sync_refresh.dart';
 
 class PumpingLogsScreen extends ConsumerWidget {
   const PumpingLogsScreen({super.key});
@@ -28,7 +29,10 @@ class PumpingLogsScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: ListView(
+        child: SyncRefresh(
+          indicatorKey: const Key('pumping_logs_pull_to_refresh'),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
@@ -60,6 +64,7 @@ class PumpingLogsScreen extends ConsumerWidget {
                   'No pumping logs in this period. Tap + to add one.',
             ),
           ],
+        ),
         ),
       ),
     );

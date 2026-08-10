@@ -16,6 +16,7 @@ import 'widgets/log_period_bar.dart';
 import 'widgets/log_type_card.dart';
 import 'widgets/paginated_log_list.dart';
 import 'widgets/type_filter_chips.dart';
+import '../../widgets/sync_refresh.dart';
 
 class LogsHubScreen extends ConsumerStatefulWidget {
   const LogsHubScreen({super.key});
@@ -55,7 +56,10 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Logs')),
       body: SafeArea(
-        child: ListView(
+        child: SyncRefresh(
+          indicatorKey: const Key('logs_pull_to_refresh'),
+          child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
             Text(
@@ -152,6 +156,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
             ),
             const DeletedLogsSection(),
           ],
+        ),
         ),
       ),
     );

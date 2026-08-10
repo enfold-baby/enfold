@@ -10,6 +10,7 @@ import '../logs/widgets/paginated_log_list.dart';
 import '../logs/widgets/type_filter_chips.dart';
 import 'data/medication_presets.dart';
 import 'providers/medication_providers.dart';
+import '../../widgets/sync_refresh.dart';
 
 class MedicationLogsScreen extends ConsumerWidget {
   const MedicationLogsScreen({super.key});
@@ -29,7 +30,10 @@ class MedicationLogsScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: ListView(
+        child: SyncRefresh(
+          indicatorKey: const Key('medication_logs_pull_to_refresh'),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
@@ -61,6 +65,7 @@ class MedicationLogsScreen extends ConsumerWidget {
                   'No medication or vitamin logs in this period. Tap + to add one.',
             ),
           ],
+        ),
         ),
       ),
     );

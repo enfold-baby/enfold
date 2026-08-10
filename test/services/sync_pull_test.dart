@@ -166,6 +166,31 @@ void main() {
     final baby = await (db.select(db.babies)..limit(1)).getSingle();
     expect(baby.serverChildId, goodId);
   });
+
+  test('pullRemote merges care events from all family children', () async {
+    const localBabyId = 'local-baby';
+    await db.into(db.babies).insert(
+          BabiesCompanion.insert(
+            id: localBabyId,
+            name: 'Baby',
+            createdAt: DateTime.now(),
+            serverChildId: const Value('child-a'),
+          ),
+        );
+
+    final multi = SyncService(api: _MultiChildPullApi(), db: db);
+    final result = await multi.pullRemote(
+      session: const AuthSession(
+        token: 'token',
+        user: AuthUser(id: 'u1', email: 'a@b.com', displayName: ''),
+      ),
+    );
+
+    expect(result.ok, isTrue, reason: result.error);
+    expect(result.pulled, 2);
+    final ids = (await db.select(db.careEvents).get()).map((e) => e.id).toSet();
+    expect(ids, {'feed-a', 'sleep-b'});
+  });
 }
 
 class _StaleThenGoodPullApi extends BloomdueApiClient {
@@ -177,6 +202,7 @@ class _StaleThenGoodPullApi extends BloomdueApiClient {
 
   @override
   Future<List<ChildProfile>> listChildren(String token) async {
+    // Stale id is not in the current family — only the good child is.
     return [ChildProfile(id: goodId, name: 'Partner Baby', familyId: 'fam')];
   }
 
@@ -196,6 +222,47 @@ class _StaleThenGoodPullApi extends BloomdueApiClient {
         occurredAt: DateTime.now(),
         details: const {},
         note: 'ok',
+      ),
+    ];
+  }
+}
+
+class _MultiChildPullApi extends BloomdueApiClient {
+  _MultiChildPullApi() : super(httpClient: http.Client());
+
+  @override
+  Future<List<ChildProfile>> listChildren(String token) async {
+    return const [
+      ChildProfile(id: 'child-a', name: 'Baby A', familyId: 'fam'),
+      ChildProfile(id: 'child-b', name: 'Baby B', familyId: 'fam'),
+    ];
+  }
+
+  @override
+  Future<List<RemoteCareEvent>> listCareEvents({
+    required String token,
+    required String childId,
+  }) async {
+    if (childId == 'child-a') {
+      return [
+        RemoteCareEvent(
+          id: 'feed-a',
+          childId: 'child-a',
+          type: 'feeding',
+          occurredAt: DateTime.now(),
+          details: const {},
+          note: 'from a',
+        ),
+      ];
+    }
+    return [
+      RemoteCareEvent(
+        id: 'sleep-b',
+        childId: 'child-b',
+        type: 'sleep',
+        occurredAt: DateTime.now(),
+        details: const {},
+        note: 'from b',
       ),
     ];
   }

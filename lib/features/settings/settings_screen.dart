@@ -11,6 +11,7 @@ import 'widgets/export_section.dart';
 import 'widgets/partner_notifications_section.dart';
 import 'widgets/partner_section.dart';
 import 'widgets/units_section.dart';
+import '../../widgets/sync_refresh.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -23,7 +24,10 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: ListView(
+      body: SyncRefresh(
+        indicatorKey: const Key('settings_pull_to_refresh'),
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
         children: [
           const AccountSection(),
           const Divider(height: 32),
@@ -78,6 +82,7 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(height: 32),
           const AboutSection(),
         ],
+      ),
       ),
     );
   }

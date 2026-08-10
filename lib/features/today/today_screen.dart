@@ -9,6 +9,7 @@ import '../../services/database/database_provider.dart';
 import '../../services/sync/sync_providers.dart';
 import '../../services/sync/sync_service.dart';
 import '../../widgets/bloom_brand_mark.dart';
+import '../../widgets/sync_refresh.dart';
 import '../../widgets/bloom_illustrations.dart';
 import '../../widgets/bloom_section_header.dart';
 import '../../widgets/bloom_surface.dart';
@@ -114,10 +115,8 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
         ],
       ),
       body: SafeArea(
-        child: RefreshIndicator(
-          key: const Key('today_pull_to_refresh'),
-          color: AppColors.sage,
-          onRefresh: _refreshToday,
+        child: SyncRefresh(
+          indicatorKey: const Key('today_pull_to_refresh'),
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
@@ -199,37 +198,6 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
         ),
       ),
     );
-  }
-
-  /// Pull-to-refresh: sync with partner server when signed in, then reload local streams.
-  Future<void> _refreshToday() async {
-    final result = await ref.read(syncActionsProvider).syncIfSignedIn();
-    ref.invalidate(todayLogProvider);
-    ref.invalidate(todayMedicationLogsProvider);
-    ref.invalidate(todayTummyLogsProvider);
-    ref.invalidate(todayPumpingLogsProvider);
-    ref.invalidate(growthMeasurementsProvider);
-    ref.invalidate(milestoneStatusesProvider);
-    ref.invalidate(partnerNudgeProvider);
-    ref.invalidate(hasPartnerProvider);
-
-    try {
-      await ref.read(todayLogProvider.future);
-    } catch (_) {
-      // Offline / empty — still finish the indicator.
-    }
-
-    if (!mounted) return;
-    if (ref.read(authSessionProvider).valueOrNull != null &&
-        result.ok == false) {
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          const SnackBar(
-            content: Text('Couldn’t sync right now. Your local logs are safe.'),
-          ),
-        );
-    }
   }
 
   Widget _quickActionGrid() {

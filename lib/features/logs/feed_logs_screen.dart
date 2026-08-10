@@ -9,6 +9,7 @@ import 'providers/logs_providers.dart';
 import 'widgets/log_period_bar.dart';
 import 'widgets/paginated_log_list.dart';
 import 'widgets/type_filter_chips.dart';
+import '../../widgets/sync_refresh.dart';
 
 class FeedLogsScreen extends ConsumerWidget {
   const FeedLogsScreen({super.key});
@@ -28,7 +29,10 @@ class FeedLogsScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
-        child: ListView(
+        child: SyncRefresh(
+          indicatorKey: const Key('feed_logs_pull_to_refresh'),
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
@@ -75,6 +79,7 @@ class FeedLogsScreen extends ConsumerWidget {
               emptyMessage: 'No feed logs in this period. Tap + to add one.',
             ),
           ],
+        ),
         ),
       ),
     );

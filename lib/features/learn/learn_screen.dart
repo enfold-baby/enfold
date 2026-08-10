@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../widgets/sync_refresh.dart';
 import 'models/learn_card.dart';
 import 'providers/learn_content_provider.dart';
 import 'utils/learn_card_filter.dart';
@@ -62,7 +63,10 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
         data: (cards) {
           final visible = filterLearnCards(cards, _query);
 
-          return ListView(
+          return SyncRefresh(
+            indicatorKey: const Key('learn_pull_to_refresh'),
+            child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
               Text(
@@ -120,6 +124,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                   ),
                 ),
             ],
+          ),
           );
         },
       ),
