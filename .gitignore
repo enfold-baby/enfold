@@ -105,3 +105,6 @@ agent-tools/
 
 # Local demo / marketing capture output
 screenshots/
+
+# Sideload APK uploads (local/prod data)
+backend/uploads/

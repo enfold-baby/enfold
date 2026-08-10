@@ -1,8 +1,7 @@
 # Todo — in-app Android version check + APK update (Artsani-style)
 
-> **Priority:** P2 · **Status:** Not started · **Model:** Artsani Digital mobile  
-> **Reference:** `~/apps/artsani-digital/mobile/lib/core/services/update_service.dart`  
-> + backend `app/routers/app_version.py` + web `SetariAplicatieMobila.jsx`
+> **Priority:** P2 · **Status:** ✅ Shipped 2026-08-10 (local) · **Model:** Artsani Digital  
+> **Reference:** AD `update_service.dart` + `MainActivity` installer channel
 
 ## Why
 
@@ -26,38 +25,48 @@ We need a calm “new version available” prompt that can **download + open the
 
 ### Backend (`backend/`)
 
-- [ ] `GET /v1/app-version` (public)  
-- [ ] `GET /v1/app-version/download` (public APK)  
-- [ ] `PUT /v1/app-version` ops fields (auth or simple admin token for v1)  
-- [ ] `POST /v1/app-version/upload` (APK)  
-- [ ] Version source: `app-version.json` or DB + file on disk under uploads  
+- [x] `GET /v1/app-version` (public)  
+- [x] `GET /v1/app-version/download` (public APK)  
+- [x] `PUT /v1/app-version` via `X-Admin-Token`  
+- [x] `POST /v1/app-version/upload` via `X-Admin-Token`  
+- [x] State: `backend/app_version.json` · APK: `backend/uploads/bloomdue-baby.apk`  
 
 ### Mobile (`lib/`)
 
-- [ ] `UpdateService` (port AD logic, EN copy, BloomDue package)  
-- [ ] Check once on main shell / after onboarding when app opens  
-- [ ] Dialog: **Update** / **Later** (hide Later if `force_update`)  
-- [ ] Progress UI while downloading  
-- [ ] Android MethodChannel + FileProvider install (mirror AD `MainActivity`)  
-- [ ] iOS: optional “open TestFlight/App Store” only — no APK path  
+- [x] `UpdateService`  
+- [x] Check once on `AppShell` open  
+- [x] Dialog: **Update** / **Later** (hide Later if `force_update`)  
+- [x] Progress UI while downloading  
+- [x] Android MethodChannel + FileProvider install  
+- [x] iOS/web: no-op check (returns null)  
 
 ### Landing / ops (minimal v1)
 
-- [ ] Simple upload path: admin page **or** script/scp APK + bump `app-version.json`  
-- [ ] Document “bump `pubspec` +N before each beta APK”  
+- [x] Script: `scripts/publish_beta_apk.sh`  
+- [x] Document bump `pubspec` +N before each beta APK  
 
 ### Later
 
-- [ ] FCM “new version” push (optional; cold-start check is enough for beta)  
-- [ ] After Play Store: keep check optional or point to store listing  
+- [ ] FCM “new version” push  
+- [ ] After Play Store: optional store deep link  
+- [ ] Admin UI on landing (optional)  
 
 ## Acceptance
 
-- [ ] Local docker: bump remote build_number → emulator shows dialog  
-- [ ] Later dismisses; kill app and reopen → dialog again  
-- [ ] Update downloads APK and opens installer  
-- [ ] Force update cannot be dismissed  
-- [ ] Release builds still work; iOS does not crash on missing channel  
+- [x] Local docker: `GET/PUT /v1/app-version` works with admin token  
+- [ ] Manual: bump build_number above app +N → emulator dialog (verify on device)  
+- [x] Later dismisses for process; re-checks next cold start  
+- [x] Force update hides Later  
+- [x] Non-Android does not crash  
+
+## Ops (local)
+
+```bash
+# After flutter build apk --release
+APP_VERSION_ADMIN_TOKEN=dev-local-apk-admin \
+  ./scripts/publish_beta_apk.sh \
+  build/app/outputs/flutter-apk/app-release.apk 0.1.0 10
+```
 
 ## Out of scope for first ship
 

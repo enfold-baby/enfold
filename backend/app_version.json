@@ -1,0 +1,6 @@
+{
+  "version": "0.1.0",
+  "build_number": 10,
+  "force_update": false,
+  "download_url": "/v1/app-version/download"
+}

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/theme/app_colors.dart';
+import '../services/update/update_service.dart';
 
-class AppShell extends StatelessWidget {
+class AppShell extends StatefulWidget {
   const AppShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
@@ -25,11 +26,111 @@ class AppShell extends StatelessWidget {
   ];
 
   @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  bool _updateChecked = false;
+  final _updateService = UpdateService();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdate());
+  }
+
+  Future<void> _checkForUpdate() async {
+    if (_updateChecked) return;
+    _updateChecked = true;
+
+    final update = await _updateService.checkForUpdate();
+    if (update != null && mounted) {
+      _showUpdateDialog(update);
+    }
+  }
+
+  void _showUpdateDialog(AppUpdateInfo update) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: !update.forceUpdate,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Update available'),
+        content: Text(
+          'A new BloomDue version (${update.version}, build ${update.buildNumber}) '
+          'is ready. You can update now or later.',
+        ),
+        actions: [
+          if (!update.forceUpdate)
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Later'),
+            ),
+          FilledButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              _downloadAndInstall(update);
+            },
+            child: const Text('Update'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _downloadAndInstall(AppUpdateInfo update) {
+    final progress = ValueNotifier<double>(0);
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => PopScope(
+        canPop: false,
+        child: AlertDialog(
+          title: const Text('Downloading update…'),
+          content: ValueListenableBuilder<double>(
+            valueListenable: progress,
+            builder: (_, value, _) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LinearProgressIndicator(value: value <= 0 ? null : value),
+                const SizedBox(height: 12),
+                Text(
+                  value <= 0 ? 'Starting…' : '${(value * 100).toInt()}%',
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    _updateService
+        .downloadAndInstall(
+          update.downloadUrl,
+          onProgress: (p) => progress.value = p,
+        )
+        .then((_) {
+          if (mounted) Navigator.of(context).pop();
+        })
+        .catchError((Object _) {
+          if (!mounted) return;
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Could not download the update. Try again later.'),
+            ),
+          );
+        });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final shell = widget.navigationShell;
 
     return Scaffold(
-      body: navigationShell,
+      body: shell,
       bottomNavigationBar: DecoratedBox(
         decoration: BoxDecoration(
           color: isDark ? AppColors.nightElevated : AppColors.creamDeep,
@@ -51,11 +152,11 @@ class AppShell extends StatelessWidget {
               : null,
         ),
         child: NavigationBar(
-          selectedIndex: navigationShell.currentIndex,
-          onDestinationSelected: navigationShell.goBranch,
+          selectedIndex: shell.currentIndex,
+          onDestinationSelected: shell.goBranch,
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           destinations: [
-            for (final d in _destinations)
+            for (final d in AppShell._destinations)
               NavigationDestination(
                 icon: Icon(d.icon),
                 selectedIcon: Icon(d.selectedIcon),

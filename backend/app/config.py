@@ -39,6 +39,9 @@ class Settings(BaseSettings):
     firebase_project_id: str = ""
     firebase_service_account_json: str = ""
 
+    # Protects APK upload + version metadata PUT (sideload beta ops).
+    app_version_admin_token: str = ""
+
     @property
     def cors_origins(self) -> list[str]:
         return [origin.strip() for origin in self.cors_allow_origins.split(",") if origin.strip()]

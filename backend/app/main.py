@@ -3,7 +3,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 from app.config import get_settings
-from app.routers import auth, beta_requests, care_events, children, devices, health
+from app.routers import app_version, auth, beta_requests, care_events, children, devices, health
 
 settings = get_settings()
 allowed_origins = set(settings.cors_origins)
@@ -32,6 +32,7 @@ async def cors(request: Request, call_next):
 
 app.include_router(health.router)
 app.include_router(auth.router)
+app.include_router(app_version.router)
 app.include_router(beta_requests.router)
 app.include_router(children.router)
 app.include_router(care_events.router)

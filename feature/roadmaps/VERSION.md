@@ -34,7 +34,7 @@ Current: **`0.1.0+9`**
 | Item | Notes |
 |---|---|
 | No past dates while expecting | Due / appointment pickers ✅ [todos/DATE_PICKER_NO_PAST.md](../todos/DATE_PICKER_NO_PAST.md) |
-| In-app Android APK update | AD-style check / download / install → [todos/APP_VERSION_UPDATE.md](../todos/APP_VERSION_UPDATE.md) |
+| In-app Android APK update | AD-style check / download / install ✅ |
 | Pull-to-refresh sync | Explicit partner refresh on Today ✅ |
 | Open startup + public roadmap | Landing `/open` + `/roadmap` |
 | Background sync | Periodic pull when signed in |
