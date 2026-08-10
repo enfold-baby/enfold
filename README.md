@@ -8,7 +8,7 @@ Calm baby care from bump to toddler — Flutter app for [bloomdue.baby](https://
 | **Bundle ID** | `baby.bloomdue.app` |
 | **API** | `https://api.bloomdue.baby` |
 | **Landing** | `https://bloomdue.baby` (legal + beta form live) |
-| **Drift** | schema v9 |
+| **Drift** | schema v10 |
 
 ## Docs
 

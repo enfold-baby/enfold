@@ -55,5 +55,14 @@ void main() {
       expect(await db.settingsDao.partnerActivityPushEnabled(), isTrue);
       expect(await db.settingsDao.partnerGentleNudgeEnabled(), isTrue);
     });
+
+    test('lastSignedInUserId defaults null and persists', () async {
+      final db = _testDb();
+      addTearDown(db.close);
+
+      expect(await db.settingsDao.lastSignedInUserId(), isNull);
+      await db.settingsDao.setLastSignedInUserId('user-42');
+      expect(await db.settingsDao.lastSignedInUserId(), 'user-42');
+    });
   });
 }

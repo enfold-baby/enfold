@@ -38,7 +38,7 @@ Current: **`0.1.0+9`**
 | Pull-to-refresh sync | Explicit partner refresh on Today ✅ |
 | Open startup + public roadmap | Landing `/open` + `/roadmap` |
 | Background sync | Periodic pull when signed in |
-| Account switching | Upload-or-fresh on different login → [todos/ACCOUNT_SWITCHING.md](../todos/ACCOUNT_SWITCHING.md) |
+| Account switching | Upload-or-fresh on different login ✅ [todos/ACCOUNT_SWITCHING.md](../todos/ACCOUNT_SWITCHING.md) |
 | Romanian i18n | ARB files, `flutter_localizations` |
 | Growth charts | Visual curves from measurement history |
 | Dark theme polish | Persist theme + contrast ✅ shipped 0.1.0+7 |

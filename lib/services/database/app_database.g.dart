@@ -1934,6 +1934,17 @@ class $AppSettingsTable extends AppSettings
     requiredDuringInsert: false,
     defaultValue: const Constant('system'),
   );
+  static const VerificationMeta _lastSignedInUserIdMeta =
+      const VerificationMeta('lastSignedInUserId');
+  @override
+  late final GeneratedColumn<String> lastSignedInUserId =
+      GeneratedColumn<String>(
+        'last_signed_in_user_id',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1942,6 +1953,7 @@ class $AppSettingsTable extends AppSettings
     partnerActivityPushEnabled,
     partnerGentleNudgeEnabled,
     themeMode,
+    lastSignedInUserId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2000,6 +2012,15 @@ class $AppSettingsTable extends AppSettings
         themeMode.isAcceptableOrUnknown(data['theme_mode']!, _themeModeMeta),
       );
     }
+    if (data.containsKey('last_signed_in_user_id')) {
+      context.handle(
+        _lastSignedInUserIdMeta,
+        lastSignedInUserId.isAcceptableOrUnknown(
+          data['last_signed_in_user_id']!,
+          _lastSignedInUserIdMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2033,6 +2054,10 @@ class $AppSettingsTable extends AppSettings
         DriftSqlType.string,
         data['${effectivePrefix}theme_mode'],
       )!,
+      lastSignedInUserId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_signed_in_user_id'],
+      ),
     );
   }
 
@@ -2049,6 +2074,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
   final bool partnerActivityPushEnabled;
   final bool partnerGentleNudgeEnabled;
   final String themeMode;
+
+  /// Last account that successfully signed in on this install (for switch isolation).
+  final String? lastSignedInUserId;
   const AppSetting({
     required this.id,
     required this.onboardingCompleted,
@@ -2056,6 +2084,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     required this.partnerActivityPushEnabled,
     required this.partnerGentleNudgeEnabled,
     required this.themeMode,
+    this.lastSignedInUserId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2070,6 +2099,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       partnerGentleNudgeEnabled,
     );
     map['theme_mode'] = Variable<String>(themeMode);
+    if (!nullToAbsent || lastSignedInUserId != null) {
+      map['last_signed_in_user_id'] = Variable<String>(lastSignedInUserId);
+    }
     return map;
   }
 
@@ -2081,6 +2113,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       partnerActivityPushEnabled: Value(partnerActivityPushEnabled),
       partnerGentleNudgeEnabled: Value(partnerGentleNudgeEnabled),
       themeMode: Value(themeMode),
+      lastSignedInUserId: lastSignedInUserId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSignedInUserId),
     );
   }
 
@@ -2102,6 +2137,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
         json['partnerGentleNudgeEnabled'],
       ),
       themeMode: serializer.fromJson<String>(json['themeMode']),
+      lastSignedInUserId: serializer.fromJson<String?>(
+        json['lastSignedInUserId'],
+      ),
     );
   }
   @override
@@ -2118,6 +2156,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
         partnerGentleNudgeEnabled,
       ),
       'themeMode': serializer.toJson<String>(themeMode),
+      'lastSignedInUserId': serializer.toJson<String?>(lastSignedInUserId),
     };
   }
 
@@ -2128,6 +2167,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     bool? partnerActivityPushEnabled,
     bool? partnerGentleNudgeEnabled,
     String? themeMode,
+    Value<String?> lastSignedInUserId = const Value.absent(),
   }) => AppSetting(
     id: id ?? this.id,
     onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
@@ -2137,6 +2177,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     partnerGentleNudgeEnabled:
         partnerGentleNudgeEnabled ?? this.partnerGentleNudgeEnabled,
     themeMode: themeMode ?? this.themeMode,
+    lastSignedInUserId: lastSignedInUserId.present
+        ? lastSignedInUserId.value
+        : this.lastSignedInUserId,
   );
   AppSetting copyWithCompanion(AppSettingsCompanion data) {
     return AppSetting(
@@ -2154,6 +2197,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
           ? data.partnerGentleNudgeEnabled.value
           : this.partnerGentleNudgeEnabled,
       themeMode: data.themeMode.present ? data.themeMode.value : this.themeMode,
+      lastSignedInUserId: data.lastSignedInUserId.present
+          ? data.lastSignedInUserId.value
+          : this.lastSignedInUserId,
     );
   }
 
@@ -2165,7 +2211,8 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
           ..write('useImperialUnits: $useImperialUnits, ')
           ..write('partnerActivityPushEnabled: $partnerActivityPushEnabled, ')
           ..write('partnerGentleNudgeEnabled: $partnerGentleNudgeEnabled, ')
-          ..write('themeMode: $themeMode')
+          ..write('themeMode: $themeMode, ')
+          ..write('lastSignedInUserId: $lastSignedInUserId')
           ..write(')'))
         .toString();
   }
@@ -2178,6 +2225,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     partnerActivityPushEnabled,
     partnerGentleNudgeEnabled,
     themeMode,
+    lastSignedInUserId,
   );
   @override
   bool operator ==(Object other) =>
@@ -2188,7 +2236,8 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
           other.useImperialUnits == this.useImperialUnits &&
           other.partnerActivityPushEnabled == this.partnerActivityPushEnabled &&
           other.partnerGentleNudgeEnabled == this.partnerGentleNudgeEnabled &&
-          other.themeMode == this.themeMode);
+          other.themeMode == this.themeMode &&
+          other.lastSignedInUserId == this.lastSignedInUserId);
 }
 
 class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
@@ -2198,6 +2247,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
   final Value<bool> partnerActivityPushEnabled;
   final Value<bool> partnerGentleNudgeEnabled;
   final Value<String> themeMode;
+  final Value<String?> lastSignedInUserId;
   const AppSettingsCompanion({
     this.id = const Value.absent(),
     this.onboardingCompleted = const Value.absent(),
@@ -2205,6 +2255,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     this.partnerActivityPushEnabled = const Value.absent(),
     this.partnerGentleNudgeEnabled = const Value.absent(),
     this.themeMode = const Value.absent(),
+    this.lastSignedInUserId = const Value.absent(),
   });
   AppSettingsCompanion.insert({
     this.id = const Value.absent(),
@@ -2213,6 +2264,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     this.partnerActivityPushEnabled = const Value.absent(),
     this.partnerGentleNudgeEnabled = const Value.absent(),
     this.themeMode = const Value.absent(),
+    this.lastSignedInUserId = const Value.absent(),
   });
   static Insertable<AppSetting> custom({
     Expression<int>? id,
@@ -2221,6 +2273,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     Expression<bool>? partnerActivityPushEnabled,
     Expression<bool>? partnerGentleNudgeEnabled,
     Expression<String>? themeMode,
+    Expression<String>? lastSignedInUserId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2232,6 +2285,8 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
       if (partnerGentleNudgeEnabled != null)
         'partner_gentle_nudge_enabled': partnerGentleNudgeEnabled,
       if (themeMode != null) 'theme_mode': themeMode,
+      if (lastSignedInUserId != null)
+        'last_signed_in_user_id': lastSignedInUserId,
     });
   }
 
@@ -2242,6 +2297,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     Value<bool>? partnerActivityPushEnabled,
     Value<bool>? partnerGentleNudgeEnabled,
     Value<String>? themeMode,
+    Value<String?>? lastSignedInUserId,
   }) {
     return AppSettingsCompanion(
       id: id ?? this.id,
@@ -2252,6 +2308,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
       partnerGentleNudgeEnabled:
           partnerGentleNudgeEnabled ?? this.partnerGentleNudgeEnabled,
       themeMode: themeMode ?? this.themeMode,
+      lastSignedInUserId: lastSignedInUserId ?? this.lastSignedInUserId,
     );
   }
 
@@ -2280,6 +2337,11 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     if (themeMode.present) {
       map['theme_mode'] = Variable<String>(themeMode.value);
     }
+    if (lastSignedInUserId.present) {
+      map['last_signed_in_user_id'] = Variable<String>(
+        lastSignedInUserId.value,
+      );
+    }
     return map;
   }
 
@@ -2291,7 +2353,8 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
           ..write('useImperialUnits: $useImperialUnits, ')
           ..write('partnerActivityPushEnabled: $partnerActivityPushEnabled, ')
           ..write('partnerGentleNudgeEnabled: $partnerGentleNudgeEnabled, ')
-          ..write('themeMode: $themeMode')
+          ..write('themeMode: $themeMode, ')
+          ..write('lastSignedInUserId: $lastSignedInUserId')
           ..write(')'))
         .toString();
   }
@@ -4147,6 +4210,7 @@ typedef $$AppSettingsTableCreateCompanionBuilder =
       Value<bool> partnerActivityPushEnabled,
       Value<bool> partnerGentleNudgeEnabled,
       Value<String> themeMode,
+      Value<String?> lastSignedInUserId,
     });
 typedef $$AppSettingsTableUpdateCompanionBuilder =
     AppSettingsCompanion Function({
@@ -4156,6 +4220,7 @@ typedef $$AppSettingsTableUpdateCompanionBuilder =
       Value<bool> partnerActivityPushEnabled,
       Value<bool> partnerGentleNudgeEnabled,
       Value<String> themeMode,
+      Value<String?> lastSignedInUserId,
     });
 
 class $$AppSettingsTableFilterComposer
@@ -4194,6 +4259,11 @@ class $$AppSettingsTableFilterComposer
 
   ColumnFilters<String> get themeMode => $composableBuilder(
     column: $table.themeMode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastSignedInUserId => $composableBuilder(
+    column: $table.lastSignedInUserId,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -4236,6 +4306,11 @@ class $$AppSettingsTableOrderingComposer
     column: $table.themeMode,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get lastSignedInUserId => $composableBuilder(
+    column: $table.lastSignedInUserId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AppSettingsTableAnnotationComposer
@@ -4272,6 +4347,11 @@ class $$AppSettingsTableAnnotationComposer
 
   GeneratedColumn<String> get themeMode =>
       $composableBuilder(column: $table.themeMode, builder: (column) => column);
+
+  GeneratedColumn<String> get lastSignedInUserId => $composableBuilder(
+    column: $table.lastSignedInUserId,
+    builder: (column) => column,
+  );
 }
 
 class $$AppSettingsTableTableManager
@@ -4311,6 +4391,7 @@ class $$AppSettingsTableTableManager
                 Value<bool> partnerActivityPushEnabled = const Value.absent(),
                 Value<bool> partnerGentleNudgeEnabled = const Value.absent(),
                 Value<String> themeMode = const Value.absent(),
+                Value<String?> lastSignedInUserId = const Value.absent(),
               }) => AppSettingsCompanion(
                 id: id,
                 onboardingCompleted: onboardingCompleted,
@@ -4318,6 +4399,7 @@ class $$AppSettingsTableTableManager
                 partnerActivityPushEnabled: partnerActivityPushEnabled,
                 partnerGentleNudgeEnabled: partnerGentleNudgeEnabled,
                 themeMode: themeMode,
+                lastSignedInUserId: lastSignedInUserId,
               ),
           createCompanionCallback:
               ({
@@ -4327,6 +4409,7 @@ class $$AppSettingsTableTableManager
                 Value<bool> partnerActivityPushEnabled = const Value.absent(),
                 Value<bool> partnerGentleNudgeEnabled = const Value.absent(),
                 Value<String> themeMode = const Value.absent(),
+                Value<String?> lastSignedInUserId = const Value.absent(),
               }) => AppSettingsCompanion.insert(
                 id: id,
                 onboardingCompleted: onboardingCompleted,
@@ -4334,6 +4417,7 @@ class $$AppSettingsTableTableManager
                 partnerActivityPushEnabled: partnerActivityPushEnabled,
                 partnerGentleNudgeEnabled: partnerGentleNudgeEnabled,
                 themeMode: themeMode,
+                lastSignedInUserId: lastSignedInUserId,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

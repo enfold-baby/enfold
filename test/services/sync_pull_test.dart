@@ -22,6 +22,7 @@ class FakePullApi extends BloomdueApiClient {
     createdByUserId: 'partner-user',
     createdByDisplayName: 'Raul',
   );
+  List<RemoteCareEvent> extraEvents = const [];
 
   @override
   Future<List<ChildProfile>> listChildren(String token) async {
@@ -33,7 +34,7 @@ class FakePullApi extends BloomdueApiClient {
     required String token,
     required String childId,
   }) async {
-    return [remoteEvent];
+    return [remoteEvent, ...extraEvents];
   }
 
   @override
@@ -92,5 +93,47 @@ void main() {
     expect(logs.first.pendingSync, isFalse);
     expect(logs.first.loggedByUserId, 'partner-user');
     expect(logs.first.loggedByDisplayName, 'Raul');
+  });
+
+  test('pullRemote fullHistory includes events outside lookback window', () async {
+    const localBabyId = 'local-baby';
+    final oldEvent = RemoteCareEvent(
+      id: 'old-event',
+      childId: 'server-child-1',
+      type: 'diaper',
+      occurredAt: DateTime.now().subtract(const Duration(days: 14)),
+      details: const {},
+      note: 'old',
+    );
+    api.extraEvents = [oldEvent];
+
+    await db.into(db.babies).insert(
+          BabiesCompanion.insert(
+            id: localBabyId,
+            name: 'Baby',
+            createdAt: DateTime.now(),
+            serverChildId: const Value('server-child-1'),
+          ),
+        );
+
+    final limited = await sync.pullRemote(
+      session: const AuthSession(
+        token: 'token',
+        user: AuthUser(id: 'u1', email: 'a@b.com', displayName: ''),
+      ),
+    );
+    expect(limited.pulled, 1); // only today's partner event
+
+    final full = await sync.pullRemote(
+      session: const AuthSession(
+        token: 'token',
+        user: AuthUser(id: 'u1', email: 'a@b.com', displayName: ''),
+      ),
+      fullHistory: true,
+    );
+    expect(full.pulled, 1); // old event newly merged
+
+    final all = await db.select(db.careEvents).get();
+    expect(all.map((e) => e.id).toSet(), {'partner-event-1', 'old-event'});
   });
 }

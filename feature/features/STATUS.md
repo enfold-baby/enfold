@@ -1,7 +1,7 @@
 # Feature status — what's built
 
 > Snapshot as of **2026-08-10**. Source of truth is the code; update this when shipping major modules.  
-> App: **`0.1.0+9`** · Drift **v9** · API + landing live on prod.
+> App: **`0.1.0+9`** · Drift **v10** · API + landing live on prod.
 
 ## App shell
 
@@ -63,6 +63,7 @@
 | Family invite code + join | ✅ |
 | Bidirectional care-event sync | ✅ create + edit + delete + pull |
 | Last logged by (`· you` / partner name) | ✅ |
+| Account switching isolation | ✅ upload local vs start fresh + clear on sign-out |
 | Gentle in-app nudge | ✅ opt-in |
 | Activity push (FCM) | 🟡 prepared, no Firebase yet |
 | Real-time / websocket sync | 🔲 pull on actions + Today open |
@@ -71,7 +72,7 @@
 
 | Section | Status |
 |---|---|
-| Account (magic code sign-in/out) | ✅ |
+| Account (magic code, switch dialog, sign-out clear) | ✅ |
 | Partner sharing (invite/join) | ✅ |
 | Partner notifications (2 toggles) | ✅ |
 | Baby profile (name, birth date, preemie) | ✅ |
@@ -81,7 +82,7 @@
 | About (version, beta badge) | ✅ |
 | In-app APK version update | ✅ Android check + download + install |
 
-## Local database (Drift v9)
+## Local database (Drift v10)
 
 | Table | Purpose |
 |---|---|
@@ -89,7 +90,7 @@
 | `care_events` | Unified log mirror of VPS `care_events` |
 | `pregnancy_profiles` | Due date, kick count |
 | `pregnancy_appointments` | Appointment notes |
-| `app_settings` | Onboarding, units, partner toggles, **theme_mode** |
+| `app_settings` | Onboarding, units, partner toggles, theme_mode, **last_signed_in_user_id** |
 | `growth_measurements` | Weight/length/head |
 | `milestone_achievements` | Milestone done dates |
 

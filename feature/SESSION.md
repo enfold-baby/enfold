@@ -1,7 +1,7 @@
 # Last session
 
 **Date:** 2026-08-10  
-**Version:** `0.1.0+9` · Drift schema **v9**  
+**Version:** `0.1.0+9` · Drift schema **v10**  
 **API prod:** `https://api.bloomdue.baby` · **API local:** `http://127.0.0.1:8282` (emulator `http://10.0.2.2:8282`)  
 **Contact:** `contact@globinary.io` (hello@bloomdue.baby retired)
 **Mail:** Microsoft Graph as `contact@globinary.io` (same app as globinary.io); beta → `contact@globinary.io`; no Sent folder  
@@ -10,15 +10,18 @@
 
 - Contact email + Graph mail + local full stack (API + landing docker)
 - **No past dates while expecting** shipped  
-- Dev / GitHub / prod monorepo synced @ `02a48a3`  
-- Todo logged: **AD-style in-app APK update** → `todos/APP_VERSION_UPDATE.md`
+- Pull-to-refresh on Today · open startup `/open` + `/roadmap`  
+- **AD-style in-app APK update** → `todos/APP_VERSION_UPDATE.md`  
+- **Account switching isolation** (schema v10) → `todos/ACCOUNT_SWITCHING.md`  
+  - Upload local vs start fresh dialog on different account  
+  - Sign out & clear device data  
+  - Full-history pull after start fresh  
 
 ## Next up (mobile)
 
-1. Account switching isolation → [`todos/ACCOUNT_SWITCHING.md`](./todos/ACCOUNT_SWITCHING.md)  
-2. Dogfood partner invite on emulator + local API  
-3. Store path when DUNS ready  
-4. FCM partner push later  
+1. Dogfood partner invite on emulator + local API  
+2. Store path when DUNS ready  
+3. FCM partner push later  
 
 ### Ship beta APK for update testing (local)
 

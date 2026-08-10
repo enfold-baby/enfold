@@ -1,6 +1,6 @@
 # BloomDue — feature docs hub
 
-> **Last updated:** 2026-08-10 · **App version:** `0.1.0+9` · **Drift schema:** v9  
+> **Last updated:** 2026-08-10 · **App version:** `0.1.0+9` · **Drift schema:** v10  
 > **Prod:** landing + API live · monorepo synced local / GitHub / VPS
 
 Central index for what's built, what's next, and how to resume work.

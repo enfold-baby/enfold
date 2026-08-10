@@ -35,11 +35,17 @@ class SyncService {
 
   static const pullLookbackDays = 2;
 
-  Future<SyncResult> syncAll({required AuthSession session}) async {
+  Future<SyncResult> syncAll({
+    required AuthSession session,
+    bool fullHistory = false,
+  }) async {
     final pushResult = await syncPending(session: session);
     if (!pushResult.ok) return pushResult;
 
-    final pullResult = await pullRemote(session: session);
+    final pullResult = await pullRemote(
+      session: session,
+      fullHistory: fullHistory,
+    );
     if (!pullResult.ok) {
       return SyncResult(
         pushed: pushResult.pushed,
@@ -162,7 +168,10 @@ class SyncService {
     }
   }
 
-  Future<SyncResult> pullRemote({required AuthSession session}) async {
+  Future<SyncResult> pullRemote({
+    required AuthSession session,
+    bool fullHistory = false,
+  }) async {
     try {
       final baby = await (_db.select(_db.babies)..limit(1)).getSingleOrNull();
       if (baby == null) return const SyncResult(pushed: 0);
@@ -181,17 +190,24 @@ class SyncService {
         childId: serverChildId,
       );
 
-      final since = DateTime.now().subtract(const Duration(days: pullLookbackDays));
+      DateTime? since;
+      if (!fullHistory) {
+        final lookback = DateTime.now().subtract(
+          const Duration(days: pullLookbackDays),
+        );
+        since = DateTime(lookback.year, lookback.month, lookback.day);
+      }
+
       final pulled = await _db.careLogDao.upsertRemoteCareEvents(
         babyId: baby.id,
         events: remoteEvents,
-        since: DateTime(since.year, since.month, since.day),
+        since: since,
       );
 
       final removed = await _db.careLogDao.reconcileRemoteDeletions(
         babyId: baby.id,
         remoteIds: remoteEvents.map((e) => e.id).toSet(),
-        since: DateTime(since.year, since.month, since.day),
+        since: since,
       );
 
       return SyncResult(pushed: 0, pulled: pulled, deleted: removed);

@@ -374,6 +374,24 @@ class CareLogDao extends DatabaseAccessor<AppDatabase> with _$CareLogDaoMixin {
     return id;
   }
 
+  /// Wipe local care logs and unlink the baby from any server child.
+  /// Used when switching accounts and choosing "start fresh".
+  Future<void> clearLocalCareData() async {
+    await transaction(() async {
+      await delete(careEvents).go();
+      await update(babies).write(
+        const BabiesCompanion(serverChildId: Value(null)),
+      );
+    });
+  }
+
+  /// Drop server child mapping so the next sync re-links under the new account.
+  Future<void> unlinkServerChild() async {
+    await update(babies).write(
+      const BabiesCompanion(serverChildId: Value(null)),
+    );
+  }
+
   ({DateTime start, DateTime end}) _todayRange() {
     final now = DateTime.now();
     final start = DateTime(now.year, now.month, now.day);

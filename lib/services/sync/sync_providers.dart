@@ -20,11 +20,14 @@ class SyncActions {
 
   final Ref _ref;
 
-  Future<SyncResult> syncIfSignedIn() async {
+  Future<SyncResult> syncIfSignedIn({bool fullHistory = false}) async {
     final session = _ref.read(authSessionProvider).valueOrNull;
     if (session == null) return const SyncResult(pushed: 0);
 
-    final result = await _ref.read(syncServiceProvider).syncAll(session: session);
+    final result = await _ref.read(syncServiceProvider).syncAll(
+          session: session,
+          fullHistory: fullHistory,
+        );
     _ref.read(lastSyncResultProvider.notifier).state = result;
     return result;
   }

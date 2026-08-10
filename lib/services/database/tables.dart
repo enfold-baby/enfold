@@ -98,6 +98,8 @@ class AppSettings extends Table {
       boolean().withDefault(const Constant(false))();
   TextColumn get themeMode =>
       text().withDefault(const Constant('system'))();
+  /// Last account that successfully signed in on this install (for switch isolation).
+  TextColumn get lastSignedInUserId => text().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {id};

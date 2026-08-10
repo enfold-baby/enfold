@@ -92,6 +92,18 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
     );
   }
 
+  Future<String?> lastSignedInUserId() async {
+    final settings = await ensureSettings();
+    return settings.lastSignedInUserId;
+  }
+
+  Future<void> setLastSignedInUserId(String? userId) async {
+    await ensureSettings();
+    await (update(appSettings)..where((s) => s.id.equals(_singletonId))).write(
+      AppSettingsCompanion(lastSignedInUserId: Value(userId)),
+    );
+  }
+
   static ThemeMode _parseThemeMode(String raw) => switch (raw) {
         'light' => ThemeMode.light,
         'dark' => ThemeMode.dark,

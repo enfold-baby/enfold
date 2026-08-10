@@ -10,7 +10,7 @@
 | ✅ | ~~No past dates while expecting~~ | [DATE_PICKER_NO_PAST.md](./DATE_PICKER_NO_PAST.md) | Shipped 2026-08-10 |
 | ✅ | ~~Pull-to-refresh sync on Today~~ | — | Shipped 2026-08-10 |
 | ✅ | ~~In-app APK version update (AD-style)~~ | [APP_VERSION_UPDATE.md](./APP_VERSION_UPDATE.md) | Shipped 2026-08-10 |
-| 🟠 P2 | **Account switching / local data isolation** | [ACCOUNT_SWITCHING.md](./ACCOUNT_SWITCHING.md) | Medium — before public beta |
+| ✅ | ~~Account switching / local data isolation~~ | [ACCOUNT_SWITCHING.md](./ACCOUNT_SWITCHING.md) | Shipped 2026-08-10 (schema v10) |
 | 🟠 P2 | **Store release (signed builds)** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Medium — blocked on DUNS/accounts |
 | 🟡 P3 | **Learn card physician review** | [CONTENT_REVIEW.md](./CONTENT_REVIEW.md) | Ongoing — human in the loop |
 | 🟡 P3 | **Real-time partner sync** | — | Medium — websocket or periodic pull |
@@ -29,6 +29,7 @@
 
 ## Recently completed ✅
 
+- Account switching isolation (upload-or-fresh + sign-out clear, Drift v10)
 - In-app Android APK version update (AD-style)
 - Pull-to-refresh on Today · open startup `/open` + `/roadmap`
 - No past dates while expecting (due + appointment pickers)

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../services/api/api_exception.dart';
+import '../../../services/auth/account_switch_service.dart';
 import '../../../services/auth/auth_providers.dart';
 import '../../../services/sync/sync_providers.dart';
 import '../../../services/sync/sync_service.dart';
@@ -62,17 +63,82 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
     }
   }
 
+  Future<AccountSwitchChoice?> _promptAccountSwitch() {
+    return showDialog<AccountSwitchChoice>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          key: const Key('account_switch_dialog'),
+          title: Text(
+            'Different account',
+            style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
+          ),
+          content: Text(
+            'This device already has logs from another account. '
+            'What should we do with the data on this phone?',
+            style: GoogleFonts.nunito(),
+          ),
+          actions: [
+            TextButton(
+              key: const Key('account_switch_cancel'),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              key: const Key('account_switch_upload'),
+              onPressed: () =>
+                  Navigator.of(context).pop(AccountSwitchChoice.uploadLocal),
+              child: const Text('Upload local logs'),
+            ),
+            FilledButton(
+              key: const Key('account_switch_fresh'),
+              onPressed: () =>
+                  Navigator.of(context).pop(AccountSwitchChoice.startFresh),
+              child: const Text('Start fresh'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _verify() async {
     setState(() {
       _busy = true;
       _status = null;
     });
     try {
+      final switchService = ref.read(accountSwitchServiceProvider);
+
       await ref.read(authSessionProvider.notifier).verifyMagicCode(
             email: _emailController.text,
             code: _codeController.text,
           );
-      final result = await ref.read(syncActionsProvider).syncIfSignedIn();
+      final session = ref.read(authSessionProvider).valueOrNull;
+      if (session == null) {
+        setState(() => _status = 'Invalid or expired code.');
+        return;
+      }
+
+      var fullHistory = false;
+      if (await switchService.isAccountSwitch(session.user.id)) {
+        if (!mounted) return;
+        final choice = await _promptAccountSwitch();
+        if (choice == null) {
+          await ref.read(authSessionProvider.notifier).signOut();
+          setState(() => _status = 'Sign-in cancelled.');
+          return;
+        }
+        await switchService.applySwitchChoice(choice);
+        fullHistory = choice == AccountSwitchChoice.startFresh;
+      }
+
+      final result = await ref
+          .read(syncActionsProvider)
+          .syncIfSignedIn(fullHistory: fullHistory);
+      await switchService.setLastSignedInUserId(session.user.id);
+
       setState(() {
         _status = result.ok
             ? _syncStatusMessage(result, prefix: 'Signed in')
@@ -81,7 +147,7 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
     } catch (e) {
       setState(() => _status = 'Invalid or expired code.');
     } finally {
-      setState(() => _busy = false);
+      if (mounted) setState(() => _busy = false);
     }
   }
 
@@ -93,14 +159,58 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
     return '${parts.join(' · ')}.';
   }
 
-  Future<void> _signOut() async {
-    await ref.read(authSessionProvider.notifier).signOut();
+  Future<void> _signOut({bool clearDeviceData = false}) async {
     setState(() {
-      _codeSent = false;
-      _devCode = null;
+      _busy = true;
       _status = null;
-      _codeController.clear();
     });
+    try {
+      if (clearDeviceData) {
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            key: const Key('sign_out_clear_dialog'),
+            title: Text(
+              'Clear device data?',
+              style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
+            ),
+            content: Text(
+              'This removes local logs, growth, and pregnancy data from this '
+              'phone. Server backups stay with your account.',
+              style: GoogleFonts.nunito(),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                key: const Key('sign_out_clear_confirm'),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Sign out & clear'),
+              ),
+            ],
+          ),
+        );
+        if (confirmed != true) return;
+
+        final switchService = ref.read(accountSwitchServiceProvider);
+        await switchService.clearLocalCareData();
+        await switchService.setLastSignedInUserId(null);
+      }
+
+      await ref.read(authSessionProvider.notifier).signOut();
+      setState(() {
+        _codeSent = false;
+        _devCode = null;
+        _status = clearDeviceData
+            ? 'Signed out and cleared local data.'
+            : null;
+        _codeController.clear();
+      });
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   @override
@@ -182,8 +292,20 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
               ] else ...[
                 OutlinedButton(
                   key: const Key('auth_sign_out'),
-                  onPressed: _busy ? null : _signOut,
+                  onPressed: _busy ? null : () => _signOut(),
                   child: const Text('Sign out'),
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  key: const Key('auth_sign_out_clear'),
+                  onPressed:
+                      _busy ? null : () => _signOut(clearDeviceData: true),
+                  child: Text(
+                    'Sign out and clear device data',
+                    style: GoogleFonts.nunito(
+                      color: AppColors.mutedText(brightness),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 OutlinedButton(
@@ -214,7 +336,6 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
                   ),
                 ),
               ],
-
             ],
           ),
         ),

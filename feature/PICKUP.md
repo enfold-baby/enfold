@@ -11,7 +11,7 @@ Copy one of these into a fresh chat:
 
 ```
 Read feature/SESSION.md, feature/PICKUP.md, and feature/todos/README.md in bloomdue_baby.
-Flutter app at 0.1.0+9, Drift schema v9.
+Flutter app at 0.1.0+9, Drift schema v10.
 Debug API → http://10.0.2.2:8282 (Android emulator); release → https://api.bloomdue.baby.
 Local docker: docker compose up -d. Contact: contact@globinary.io.
 Continue mobile feature work. Commit local no coauthor; user pushes GitHub.
@@ -38,11 +38,11 @@ Read lib/services/sync/sync_service.dart and today screen providers.
 
 ---
 
-## Account switching
+## Account switching (shipped)
 
 ```
-Read feature/todos/ACCOUNT_SWITCHING.md.
-Before public beta: isolate local Drift data when a different email signs in (upload-or-fresh prompt).
+Account switching isolation is shipped (schema v10).
+See feature/todos/ACCOUNT_SWITCHING.md for behavior: upload-or-fresh dialog, sign-out clear.
 ```
 
 ---
@@ -99,7 +99,7 @@ Do not touch due.bloomdue.baby.
 | Layer | Detail |
 |---|---|
 | **Flutter** | Riverpod, go_router, Drift SQLite, offline-first |
-| **Version** | `0.1.0+9` · Drift **v9** |
+| **Version** | `0.1.0+9` · Drift **v10** |
 | **API** | `ApiConfig` — debug local docker / release prod (`lib/core/config/api_config.dart`) |
 | **Sync** | create + **edit + delete** + pull (`sync_service.dart`) |
 | **Auth** | Magic code email → JWT in secure storage |
