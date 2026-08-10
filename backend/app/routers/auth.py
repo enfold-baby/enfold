@@ -5,7 +5,14 @@ from app.auth import create_token, generate_magic_code, get_current_user, get_or
 from app.config import get_settings
 from app.db import get_db
 from app.models import User
-from app.schemas import MagicCodeRequest, MagicCodeVerify, MeResponse, TokenResponse, UserResponse
+from app.schemas import (
+    MagicCodeRequest,
+    MagicCodeVerify,
+    MeResponse,
+    TokenResponse,
+    UserProfileUpdate,
+    UserResponse,
+)
 from app.services.email import EmailSender
 from app.services.otp import OtpStore
 
@@ -39,3 +46,19 @@ async def verify_magic_code(payload: MagicCodeVerify, db: AsyncSession = Depends
 @router.get("/me", response_model=MeResponse)
 async def me(user: User = Depends(get_current_user)) -> MeResponse:
     return MeResponse(user=UserResponse(id=user.id, email=user.email, display_name=user.display_name))
+
+
+@router.patch("/me", response_model=MeResponse)
+async def update_me(
+    payload: UserProfileUpdate,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> MeResponse:
+    """Update caregiver display name (shown on logs as “who logged this”)."""
+    user.display_name = (payload.display_name or "").strip()[:120]
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return MeResponse(
+        user=UserResponse(id=user.id, email=user.email, display_name=user.display_name)
+    )

@@ -72,6 +72,18 @@ class BloomdueApiClient {
     return AuthUser.fromJson(body['user'] as Map<String, dynamic>);
   }
 
+  Future<AuthUser> updateMe({
+    required String token,
+    required String displayName,
+  }) async {
+    final body = await _patch(
+      '/v1/auth/me',
+      {'display_name': displayName},
+      token: token,
+    );
+    return AuthUser.fromJson(body['user'] as Map<String, dynamic>);
+  }
+
   Future<List<ChildProfile>> listChildren(String token) async {
     final response = await _http.get(
       Uri.parse('$_baseUrl/v1/children'),

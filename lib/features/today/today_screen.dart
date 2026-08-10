@@ -91,7 +91,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     final partnerNudge = ref.watch(partnerNudgeProvider).valueOrNull;
     final showPartnerNudge =
         partnerNudge != null && partnerNudge.type != _dismissedNudgeType;
-    final showAttribution = ref.watch(hasPartnerProvider).valueOrNull ?? false;
+    final showAttribution = isSignedIn;
     final now = DateTime.now();
 
     return Scaffold(

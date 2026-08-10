@@ -7,6 +7,7 @@ import 'providers/theme_providers.dart';
 import 'widgets/about_section.dart';
 import 'widgets/account_section.dart';
 import 'widgets/baby_profile_section.dart';
+import 'widgets/caregiver_profile_section.dart';
 import 'widgets/export_section.dart';
 import 'widgets/partner_notifications_section.dart';
 import 'widgets/partner_section.dart';
@@ -30,6 +31,8 @@ class SettingsScreen extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
         children: [
           const AccountSection(),
+          const Divider(height: 32),
+          const CaregiverProfileSection(),
           const Divider(height: 32),
           const PartnerSection(),
           const PartnerNotificationsSection(),

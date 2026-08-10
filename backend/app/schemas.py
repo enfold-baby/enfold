@@ -28,6 +28,10 @@ class MeResponse(BaseModel):
     user: UserResponse
 
 
+class UserProfileUpdate(BaseModel):
+    display_name: str = Field(default="", max_length=120)
+
+
 class ChildCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
     birth_date: date | None = None

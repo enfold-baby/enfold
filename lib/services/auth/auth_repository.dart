@@ -46,4 +46,12 @@ class AuthRepository {
   Future<void> signOut() async {
     await _storage.delete(key: _tokenKey);
   }
+
+  Future<AuthSession> updateDisplayName({
+    required String token,
+    required String displayName,
+  }) async {
+    final user = await _api.updateMe(token: token, displayName: displayName);
+    return AuthSession(token: token, user: user);
+  }
 }

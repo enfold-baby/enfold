@@ -48,4 +48,14 @@ class AuthSessionNotifier extends AsyncNotifier<AuthSession?> {
     await ref.read(authRepositoryProvider).signOut();
     state = const AsyncData(null);
   }
+
+  Future<void> updateDisplayName(String displayName) async {
+    final current = state.valueOrNull;
+    if (current == null) return;
+    final session = await ref.read(authRepositoryProvider).updateDisplayName(
+          token: current.token,
+          displayName: displayName,
+        );
+    state = AsyncData(session);
+  }
 }

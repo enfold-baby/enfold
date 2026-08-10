@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../services/auth/auth_providers.dart';
-import '../../partner/providers/partner_providers.dart';
 import '../../settings/providers/units_providers.dart';
 import '../../today/models/care_log_entry.dart';
 import 'log_entry_actions.dart';
@@ -30,8 +29,8 @@ class PaginatedLogList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authSessionProvider).valueOrNull;
     final isSignedIn = session != null;
-    final showAttribution =
-        ref.watch(hasPartnerProvider).valueOrNull ?? false;
+    // Show “you” / Mom / Dad whenever signed in so multi-caregiver logging is clear.
+    final showAttribution = isSignedIn;
     final useImperial = ref.watch(useImperialUnitsProvider).valueOrNull ?? false;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 

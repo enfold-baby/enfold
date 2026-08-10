@@ -11,6 +11,7 @@
 | ✅ | ~~Pull-to-refresh sync on Today~~ | — | Shipped 2026-08-10 |
 | ✅ | ~~In-app APK version update (AD-style)~~ | [APP_VERSION_UPDATE.md](./APP_VERSION_UPDATE.md) | Shipped 2026-08-10 |
 | ✅ | ~~Account switching / local data isolation~~ | [ACCOUNT_SWITCHING.md](./ACCOUNT_SWITCHING.md) | Shipped 2026-08-10 (schema v10) |
+| 🟠 P2 | **Multiple children per family** | [MULTI_CHILD.md](./MULTI_CHILD.md) | Large — active child switcher |
 | 🟠 P2 | **Store release (signed builds)** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Medium — blocked on DUNS/accounts |
 | 🟡 P3 | **Learn card physician review** | [CONTENT_REVIEW.md](./CONTENT_REVIEW.md) | Ongoing — human in the loop |
 | 🟡 P3 | **Real-time partner sync** | — | Medium — websocket or periodic pull |
