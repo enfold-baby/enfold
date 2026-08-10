@@ -47,6 +47,16 @@ Before public beta: isolate local Drift data when a different email signs in (up
 
 ---
 
+## In-app APK update (Artsani-style)
+
+```
+Read feature/todos/APP_VERSION_UPDATE.md and ~/apps/artsani-digital/mobile/lib/core/services/update_service.dart.
+Port version check + download/install for BloomDue Android sideload beta.
+Backend GET /v1/app-version + APK download/upload. iOS: store link only later.
+```
+
+---
+
 ## Store / beta release
 
 ```

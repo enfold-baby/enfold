@@ -79,6 +79,7 @@
 | Metric / imperial units | ✅ |
 | Theme (system / light / dark, **persisted**) | ✅ |
 | About (version, beta badge) | ✅ |
+| In-app APK version update | 🔲 planned → [todos/APP_VERSION_UPDATE.md](../todos/APP_VERSION_UPDATE.md) |
 
 ## Local database (Drift v9)
 

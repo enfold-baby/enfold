@@ -4,23 +4,22 @@
 **Version:** `0.1.0+9` · Drift schema **v9**  
 **API prod:** `https://api.bloomdue.baby` · **API local:** `http://127.0.0.1:8282` (emulator `http://10.0.2.2:8282`)  
 **Contact:** `contact@globinary.io` (hello@bloomdue.baby retired)
-**Mail:** Microsoft Graph via `raul@globinary.io` (same app as globinary.io); beta requests → `contact@globinary.io`
+**Mail:** Microsoft Graph as `contact@globinary.io` (same app as globinary.io); beta → `contact@globinary.io`; no Sent folder  
 
 ## Done this session
 
-- Contact email switched to **contact@globinary.io** (landing, legal, API, docs) + prod deploy
-- **Local docker** stack: `docker compose up -d` (postgres, redis, backend :8282, **landing :8283**, caddy :8280 → landing + `/api`)
-- **Debug API routing:** `ApiConfig` → Android emulator `10.0.2.2:8282`, release stays prod
-- Android **debug cleartext** HTTP for local API
-- **No past dates while expecting** — due date + appointment pickers; unit tests
-- Magic codes: `DEV_MAGIC_CODE_LOG=true` prints to backend logs locally
+- Contact email + Graph mail + local full stack (API + landing docker)
+- **No past dates while expecting** shipped  
+- Dev / GitHub / prod monorepo synced @ `02a48a3`  
+- Todo logged: **AD-style in-app APK update** → `todos/APP_VERSION_UPDATE.md`
 
 ## Next up (mobile)
 
-1. Pull-to-refresh sync on Today  
-2. Account switching isolation → `todos/ACCOUNT_SWITCHING.md`  
-3. Dogfood partner invite on emulator + local API  
-4. Store path when DUNS ready  
+1. **Pull-to-refresh sync** on Today (quick win)  
+2. **In-app APK version update** (AD pattern) → [`todos/APP_VERSION_UPDATE.md`](./todos/APP_VERSION_UPDATE.md)  
+3. Account switching isolation → [`todos/ACCOUNT_SWITCHING.md`](./todos/ACCOUNT_SWITCHING.md)  
+4. Dogfood on emulator + local API  
+5. Store path when DUNS ready · FCM later
 
 ## Local dev workflow
 
