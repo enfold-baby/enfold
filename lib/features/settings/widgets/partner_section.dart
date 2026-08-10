@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../services/api/api_exception.dart';
 import '../../../services/api/family_models.dart';
+import '../../../services/auth/account_switch_service.dart';
 import '../../../services/auth/auth_providers.dart';
 import '../../../services/sync/sync_providers.dart';
 
@@ -97,18 +98,79 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
           );
       ref.invalidate(familyInfoProvider);
       final syncResult = await ref.read(syncActionsProvider).syncIfSignedIn();
-      setState(() {
-        _codeController.clear();
-        _status = syncResult.ok
+      _showFeedback(
+        syncResult.ok
             ? 'Joined family · pulled ${syncResult.pulled} partner logs.'
-            : 'Joined family, but sync will retry (${syncResult.error}).';
-      });
+            : 'Joined family, but sync will retry (${syncResult.error}).',
+      );
+      _codeController.clear();
     } on ApiException catch (e) {
-      setState(() => _status = _messageForApiError(e));
+      _showFeedback(_messageForApiError(e), error: true);
     } catch (_) {
-      setState(() => _status = 'Could not join with that code.');
+      _showFeedback('Could not join with that code.', error: true);
     } finally {
-      setState(() => _busy = false);
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _leaveFamily() async {
+    final session = ref.read(authSessionProvider).valueOrNull;
+    if (session == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        key: const Key('partner_leave_dialog'),
+        title: Text(
+          'Leave this family?',
+          style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
+        ),
+        content: Text(
+          'You will stop sharing with your partner.\n\n'
+          '• On this phone, synced care logs will be cleared so you start fresh.\n'
+          '• Your partner’s family keeps all their logs and baby data — nothing '
+          'is deleted for them on the server.\n\n'
+          'You can join again later with a new invite code.',
+          style: GoogleFonts.nunito(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            key: const Key('partner_leave_confirm'),
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.red.shade700,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Leave family'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    setState(() {
+      _busy = true;
+      _status = null;
+    });
+    try {
+      await ref.read(apiClientProvider).leaveFamily(session.token);
+      // Drop partner-synced local rows; family keeps server data.
+      await ref.read(accountSwitchServiceProvider).clearLocalCareData();
+      ref.invalidate(familyInfoProvider);
+      _showFeedback(
+        'You left the family. Local synced logs were cleared; '
+        'partner data stays on their account.',
+      );
+    } on ApiException catch (e) {
+      _showFeedback(_messageForApiError(e), error: true);
+    } catch (_) {
+      _showFeedback('Could not leave family. Try again.', error: true);
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
   }
 
@@ -176,6 +238,13 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                         color: AppColors.mutedText(brightness),
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
+                    key: const Key('partner_leave_family'),
+                    onPressed: _busy ? null : _leaveFamily,
+                    icon: const Icon(Icons.logout_outlined),
+                    label: const Text('Leave family'),
                   ),
                   const SizedBox(height: 16),
                 ],

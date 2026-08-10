@@ -134,6 +134,12 @@ class BloomdueApiClient {
     return FamilyInfo.fromJson(body);
   }
 
+  /// Leave a shared family. Returns the new solo family on the server.
+  Future<FamilyInfo> leaveFamily(String token) async {
+    final body = await _post('/v1/families/leave', {}, token: token);
+    return FamilyInfo.fromJson(body);
+  }
+
   Future<void> registerDevice({
     required String token,
     required String platform,

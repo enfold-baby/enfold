@@ -113,3 +113,49 @@ async def join_family(
     membership.role = "parent"
     await db.commit()
     return await _family_info(target_family_id, db)
+
+
+@router.post("/leave", response_model=FamilyInfoResponse)
+async def leave_family(
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> FamilyInfoResponse:
+    """Leave a shared family. Partner's family data stays intact.
+
+    The leaving user is placed in a fresh solo family so the app still has
+    a family_id for children / care events they create later.
+    """
+    membership = await _membership_for(user, db)
+    family_id = membership.family_id
+
+    member_count = len(
+        (
+            await db.execute(
+                select(FamilyMembership).where(FamilyMembership.family_id == family_id)
+            )
+        )
+        .scalars()
+        .all()
+    )
+    if member_count <= 1:
+        raise HTTPException(
+            status_code=400,
+            detail="You are not in a shared family — nothing to leave.",
+        )
+
+    # Detach from shared family; do not delete their children / care_events.
+    await db.delete(membership)
+    await db.flush()
+
+    solo = Family(name="My family")
+    db.add(solo)
+    await db.flush()
+    db.add(
+        FamilyMembership(
+            user_id=user.id,
+            family_id=solo.id,
+            role="owner",
+        )
+    )
+    await db.commit()
+    return await _family_info(solo.id, db)

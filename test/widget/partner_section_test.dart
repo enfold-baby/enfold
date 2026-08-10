@@ -36,6 +36,34 @@ class _FakePartnerApi extends BloomdueApiClient {
   }
 }
 
+class _SharedFamilyApi extends BloomdueApiClient {
+  _SharedFamilyApi() : super(httpClient: http.Client());
+
+  var leaveCalls = 0;
+
+  @override
+  Future<FamilyInfo> getFamily(String token) async {
+    return const FamilyInfo(
+      id: 'fam-1',
+      members: [
+        FamilyMember(id: 'u1', email: 'parent@bloomdue.baby', displayName: 'Parent'),
+        FamilyMember(id: 'u2', email: 'partner@bloomdue.baby', displayName: 'Partner'),
+      ],
+    );
+  }
+
+  @override
+  Future<FamilyInfo> leaveFamily(String token) async {
+    leaveCalls++;
+    return const FamilyInfo(
+      id: 'fam-solo',
+      members: [
+        FamilyMember(id: 'u1', email: 'parent@bloomdue.baby', displayName: 'Parent'),
+      ],
+    );
+  }
+}
+
 void main() {
   testWidgets('partner section shows invite UI when signed in', (tester) async {
     final db = createTestDatabase();
@@ -66,5 +94,38 @@ void main() {
     expect(find.byKey(const Key('partner_create_invite')), findsOneWidget);
     expect(find.byKey(const Key('partner_join_code')), findsOneWidget);
     expect(find.byKey(const Key('partner_join')), findsOneWidget);
+  });
+
+  testWidgets('leave family button shows when shared and confirms', (tester) async {
+    final db = createTestDatabase();
+    final api = _SharedFamilyApi();
+    final container = ProviderContainer(
+      overrides: [
+        databaseProvider.overrideWithValue(db),
+        apiClientProvider.overrideWithValue(api),
+        authSessionProvider.overrideWith(_SignedInAuthNotifier.new),
+      ],
+    );
+    addTearDown(container.dispose);
+    addTearDown(db.close);
+
+    tester.view.physicalSize = const Size(400, 1400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(home: Scaffold(body: PartnerSection())),
+      ),
+    );
+    await pumpUntilFound(tester, find.byKey(const Key('partner_leave_family')));
+    await tester.tap(find.byKey(const Key('partner_leave_family')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('partner_leave_dialog')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('partner_leave_confirm')));
+    await tester.pumpAndSettle();
+    expect(api.leaveCalls, 1);
   });
 }
