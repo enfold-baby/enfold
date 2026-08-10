@@ -15,11 +15,20 @@
 
 ## Next up (mobile)
 
-1. **Pull-to-refresh sync** on Today (quick win)  
-2. **In-app APK version update** (AD pattern) → [`todos/APP_VERSION_UPDATE.md`](./todos/APP_VERSION_UPDATE.md)  
-3. Account switching isolation → [`todos/ACCOUNT_SWITCHING.md`](./todos/ACCOUNT_SWITCHING.md)  
-4. Dogfood on emulator + local API  
-5. Store path when DUNS ready · FCM later
+1. Account switching isolation → [`todos/ACCOUNT_SWITCHING.md`](./todos/ACCOUNT_SWITCHING.md)  
+2. Dogfood partner invite on emulator + local API  
+3. Store path when DUNS ready  
+4. FCM partner push later  
+
+### Ship beta APK for update testing (local)
+
+```bash
+# bump pubspec build +N first (e.g. 0.1.0+10), then:
+flutter build apk --release
+APP_VERSION_ADMIN_TOKEN=dev-local-apk-admin \
+  ./scripts/publish_beta_apk.sh build/app/outputs/flutter-apk/app-release.apk 0.1.0 10
+# Install an older build on device; reopen → Update dialog
+```
 
 ## Local dev workflow
 
