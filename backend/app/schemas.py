@@ -92,3 +92,24 @@ class BetaRequestCreate(BaseModel):
 
 class BetaRequestResponse(BaseModel):
     status: str = "sent"
+
+
+class FamilyMemberResponse(BaseModel):
+    id: uuid.UUID
+    email: EmailStr
+    display_name: str
+
+
+class FamilyInfoResponse(BaseModel):
+    id: uuid.UUID
+    invite_code: str | None = None
+    members: list[FamilyMemberResponse]
+
+
+class FamilyInviteResponse(BaseModel):
+    code: str
+    expires_at: datetime | None = None
+
+
+class FamilyJoinRequest(BaseModel):
+    code: str = Field(min_length=4, max_length=32)

@@ -39,9 +39,26 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
     super.dispose();
   }
 
+  void _showFeedback(String message, {bool error = false}) {
+    if (!mounted) return;
+    setState(() => _status = message);
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    messenger
+      ?..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: error ? Colors.red.shade800 : null,
+        ),
+      );
+  }
+
   Future<void> _createInvite() async {
     final session = ref.read(authSessionProvider).valueOrNull;
-    if (session == null) return;
+    if (session == null) {
+      _showFeedback('Sign in first to create an invite.', error: true);
+      return;
+    }
 
     setState(() {
       _busy = true;
@@ -52,13 +69,13 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
           await ref.read(apiClientProvider).createFamilyInvite(session.token);
       await Clipboard.setData(ClipboardData(text: invite.code));
       ref.invalidate(familyInfoProvider);
-      setState(() => _status = 'Invite code ${invite.code} copied.');
+      _showFeedback('Invite code ${invite.code} copied.');
     } on ApiException catch (e) {
-      setState(() => _status = _messageForApiError(e));
+      _showFeedback(_messageForApiError(e), error: true);
     } catch (_) {
-      setState(() => _status = 'Could not create invite. Try again.');
+      _showFeedback('Could not create invite. Try again.', error: true);
     } finally {
-      setState(() => _busy = false);
+      if (mounted) setState(() => _busy = false);
     }
   }
 
@@ -97,8 +114,12 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
 
   String _messageForApiError(ApiException e) {
     if (e.statusCode == 404) {
-      return 'Partner invites are rolling out on the server. '
-          'Pull sync still works once you share a family.';
+      // Distinct copy: join uses 404 for bad codes; create used to 404 when
+      // the families router was missing on the API.
+      return e.message.contains('Invite') || e.message.contains('code')
+          ? e.message
+          : 'Could not reach partner invites on the API (${e.message}). '
+              'Is the backend up to date?';
     }
     return e.message;
   }
