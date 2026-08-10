@@ -12,7 +12,7 @@ if [[ -z "${SSHPASS:-}" ]]; then
 fi
 
 if [[ -z "${SMTP_PASSWORD:-}" ]]; then
-  printf 'Set SMTP_PASSWORD (hello@ mailbox password).\n' >&2
+  printf 'Set SMTP_PASSWORD (contact@globinary.io mailbox password).\n' >&2
   exit 1
 fi
 
@@ -48,9 +48,9 @@ lines.extend(
     [
         "SMTP_HOST=mail.privateemail.com",
         "SMTP_PORT=587",
-        "SMTP_USER=hello@bloomdue.baby",
+        "SMTP_USER=contact@globinary.io",
         f"SMTP_PASSWORD={escaped_pw}",
-        "SMTP_FROM_EMAIL=hello@bloomdue.baby",
+        "SMTP_FROM_EMAIL=contact@globinary.io",
         "SMTP_FROM_NAME=BloomDue",
         "SMTP_USE_SSL=false",
         "DEV_MAGIC_CODE_LOG=false",

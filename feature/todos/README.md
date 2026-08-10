@@ -29,7 +29,7 @@
 ## Recently completed ✅
 
 - Landing legal pages (Privacy + Terms) + no cookie banner  
-- Join-beta form + `POST /v1/beta-requests` SMTP to `hello@bloomdue.baby`  
+- Join-beta form + `POST /v1/beta-requests` SMTP to `contact@globinary.io`  
 - Landing v3 redesign + mobile care carousel  
 - Prod monorepo sync (local / GitHub / VPS @ `e78a99e`)  
 - Demo emulator screenshot tooling (Damian seed day)  

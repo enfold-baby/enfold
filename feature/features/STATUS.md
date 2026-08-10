@@ -116,7 +116,7 @@
 | Mobile care story carousel | ✅ |
 | Privacy Policy `/privacy/` | ✅ |
 | Terms of Use `/terms/` | ✅ |
-| Join-beta form `#join-beta` | ✅ → API + `hello@bloomdue.baby` |
+| Join-beta form `#join-beta` | ✅ → API + `contact@globinary.io` |
 | Cookie consent banner | ❌ not needed (Simple Analytics only) |
 | `due.bloomdue.baby` | ✅ Live — do not touch |
 

@@ -51,7 +51,7 @@ class EmailSender:
             f"Your BloomDue sign-in code is {code}.\n\n"
             f"It expires in {s.magic_code_expire_minutes} minutes.\n\n"
             "If you didn't request this, you can ignore this email.\n\n"
-            "Questions? hello@bloomdue.baby"
+            "Questions? contact@globinary.io"
         )
 
         context = ssl.create_default_context()

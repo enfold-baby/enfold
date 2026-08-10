@@ -16,9 +16,9 @@
 
 ### Landing + legal + beta signup (prod)
 - Landing redesigned to match mobile v3 design + mobile care carousel
-- **Privacy** + **Terms** live (`/privacy/`, `/terms/`) — EN, controller Globinary SRL, contact `hello@bloomdue.baby`
+- **Privacy** + **Terms** live (`/privacy/`, `/terms/`) — EN, controller Globinary SRL, contact `contact@globinary.io`
 - No cookie banner (Simple Analytics only)
-- Inline **#join-beta** form → `POST /v1/beta-requests` → SMTP to `hello@bloomdue.baby` + auto-reply
+- Inline **#join-beta** form → `POST /v1/beta-requests` → SMTP to `contact@globinary.io` + auto-reply
 - Nginx redirect fix (no `:3000` bounce)
 - Landing/backend redeployed; monorepo synced local ↔ GitHub ↔ VPS
 

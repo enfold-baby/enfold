@@ -87,7 +87,7 @@ class EmailSender:
             f"Your BloomDue sign-in code is {code}.\n\n"
             f"It expires in {s.magic_code_expire_minutes} minutes.\n\n"
             "If you didn't request this, you can ignore this email.\n\n"
-            "Questions? hello@bloomdue.baby"
+            "Questions? contact@globinary.io"
         )
         self._smtp_send(msg)
 
@@ -100,7 +100,7 @@ class EmailSender:
         message: str,
     ) -> None:
         s = self.settings
-        to_addr = (s.beta_request_to_email or s.smtp_from_email or "hello@bloomdue.baby").strip()
+        to_addr = (s.beta_request_to_email or s.smtp_from_email or "contact@globinary.io").strip()
         display_name = name.strip() or "(not provided)"
         note = message.strip() or "(none)"
         platform_label = platform.strip() or "unspecified"
@@ -136,7 +136,7 @@ class EmailSender:
             "If you didn’t request this, you can ignore this message.\n\n"
             "Warmly,\n"
             "The BloomDue team\n"
-            "hello@bloomdue.baby\n"
+            "contact@globinary.io\n"
             "https://bloomdue.baby/\n"
         )
         self._smtp_send(msg)
