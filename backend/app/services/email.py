@@ -2,6 +2,7 @@ import asyncio
 import smtplib
 import ssl
 from email.message import EmailMessage
+from email.utils import formataddr
 
 import httpx
 
@@ -31,15 +32,32 @@ class EmailSender:
     def configured(self) -> bool:
         return self.smtp_configured or self.graph_configured
 
+    def _from_display(self) -> str:
+        s = self.settings
+        # Prefer Graph mailbox; fall back to SMTP from.
+        addr = (s.ms_graph_sender or s.smtp_from_email or "contact@globinary.io").strip()
+        name = (s.smtp_from_name or "BloomDue").strip()
+        return formataddr((name, addr))
+
+    def _team_inbox(self) -> str:
+        s = self.settings
+        return (s.beta_request_to_email or "contact@globinary.io").strip()
+
     async def send_magic_code(self, email: str, code: str) -> None:
-        if self.smtp_configured:
-            await asyncio.to_thread(self._send_magic_code_smtp, email, code)
-            return
-        if self.graph_configured:
-            await self._send_magic_code_graph(email, code)
-            return
-        if self.settings.dev_magic_code_log:
-            print(f"Bloomdue magic code for {email}: {code}")
+        subject = "Your BloomDue sign-in code"
+        body = (
+            f"Your BloomDue sign-in code is {code}.\n\n"
+            f"It expires in {self.settings.magic_code_expire_minutes} minutes.\n\n"
+            "If you didn't request this, you can ignore this email.\n\n"
+            "Questions? contact@globinary.io\n"
+            "https://bloomdue.baby/\n"
+        )
+        await self._send(
+            to=email,
+            subject=subject,
+            text=body,
+            reply_to="contact@globinary.io",
+        )
 
     async def send_beta_request(
         self,
@@ -49,68 +67,11 @@ class EmailSender:
         platform: str,
         message: str,
     ) -> None:
-        if self.smtp_configured:
-            await asyncio.to_thread(
-                self._send_beta_request_smtp,
-                applicant_email=applicant_email,
-                name=name,
-                platform=platform,
-                message=message,
-            )
-            return
-        if self.settings.dev_magic_code_log:
-            print(
-                "Bloomdue beta request "
-                f"from={applicant_email} name={name!r} platform={platform!r} message={message!r}"
-            )
-            return
-        raise RuntimeError("Email delivery is not configured")
-
-    async def send_beta_auto_reply(self, *, applicant_email: str, name: str) -> None:
-        if self.smtp_configured:
-            await asyncio.to_thread(
-                self._send_beta_auto_reply_smtp,
-                applicant_email=applicant_email,
-                name=name,
-            )
-            return
-        if self.settings.dev_magic_code_log:
-            print(f"Bloomdue beta auto-reply to {applicant_email}")
-
-    def _send_magic_code_smtp(self, email: str, code: str) -> None:
-        s = self.settings
-        msg = EmailMessage()
-        msg["Subject"] = "Your BloomDue sign-in code"
-        msg["From"] = f"{s.smtp_from_name} <{s.smtp_from_email}>"
-        msg["To"] = email
-        msg.set_content(
-            f"Your BloomDue sign-in code is {code}.\n\n"
-            f"It expires in {s.magic_code_expire_minutes} minutes.\n\n"
-            "If you didn't request this, you can ignore this email.\n\n"
-            "Questions? contact@globinary.io"
-        )
-        self._smtp_send(msg)
-
-    def _send_beta_request_smtp(
-        self,
-        *,
-        applicant_email: str,
-        name: str,
-        platform: str,
-        message: str,
-    ) -> None:
-        s = self.settings
-        to_addr = (s.beta_request_to_email or s.smtp_from_email or "contact@globinary.io").strip()
         display_name = name.strip() or "(not provided)"
         note = message.strip() or "(none)"
         platform_label = platform.strip() or "unspecified"
-
-        msg = EmailMessage()
-        msg["Subject"] = f"Beta request · {display_name if name.strip() else applicant_email}"
-        msg["From"] = f"{s.smtp_from_name} <{s.smtp_from_email}>"
-        msg["To"] = to_addr
-        msg["Reply-To"] = applicant_email
-        msg.set_content(
+        subject = f"Beta request · {display_name if name.strip() else applicant_email}"
+        body = (
             "New BloomDue private beta request\n"
             "================================\n\n"
             f"Name: {display_name}\n"
@@ -118,17 +79,19 @@ class EmailSender:
             f"Platform: {platform_label}\n"
             f"Message:\n{note}\n\n"
             "Reply to this email to respond to the applicant.\n"
+            "— BloomDue (bloomdue.baby)\n"
         )
-        self._smtp_send(msg)
+        await self._send(
+            to=self._team_inbox(),
+            subject=subject,
+            text=body,
+            reply_to=applicant_email,
+        )
 
-    def _send_beta_auto_reply_smtp(self, *, applicant_email: str, name: str) -> None:
-        s = self.settings
+    async def send_beta_auto_reply(self, *, applicant_email: str, name: str) -> None:
         greeting = f"Hi {name.strip()}," if name.strip() else "Hi,"
-        msg = EmailMessage()
-        msg["Subject"] = "We received your BloomDue beta request"
-        msg["From"] = f"{s.smtp_from_name} <{s.smtp_from_email}>"
-        msg["To"] = applicant_email
-        msg.set_content(
+        subject = "We received your BloomDue beta request"
+        body = (
             f"{greeting}\n\n"
             "Thanks for asking to join the BloomDue private beta — we got your request.\n\n"
             "We’ll review it and follow up at this email address when a spot is ready. "
@@ -139,10 +102,62 @@ class EmailSender:
             "contact@globinary.io\n"
             "https://bloomdue.baby/\n"
         )
-        self._smtp_send(msg)
+        await self._send(
+            to=applicant_email,
+            subject=subject,
+            text=body,
+            reply_to="contact@globinary.io",
+        )
 
-    def _smtp_send(self, msg: EmailMessage) -> None:
+    async def _send(
+        self,
+        *,
+        to: str,
+        subject: str,
+        text: str,
+        reply_to: str | None = None,
+    ) -> None:
+        # Prefer Microsoft Graph (same credentials as globinary.io) when configured.
+        # SMTP (PrivateEmail hello@) is legacy and often broken.
+        if self.graph_configured:
+            await self._send_graph(
+                to=to,
+                subject=subject,
+                text=text,
+                reply_to=reply_to,
+            )
+            return
+        if self.smtp_configured:
+            await asyncio.to_thread(
+                self._send_smtp,
+                to=to,
+                subject=subject,
+                text=text,
+                reply_to=reply_to,
+            )
+            return
+        if self.settings.dev_magic_code_log:
+            print(f"Bloomdue email (dev log) to={to} subject={subject!r}\n{text}")
+            return
+        raise RuntimeError("Email delivery is not configured")
+
+    def _send_smtp(
+        self,
+        *,
+        to: str,
+        subject: str,
+        text: str,
+        reply_to: str | None,
+    ) -> None:
         s = self.settings
+        msg = EmailMessage()
+        msg["Subject"] = subject
+        msg["From"] = self._from_display()
+        msg["To"] = to
+        if reply_to:
+            msg["Reply-To"] = reply_to
+        msg.set_content(text)
+
         context = ssl.create_default_context()
         if s.smtp_use_ssl:
             with smtplib.SMTP_SSL(
@@ -159,27 +174,34 @@ class EmailSender:
             server.login(s.smtp_user, s.smtp_password)
             server.send_message(msg)
 
-    async def _send_magic_code_graph(self, email: str, code: str) -> None:
+    async def _send_graph(
+        self,
+        *,
+        to: str,
+        subject: str,
+        text: str,
+        reply_to: str | None,
+    ) -> None:
         token = await self._get_graph_token()
-        endpoint = (
-            f"https://graph.microsoft.com/v1.0/users/"
-            f"{self.settings.ms_graph_sender}/sendMail"
-        )
-        payload = {
-            "message": {
-                "subject": "Your BloomDue sign-in code",
-                "body": {
-                    "contentType": "Text",
-                    "content": (
-                        f"Your BloomDue sign-in code is {code}. "
-                        f"It expires in {self.settings.magic_code_expire_minutes} minutes."
-                    ),
-                },
-                "toRecipients": [{"emailAddress": {"address": email}}],
+        sender = self.settings.ms_graph_sender.strip()
+        endpoint = f"https://graph.microsoft.com/v1.0/users/{sender}/sendMail"
+        message: dict = {
+            "subject": subject,
+            "body": {"contentType": "Text", "content": text},
+            "toRecipients": [{"emailAddress": {"address": to}}],
+            # Friendly From name when the mailbox display name differs.
+            "from": {
+                "emailAddress": {
+                    "name": self.settings.smtp_from_name or "BloomDue",
+                    "address": sender,
+                }
             },
-            "saveToSentItems": "false",
         }
-        async with httpx.AsyncClient(timeout=10) as client:
+        if reply_to:
+            message["replyTo"] = [{"emailAddress": {"address": reply_to}}]
+
+        payload = {"message": message, "saveToSentItems": "true"}
+        async with httpx.AsyncClient(timeout=20) as client:
             response = await client.post(
                 endpoint,
                 headers={"Authorization": f"Bearer {token}"},
@@ -196,7 +218,7 @@ class EmailSender:
             "scope": "https://graph.microsoft.com/.default",
             "grant_type": "client_credentials",
         }
-        async with httpx.AsyncClient(timeout=10) as client:
+        async with httpx.AsyncClient(timeout=15) as client:
             response = await client.post(url, data=data)
             response.raise_for_status()
             return response.json()["access_token"]

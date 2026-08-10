@@ -4,6 +4,7 @@
 **Version:** `0.1.0+9` · Drift schema **v9**  
 **API prod:** `https://api.bloomdue.baby` · **API local:** `http://127.0.0.1:8282` (emulator `http://10.0.2.2:8282`)  
 **Contact:** `contact@globinary.io` (hello@bloomdue.baby retired)
+**Mail:** Microsoft Graph via `raul@globinary.io` (same app as globinary.io); beta requests → `contact@globinary.io`
 
 ## Done this session
 
