@@ -31,6 +31,7 @@ Bloomdue is a free, no-ads baby and pregnancy companion for parents. The first r
 ## Phase 4: Pregnancy Tracker
 
 - Due date, appointment planning, pregnancy timeline, preparation checklists, and postpartum transition into the baby tracker.
+- UX: while still **expecting**, date pickers (due date, appointments) should not allow past calendar dates → see `feature/todos/DATE_PICKER_NO_PAST.md`.
 
 ## Launch Criteria
 

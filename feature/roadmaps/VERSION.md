@@ -35,6 +35,7 @@ Current: **`0.1.0+4`**
 | Background sync | Periodic pull when signed in |
 | Account switching | Upload-or-fresh prompt on different login → [todos/ACCOUNT_SWITCHING.md](../todos/ACCOUNT_SWITCHING.md) |
 | Dark theme polish | Persist theme + contrast pass ✅ shipped 0.1.0+7 |
+| No past dates while expecting | Due date / pregnancy appointment pickers clamp to today+ → [todos/DATE_PICKER_NO_PAST.md](../todos/DATE_PICKER_NO_PAST.md) |
 
 ---
 

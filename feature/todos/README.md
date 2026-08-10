@@ -12,6 +12,7 @@
 | 🟠 P2 | **Store release (signed builds)** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Medium |
 | 🟡 P3 | **Learn card physician review** | [CONTENT_REVIEW.md](./CONTENT_REVIEW.md) | Ongoing — human in the loop |
 | 🟡 P3 | **Real-time partner sync** | — | Medium — websocket or periodic pull |
+| 🟡 P3 | **No past dates while expecting** *(idea)* | [DATE_PICKER_NO_PAST.md](./DATE_PICKER_NO_PAST.md) | Small — UX polish |
 | 🟢 P4 | Romanian i18n | [roadmaps/VERSION.md](../roadmaps/VERSION.md) | Large |
 | 🟢 P4 | Anonymous-first auth | [roadmaps/VERSION.md](../roadmaps/VERSION.md) | Medium |
 

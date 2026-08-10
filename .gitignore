@@ -102,3 +102,6 @@ agent-tools/
 
 # Drift — generated code IS committed; only ignore temp
 *.drift.dart.tmp
+
+# Local demo / marketing capture output
+screenshots/
