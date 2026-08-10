@@ -45,9 +45,9 @@ class ChildProfile {
 class BloomdueApiClient {
   BloomdueApiClient({
     http.Client? httpClient,
-    String baseUrl = ApiConfig.baseUrl,
+    String? baseUrl,
   })  : _http = httpClient ?? http.Client(),
-        _baseUrl = baseUrl.replaceAll(RegExp(r'/+$'), '');
+        _baseUrl = (baseUrl ?? ApiConfig.baseUrl).replaceAll(RegExp(r'/+$'), '');
 
   final http.Client _http;
   final String _baseUrl;
