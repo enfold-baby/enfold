@@ -93,6 +93,8 @@ App talks to **our VPS API**, not Supabase. Local Drift schema mirrors server `c
 19. **Phase 18** — Partner sharing + bidirectional sync ✅
 20. **Phase 19** — Last logged by + gentle partner nudge ✅
 21. **Phase 20** — FCM push scaffold (no Firebase project yet) 🟡
+22. **Phase 21** — Landing v3 + legal pages + join-beta form (SMTP) ✅
+23. **Phase 22** — Sync edit/delete, theme persist, sideload APK `0.1.0+9` ✅
 
 **Docs hub:** [`feature/README.md`](./feature/README.md)
 
@@ -101,9 +103,10 @@ App talks to **our VPS API**, not Supabase. Local Drift schema mirrors server `c
 | Field | Value |
 |---|---|
 | **Marketing version** | `0.1.0` (private beta — `0.x` shows beta badge in Settings) |
-| **Build number** | `4` — increment `+N` in `pubspec.yaml` before each store upload |
+| **Build number** | `9` — increment `+N` in `pubspec.yaml` before each store upload |
 | **Bundle ID** | `baby.bloomdue.app` |
 | **API** | `https://api.bloomdue.baby` |
+| **Legal** | https://bloomdue.baby/privacy/ · https://bloomdue.baby/terms/ |
 
 ### Build commands
 
@@ -123,5 +126,6 @@ flutter build ipa --release      # iOS TestFlight (macOS + signing)
 
 Source: `landing/public/` in this repo.  
 Deployed to VPS `bloomdue-platform-landing` container.  
-Redeploy: `SSHPASS='…' ./landing/deploy.sh`  
-Analytics: SimpleAnalytics (`scripts.simpleanalyticscdn.com/latest.js`).
+Redeploy: `SSHPASS='…' ./landing/deploy.sh` (SSH as `u_bloomdue@135.125.226.37`).  
+Analytics: SimpleAnalytics (`scripts.simpleanalyticscdn.com/latest.js`) — no cookie banner.  
+Beta signup: `#join-beta` form → `POST https://api.bloomdue.baby/v1/beta-requests`.

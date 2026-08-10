@@ -35,6 +35,6 @@ Bloomdue is a free, no-ads baby and pregnancy companion for parents. The first r
 
 ## Launch Criteria
 
-- Parents can log in, create a baby profile, log care events offline, reconnect, and sync safely.
-- Every medical or safety-related text is reviewed and versioned.
-- Privacy policy, terms, data deletion, export, and support paths are ready before public launch.
+- Parents can log in, create a baby profile, log care events offline, reconnect, and sync safely. *(sync create/edit/delete live in private beta)*
+- Every medical or safety-related text is reviewed and versioned. *(learn cards: formal sign-off pending)*
+- Privacy policy, terms, data deletion, export, and support paths are ready before public launch. *(privacy + terms live on bloomdue.baby; store signing + DUNS pending)*

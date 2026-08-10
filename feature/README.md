@@ -1,6 +1,7 @@
 # BloomDue — feature docs hub
 
-> **Last updated:** 2026-07-08 · **App version:** `0.1.0+4` · **Drift schema:** v8 · **Tests:** 87 passing
+> **Last updated:** 2026-08-10 · **App version:** `0.1.0+9` · **Drift schema:** v9  
+> **Prod:** landing + API live · monorepo synced local / GitHub / VPS
 
 Central index for what's built, what's next, and how to resume work.
 
@@ -20,6 +21,7 @@ Central index for what's built, what's next, and how to resume work.
 | Project kickoff & mission | [`START_HERE.md`](../START_HERE.md) |
 | Brand, colors, build phases | [`BRANDING.md`](../BRANDING.md) |
 | Learn card content | [`content/manifest.json`](../content/manifest.json) (25 cards) |
+| Root README | [`README.md`](../README.md) |
 
 ## Quick status
 
@@ -28,8 +30,13 @@ Central index for what's built, what's next, and how to resume work.
 | Core logging (feed / diaper / sleep) | ✅ Shipped |
 | Extended logs (meds / pump / tummy) | ✅ Shipped |
 | Learn + triage (25 cards) | ✅ Shipped — physician review pending |
-| Partner sharing + sync | ✅ Shipped |
+| Partner sharing + sync (create/edit/delete) | ✅ Shipped |
 | Last logged by + gentle nudge | ✅ Shipped |
+| Landing + legal + beta form | ✅ Live on prod |
 | FCM activity push | 🟡 Prepared — needs Firebase project |
-| Store release (signed builds) | 🔲 Not started |
+| Store release (signed builds) | 🔲 Waiting DUNS / signing |
 | Romanian i18n | 🔲 v0.2 |
+
+## Continue mobile work
+
+Default: open [SESSION.md](./SESSION.md) → [todos/README.md](./todos/README.md) → ship the next small item (e.g. no-past-dates while expecting).

@@ -1,10 +1,10 @@
 # Version roadmap
 
-> Aligns with [`BRANDING.md`](../../BRANDING.md) mission. Updated 2026-07-08.
+> Aligns with [`BRANDING.md`](../../BRANDING.md) mission. Updated **2026-08-10**.
 
 ## Shipped — v0.1.x (private beta)
 
-Current: **`0.1.0+4`**
+Current: **`0.1.0+9`**
 
 | Milestone | Focus | Status |
 |---|---|---|
@@ -13,15 +13,19 @@ Current: **`0.1.0+4`**
 | 0.1.2 logs+ | Meds, pumping, tummy, growth, soft delete | ✅ |
 | 0.1.3 partner | Family invite, sync, last-logged-by, gentle nudge | ✅ |
 | 0.1.4 push prep | FCM scaffold (no Firebase project yet) | ✅ |
+| 0.1.x polish | Theme persist, brand icon, APK sideload, sync edit/delete | ✅ |
+| Landing | v3 redesign, carousel, legal pages, beta form + API | ✅ |
 
 ### v0.1 exit criteria (before public beta)
 
-- [ ] Physician review on learn cards
-- [ ] FCM partner activity push live
-- [ ] Sync delete + edit to server
-- [ ] Signed Android release build
-- [ ] iOS TestFlight build
-- [ ] 2+ families dogfooding for 1 week without data loss
+- [ ] Physician review on learn cards  
+- [x] Sync delete + edit to server  
+- [ ] FCM partner activity push live *(deferred OK for soft launch)*  
+- [ ] Signed Android release build  
+- [ ] iOS TestFlight build  
+- [ ] 2+ families dogfooding for 1 week without data loss  
+- [x] Privacy policy + terms URLs on landing  
+- [ ] DUNS / store org ready  
 
 ---
 
@@ -29,13 +33,13 @@ Current: **`0.1.0+4`**
 
 | Item | Notes |
 |---|---|
-| Romanian i18n | ARB files, `flutter_localizations` |
-| Growth charts | Visual curves from measurement history |
+| No past dates while expecting | Due / appointment pickers → [todos/DATE_PICKER_NO_PAST.md](../todos/DATE_PICKER_NO_PAST.md) |
 | Pull-to-refresh sync | Explicit partner refresh on Today |
 | Background sync | Periodic pull when signed in |
-| Account switching | Upload-or-fresh prompt on different login → [todos/ACCOUNT_SWITCHING.md](../todos/ACCOUNT_SWITCHING.md) |
-| Dark theme polish | Persist theme + contrast pass ✅ shipped 0.1.0+7 |
-| No past dates while expecting | Due date / pregnancy appointment pickers clamp to today+ → [todos/DATE_PICKER_NO_PAST.md](../todos/DATE_PICKER_NO_PAST.md) |
+| Account switching | Upload-or-fresh on different login → [todos/ACCOUNT_SWITCHING.md](../todos/ACCOUNT_SWITCHING.md) |
+| Romanian i18n | ARB files, `flutter_localizations` |
+| Growth charts | Visual curves from measurement history |
+| Dark theme polish | Persist theme + contrast ✅ shipped 0.1.0+7 |
 
 ---
 
@@ -64,16 +68,16 @@ Current: **`0.1.0+4`**
 
 | Item | Notes |
 |---|---|
-| Play Store + App Store | Signed, reviewed, privacy policy |
-| `bloomdue.baby` marketing refresh | Screenshots, store copy |
-| Analytics opt-in | Privacy-respecting only |
+| Play Store + App Store | Signed, reviewed; legal URLs already live |
+| `bloomdue.baby` marketing refresh | Screenshots, store copy (demo SS tooling exists) |
+| Analytics opt-in | Privacy-respecting only (SA already cookieless) |
 | Content CMS | Remote card updates without app release |
 
 ---
 
 ## Explicitly out of scope (for now)
 
-- AI sleep predictions
-- Community forums
-- Wearable integrations
-- Ads or paywalled safety content
+- AI sleep predictions  
+- Community forums  
+- Wearable integrations  
+- Ads or paywalled safety content  

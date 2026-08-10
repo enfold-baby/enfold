@@ -1,7 +1,7 @@
 # Date pickers: no past dates while expecting
 
-> **Status:** Idea captured · **not started** · do not implement until picked up  
-> **Source:** User feedback 2026-07-20 (mobile dogfood)
+> **Priority:** P3 · **Status:** Idea captured · **not started** — good next mobile UX ship  
+> **Source:** User feedback 2026-07-20 (mobile dogfood) · listed in SESSION / todos queue 2026-08-10
 
 ## Intent
 

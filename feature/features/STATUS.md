@@ -1,6 +1,7 @@
 # Feature status — what's built
 
-> Snapshot of the codebase as of **2026-07-08**. Source of truth is the code; update this when shipping major modules.
+> Snapshot as of **2026-08-10**. Source of truth is the code; update this when shipping major modules.  
+> App: **`0.1.0+9`** · Drift **v9** · API + landing live on prod.
 
 ## App shell
 
@@ -17,18 +18,18 @@
 
 ## Logging
 
-| Type | Quick log | Detailed form | List + filter | Sync push |
+| Type | Quick log | Detailed form | List + filter | Sync |
 |---|---|---|---|---|
-| Feed | ✅ | ✅ breast/bottle details | ✅ | ✅ create |
-| Diaper | ✅ | ✅ wet/dirty/consistency | ✅ | ✅ create |
-| Sleep | ✅ | ✅ start/end/duration | ✅ | ✅ create |
-| Medication | — | ✅ presets (vit D, etc.) | ✅ | ✅ create |
-| Pumping | — | ✅ volume/side | ✅ | ✅ create |
-| Tummy time | — | ✅ duration | ✅ | ✅ create (as `note`) |
+| Feed | ✅ | ✅ breast / pumped bottle / formula | ✅ | ✅ create + edit + delete |
+| Diaper | ✅ | ✅ wet/dirty/consistency | ✅ | ✅ create + edit + delete |
+| Sleep | ✅ | ✅ start/end/duration | ✅ | ✅ create + edit + delete |
+| Medication | — | ✅ presets (vit D, etc.) | ✅ | ✅ create + edit + delete |
+| Pumping | — | ✅ volume/side | ✅ | ✅ create + edit + delete |
+| Tummy time | — | ✅ duration | ✅ | ✅ create + edit + delete (as `note`) |
 
-**Also:** soft delete + restore (7-day retention), edit forms, imperial/metric display.
+**Also:** soft delete + restore (7-day retention), imperial/metric display.
 
-**Gap:** delete and edit do **not** sync to server yet → see [todos/SYNC_UPDATES.md](../todos/SYNC_UPDATES.md).
+**Sync:** create / edit / delete all push when signed in; pull reconciles partner changes → [todos/SYNC_UPDATES.md](../todos/SYNC_UPDATES.md) ✅ shipped.
 
 ## Today screen extras
 
@@ -37,6 +38,7 @@
 - Gentle partner nudge banner (dismissible per session)
 - Auto-sync on open when signed in
 - PDF export shortcut in app bar
+- 🔲 Pull-to-refresh sync (nice next polish)
 
 ## Learn
 
@@ -57,9 +59,9 @@
 
 | Capability | Status |
 |---|---|
-| Magic-link auth | ✅ |
+| Magic-code auth | ✅ |
 | Family invite code + join | ✅ |
-| Bidirectional care-event sync | ✅ create + pull |
+| Bidirectional care-event sync | ✅ create + edit + delete + pull |
 | Last logged by (`· you` / partner name) | ✅ |
 | Gentle in-app nudge | ✅ opt-in |
 | Activity push (FCM) | 🟡 prepared, no Firebase yet |
@@ -75,10 +77,10 @@
 | Baby profile (name, birth date, preemie) | ✅ |
 | 7-day PDF export | ✅ |
 | Metric / imperial units | ✅ |
-| Theme (system / light / dark) | ✅ |
+| Theme (system / light / dark, **persisted**) | ✅ |
 | About (version, beta badge) | ✅ |
 
-## Local database (Drift v8)
+## Local database (Drift v9)
 
 | Table | Purpose |
 |---|---|
@@ -86,24 +88,37 @@
 | `care_events` | Unified log mirror of VPS `care_events` |
 | `pregnancy_profiles` | Due date, kick count |
 | `pregnancy_appointments` | Appointment notes |
-| `app_settings` | Onboarding, units, partner notification toggles |
+| `app_settings` | Onboarding, units, partner toggles, **theme_mode** |
 | `growth_measurements` | Weight/length/head |
 | `milestone_achievements` | Milestone done dates |
 
-## API client (`https://api.bloomdue.baby`)
+## API (`https://api.bloomdue.baby`)
 
-| Endpoint | Used by app |
+| Endpoint | Used by |
 |---|---|
-| `POST /v1/auth/magic-code/*` | Sign in |
+| `POST /v1/auth/magic-code/*` | App sign-in |
 | `GET /v1/auth/me` | Profile |
 | `GET/POST /v1/children` | Baby sync |
-| `GET/POST /v1/care-events` | Log sync |
+| `GET/POST/PATCH/DELETE /v1/care-events` | Log sync |
 | `GET /v1/families/me` | Partner info |
 | `POST /v1/families/invites` | Create invite |
 | `POST /v1/families/join` | Join family |
 | `POST /v1/devices` | FCM token (when available) |
+| `POST /v1/beta-requests` | **Landing** beta form → SMTP |
 
-**VPS deploy packages:** `deploy/api-email/`, `deploy/api-partner/`
+**VPS deploy:** `landing/deploy.sh`, `deploy/api-email/`, `deploy/api-partner/`
+
+## Landing (`https://bloomdue.baby`)
+
+| Asset | Status |
+|---|---|
+| Marketing redesign (v3 / mobile-aligned) | ✅ |
+| Mobile care story carousel | ✅ |
+| Privacy Policy `/privacy/` | ✅ |
+| Terms of Use `/terms/` | ✅ |
+| Join-beta form `#join-beta` | ✅ → API + `hello@bloomdue.baby` |
+| Cookie consent banner | ❌ not needed (Simple Analytics only) |
+| `due.bloomdue.baby` | ✅ Live — do not touch |
 
 ## Push (prepared)
 
@@ -111,18 +126,19 @@
 - `pushBootstrapProvider` registers on sign-in when toggle on
 - Backend `notify_family_partners()` — no-op until Firebase creds on VPS
 
-## Tests
+## Tests & tooling
 
-| Suite | Count |
+| Suite | Notes |
 |---|---|
-| Unit + widget | 34 files |
+| Unit + widget | `test/` (~33 files) |
 | Integration | `integration_test/app_test.dart` |
-| **Total** | **84 passing** |
+| Demo screenshots | `integration_test/demo_screenshots_test.dart` + `scripts/capture_demo_screenshots.sh` |
 
 ## Infra
 
 | Asset | Status |
 |---|---|
-| Landing `bloomdue.baby` | ✅ Live (`landing/`) |
-| API `api.bloomdue.baby` | ✅ Live (VPS Docker) |
-| `due.bloomdue.baby` | ✅ Live — do not touch |
+| Landing container | ✅ prod |
+| API container | ✅ prod |
+| Postgres / Redis | ✅ prod |
+| GitHub `Gl0deanR/bloomdue-baby` | ✅ `main` synced |

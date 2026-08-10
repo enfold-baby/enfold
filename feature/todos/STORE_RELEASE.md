@@ -1,16 +1,18 @@
 # Todo — store release (private beta)
 
-> **Priority:** P2 · **Status:** Internal APK/AAB only
+> **Priority:** P2 · **Status:** Internal APK/AAB only · waiting on **DUNS** / store org
 
 ## Current state
 
 | Platform | Status |
 |---|---|
-| Android debug APK/AAB | ✅ `./scripts/build_beta.sh` |
-| Android signed release | 🔲 Uses debug keystore |
-| iOS TestFlight | 🔲 Needs Apple Developer signing |
+| Android sideload APK | ✅ `flutter build apk --release` (debug keystore OK for friends/family) |
+| Android signed release | 🔲 Uses debug keystore — swap before open beta |
+| iOS TestFlight | 🔲 Needs Apple Developer + signing |
+| Privacy policy URL | ✅ https://bloomdue.baby/privacy/ |
+| Terms URL | ✅ https://bloomdue.baby/terms/ |
 
-**Version:** `0.1.0+4` in `pubspec.yaml` — increment `+N` before each upload.
+**Version:** `0.1.0+9` in `pubspec.yaml` — increment `+N` before each store upload.
 
 ## Android — release keystore
 
@@ -31,15 +33,21 @@
 4. `flutter build ipa --release`
 5. Upload via Transporter or Xcode Organizer
 
+Simulator works for UI day-to-day without a physical iPhone.
+
 ## Before any store upload
 
-- [ ] Privacy policy URL on landing page
-- [ ] Medical disclaimer visible in app + store listing
-- [ ] Screenshots (Today, Learn, Partner settings)
-- [ ] `flutter test` green
-- [ ] Smoke test on physical device (Pixel + iPhone if possible)
+- [x] Privacy policy URL on landing page  
+- [x] Terms URL on landing page  
+- [ ] Medical disclaimer visible in app + store listing  
+- [ ] Screenshots (Today, Learn, Logs — demo tooling exists)  
+- [ ] `flutter test` green  
+- [ ] Smoke test on physical device (S24 + iPhone if possible)  
+- [ ] Signed Android keystore  
+- [ ] DUNS / developer accounts ready  
 
 ## References
 
-- [`BRANDING.md`](../../BRANDING.md) — bundle ID, beta badge
-- [`scripts/build_beta.sh`](../../scripts/build_beta.sh)
+- [`BRANDING.md`](../../BRANDING.md) — bundle ID, beta badge  
+- [`scripts/build_beta.sh`](../../scripts/build_beta.sh)  
+- Landing legal: `landing/public/privacy/`, `landing/public/terms/`  

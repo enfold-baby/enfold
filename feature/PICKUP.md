@@ -7,33 +7,42 @@ Copy one of these into a fresh chat:
 
 ---
 
-## General resume (default)
+## General resume (default — mobile features)
 
 ```
 Read feature/SESSION.md, feature/PICKUP.md, and feature/todos/README.md in bloomdue_baby.
-Flutter app at 0.1.0+4, Drift schema v8, 84 tests passing.
-API: https://api.bloomdue.baby (VPS FastAPI + Postgres).
-Pick up where we left off. Update feature/SESSION.md and related docs as we ship work.
+Flutter app at 0.1.0+9, Drift schema v9.
+API: https://api.bloomdue.baby · Landing: https://bloomdue.baby (legal + beta form live).
+Monorepo main is synced local/GitHub/prod.
+Continue mobile feature work. Update feature/SESSION.md and related docs as we ship.
 ```
 
 ---
 
-## Finish FCM partner push
+## No past dates while expecting (small UX)
 
 ```
-Let's finish FCM partner push.
-Read feature/todos/FCM_PARTNER_PUSH.md — scaffold is done, Firebase project not created yet.
-We'll set up Firebase together, then wire Flutter + VPS.
+Read feature/todos/DATE_PICKER_NO_PAST.md.
+While still expecting, clamp due-date and pregnancy appointment pickers to today+ (local TZ).
+Do not change care-log backfill (past feeds/sleep still allowed).
 ```
 
 ---
 
-## Sync improvements
+## Pull-to-refresh / partner sync polish
 
 ```
-Read feature/todos/SYNC_UPDATES.md.
-Care log create sync works; delete/edit are local-only.
-Implement server delete + update sync for partner consistency.
+On Today (and maybe Logs), add pull-to-refresh that runs syncIfSignedIn / pull recent care events.
+Read lib/services/sync/sync_service.dart and today screen providers.
+```
+
+---
+
+## Account switching
+
+```
+Read feature/todos/ACCOUNT_SWITCHING.md.
+Before public beta: isolate local Drift data when a different email signs in (upload-or-fresh prompt).
 ```
 
 ---
@@ -42,7 +51,7 @@ Implement server delete + update sync for partner consistency.
 
 ```
 Read feature/todos/STORE_RELEASE.md and BRANDING.md build section.
-Prepare signed Android AAB and/or iOS TestFlight for private beta.
+Privacy/terms URLs are live on bloomdue.baby. Still need signed Android keystore + iOS TestFlight when DUNS/accounts ready.
 ```
 
 ---
@@ -51,7 +60,26 @@ Prepare signed Android AAB and/or iOS TestFlight for private beta.
 
 ```
 Read feature/todos/CONTENT_REVIEW.md.
-25 learn cards are in content/cards/ — need physician review workflow.
+25 learn cards are in content/cards/ — physician review workflow with neonat/pediatric collaborators.
+```
+
+---
+
+## FCM partner push (deferred)
+
+```
+Read feature/todos/FCM_PARTNER_PUSH.md — scaffold is done, Firebase project not created yet.
+Only pick this up when ready to create Firebase + wire Flutter + VPS.
+```
+
+---
+
+## Landing / API only (rare)
+
+```
+Landing source: landing/public/. Deploy via landing/deploy.sh as u_bloomdue@135.125.226.37.
+Backend: backend/app/ on VPS docker compose. Beta requests: POST /v1/beta-requests.
+Do not touch due.bloomdue.baby.
 ```
 
 ---
@@ -61,12 +89,14 @@ Read feature/todos/CONTENT_REVIEW.md.
 | Layer | Detail |
 |---|---|
 | **Flutter** | Riverpod, go_router, Drift SQLite, offline-first |
-| **API** | `lib/services/api/bloomdue_api_client.dart` |
-| **Sync** | `lib/services/sync/sync_service.dart` — push pending + pull 2-day lookback |
+| **Version** | `0.1.0+9` · Drift **v9** |
+| **API** | `lib/services/api/bloomdue_api_client.dart` → `https://api.bloomdue.baby` |
+| **Sync** | create + **edit + delete** + pull (`sync_service.dart`) |
 | **Auth** | Magic code email → JWT in secure storage |
 | **Partner** | Family invite/join, attribution, gentle nudge, FCM prep (no-op) |
-| **Deploy** | `deploy/api-partner/`, `deploy/api-email/`, `landing/deploy.sh` |
-| **VPS** | `ubuntu@135.125.226.37` → `/home/u_bloomdue/bloomdue-platform` |
+| **Landing** | v3 design, legal pages, join-beta form + SMTP |
+| **Deploy** | `landing/deploy.sh`, `deploy/api-email/`, `deploy/api-partner/` |
+| **VPS** | `u_bloomdue@135.125.226.37` → `/home/u_bloomdue/bloomdue-platform` |
 
 ## Run locally
 
@@ -76,10 +106,14 @@ flutter pub get
 dart run build_runner build    # after Drift schema changes
 flutter test
 flutter run
+# emulator screenshots (optional):
+# ./scripts/capture_demo_screenshots.sh
 ```
 
 ## Build beta
 
 ```bash
 ./scripts/build_beta.sh
+# or: flutter build apk --release
+# → build/app/outputs/flutter-apk/app-release.apk
 ```
