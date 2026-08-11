@@ -35,3 +35,9 @@ Server already allows **many `children` rows per family**; the Flutter app still
 ## Until shipped
 
 Treat the app as **one child per install**, even if the server has multiple orphan children from earlier partner join bugs. Prefer one parent creates the baby, then partner joins.
+
+### Partner hygiene (2026-08-11)
+
+- Join rebinds to the **host family’s oldest child** — never creates a second child when the family already has one.
+- Periodic foreground sync (~45s) while the app is open keeps partners fresher without multi-child UI.
+- Full multi-child switcher still required for twins/siblings.

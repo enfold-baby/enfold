@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/theme/app_colors.dart';
+import '../services/sync/periodic_sync.dart';
 import '../services/update/update_service.dart';
 
-class AppShell extends StatefulWidget {
+class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
@@ -26,17 +28,29 @@ class AppShell extends StatefulWidget {
   ];
 
   @override
-  State<AppShell> createState() => _AppShellState();
+  ConsumerState<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends ConsumerState<AppShell> {
   bool _updateChecked = false;
   final _updateService = UpdateService();
+  PeriodicSyncController? _periodicSync;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdate());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _checkForUpdate();
+      // Keep partner logs warm while the app is open (pauses in background).
+      _periodicSync = PeriodicSyncController(ref)..start();
+    });
+  }
+
+  @override
+  void dispose() {
+    _periodicSync?.dispose();
+    super.dispose();
   }
 
   Future<void> _checkForUpdate() async {

@@ -31,4 +31,18 @@ class SyncActions {
     _ref.read(lastSyncResultProvider.notifier).state = result;
     return result;
   }
+
+  /// After joining a partner family: rebind to their baby, then full pull.
+  Future<({SyncResult result, String? babyName})> syncAfterFamilyJoin() async {
+    final session = _ref.read(authSessionProvider).valueOrNull;
+    if (session == null) {
+      return (result: const SyncResult(pushed: 0), babyName: null);
+    }
+
+    final babyName = await _ref
+        .read(syncServiceProvider)
+        .rebindToFamilyPrimaryChild(session: session);
+    final result = await syncIfSignedIn(fullHistory: true);
+    return (result: result, babyName: babyName);
+  }
 }

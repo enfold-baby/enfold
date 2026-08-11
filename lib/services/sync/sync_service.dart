@@ -260,17 +260,44 @@ class SyncService {
     return msg.contains('child') || msg == 'not found';
   }
 
-  /// Prefer a still-valid linked child; otherwise oldest family child.
+  /// Prefer a still-valid linked child; otherwise oldest family child
+  /// (`listChildren` is ordered by `created_at` ascending on the server).
+  ///
+  /// Never invent a new child when the family already has one — partners
+  /// joining must attach to the host baby, not create a duplicate.
   String _pickPrimaryChildId({
     required List<ChildProfile> children,
     required String? preferredId,
   }) {
+    assert(children.isNotEmpty);
     if (preferredId != null &&
         preferredId.isNotEmpty &&
         children.any((c) => c.id == preferredId)) {
       return preferredId;
     }
     return children.first.id;
+  }
+
+  /// After join: drop any solo-family child link and bind to the host primary.
+  /// Returns the shared baby's display name when available.
+  Future<String?> rebindToFamilyPrimaryChild({
+    required AuthSession session,
+  }) async {
+    final baby = await (_db.select(_db.babies)..limit(1)).getSingleOrNull();
+    if (baby == null) return null;
+
+    await (_db.update(_db.babies)..where((b) => b.id.equals(baby.id))).write(
+      const BabiesCompanion(serverChildId: Value(null)),
+    );
+
+    final children = await _api.listChildren(session.token);
+    if (children.isEmpty) return null;
+
+    final primary = children.first;
+    await (_db.update(_db.babies)..where((b) => b.id.equals(baby.id))).write(
+      BabiesCompanion(serverChildId: Value(primary.id)),
+    );
+    return primary.name;
   }
 
   Future<String?> _linkedServerChildId({
@@ -324,14 +351,19 @@ class SyncService {
     DateTime? birthDate,
   }) async {
     final children = await _api.listChildren(session.token);
-    final id = children.isNotEmpty
-        ? children.first.id
-        : (await _api.createChild(
-            token: session.token,
-            name: name,
-            birthDate: birthDate,
-          ))
-            .id;
+    // Hard rule: if the family already has a child (host baby), never create
+    // another — that caused partner sync to split events across two babies.
+    final String id;
+    if (children.isNotEmpty) {
+      id = children.first.id;
+    } else {
+      id = (await _api.createChild(
+        token: session.token,
+        name: name,
+        birthDate: birthDate,
+      ))
+          .id;
+    }
     await (_db.update(_db.babies)..where((b) => b.id.equals(baby.id))).write(
       BabiesCompanion(serverChildId: Value(id)),
     );

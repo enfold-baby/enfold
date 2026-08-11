@@ -96,16 +96,17 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
             token: session.token,
             code: code,
           );
-      // Drop link to the previous solo-family child so sync re-binds to the
-      // shared family's baby (otherwise API returns "Child not found").
-      await ref.read(accountSwitchServiceProvider).unlinkServerChild();
+      // Rebind to the host family's baby (never create a second child).
       ref.invalidate(familyInfoProvider);
-      final syncResult = await ref
-          .read(syncActionsProvider)
-          .syncIfSignedIn(fullHistory: true);
+      final joined = await ref.read(syncActionsProvider).syncAfterFamilyJoin();
+      final syncResult = joined.result;
+      final babyLabel = joined.babyName;
+      final shareBit =
+          babyLabel != null && babyLabel.isNotEmpty ? ' for $babyLabel' : '';
       _showFeedback(
         syncResult.ok
-            ? 'Joined family · pulled ${syncResult.pulled} partner logs.'
+            ? 'Joined family · sharing logs$shareBit'
+                '${syncResult.pulled > 0 ? ' · ${syncResult.pulled} from partner' : ''}.'
             : 'Joined family, but sync will retry (${syncResult.error}).',
       );
       _codeController.clear();
