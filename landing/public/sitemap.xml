@@ -35,4 +35,9 @@
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
+  <url>
+    <loc>https://enfold.baby/galaxy/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>

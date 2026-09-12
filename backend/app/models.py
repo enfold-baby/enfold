@@ -1,7 +1,7 @@
 import uuid
 from datetime import date, datetime
 
-from sqlalchemy import Date, DateTime, ForeignKey, String, Text, UniqueConstraint, func
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, LargeBinary, String, Text, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -89,3 +89,26 @@ class Device(Base):
     fcm_token: Mapped[str] = mapped_column(Text, unique=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     last_seen_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+class Supporter(Base):
+    """One completed Stripe donation ("moon"). Private fields stay private;
+    only name, link, tier and amount can appear on the public wall."""
+
+    __tablename__ = "supporters"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=_uuid)
+    stripe_session_id: Mapped[str] = mapped_column(String(255), unique=True)
+    livemode: Mapped[bool] = mapped_column(Boolean, default=True, index=True)
+    amount_cents: Mapped[int] = mapped_column(Integer)
+    currency: Mapped[str] = mapped_column(String(8))
+    tier: Mapped[str] = mapped_column(String(16))  # tea | nest | moon | wish
+    email: Mapped[str] = mapped_column(String(255), default="")
+    full_name: Mapped[str] = mapped_column(String(255), default="")
+    business_name: Mapped[str] = mapped_column(String(255), default="")
+    tax_id: Mapped[str] = mapped_column(String(64), default="")
+    address: Mapped[dict] = mapped_column(JSONB, default=dict)
+    show_on_wall: Mapped[bool] = mapped_column(Boolean, default=False)
+    link: Mapped[str] = mapped_column(String(512), default="")
+    icon_content_type: Mapped[str] = mapped_column(String(64), default="")
+    icon: Mapped[bytes | None] = mapped_column(LargeBinary, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

@@ -2959,3 +2959,19 @@ p {
 }
 
 .footer-imprint { font-size: 0.8rem; opacity: 0.8; flex-wrap: wrap; }
+
+/* Supporters wall */
+.wall-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 20px 0; }
+.wall-stat { background: var(--cream-deep); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+.wall-stat strong { font-family: "Fraunces", Georgia, serif; font-size: 1.7rem; color: var(--bloom-deep); line-height: 1.1; }
+.wall-stat span { font-size: 0.85rem; color: var(--bark-soft); }
+.wall-moons { list-style: none; margin: 8px 0 16px; padding: 0; display: flex; flex-wrap: wrap; gap: 18px 22px; align-items: flex-end; }
+.wall-moon { display: flex; flex-direction: column; align-items: center; text-align: center; width: 132px; gap: 6px; }
+.wall-moon-face { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff7e6, #e9d9a8 60%, #cbb77d); color: var(--bark); font-weight: 800; font-size: 0.95rem; box-shadow: 0 10px 24px -14px rgba(61, 50, 41, 0.6), inset -6px -8px 14px rgba(120, 95, 40, 0.18); overflow: hidden; }
+.wall-moon-face img { width: 60%; height: 60%; object-fit: contain; border-radius: 50%; }
+.wall-moon.tier-moon .wall-moon-face { background: radial-gradient(circle at 35% 30%, #fff, #f6e7ea 55%, var(--bloom)); }
+.wall-moon.tier-nest .wall-moon-face { background: radial-gradient(circle at 35% 30%, #fff, var(--sage-mist) 55%, var(--sage)); }
+.wall-moon-name { font-weight: 800; font-size: 0.92rem; color: var(--bark); overflow-wrap: anywhere; }
+.wall-moon-name a { color: var(--sage-deep); text-decoration: none; }
+.wall-moon-name a:hover { color: var(--bloom-deep); text-decoration: underline; }
+.wall-moon-meta { font-size: 0.78rem; color: var(--bark-soft); }

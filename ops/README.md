@@ -28,3 +28,15 @@ Restore:
 ```bash
 gunzip -c enfold-db-<stamp>.sql.gz | docker exec -i bloomdue-postgres psql -U bloomdue bloomdue
 ```
+
+## Supporters wall (Stripe)
+
+Donations are Stripe Payment Links (`landing/public/support/index.html`, live and `?stripe=test` sandbox
+links). Each link collects name, optional business name, billing address and three custom fields: tax ID
+or CUI (for invoices), "show my moon on the supporters wall" (Yes/No) and an optional link. Stripe posts
+`checkout.session.completed` to `POST /v1/stripe/webhook` (live and sandbox endpoints, secrets in
+`STRIPE_WEBHOOK_SECRET` / `STRIPE_WEBHOOK_SECRET_TEST` on the VPS). The API stores every donation in
+`supporters` (private fields stay private) and serves `GET /v1/support/wall?mode=live|test` plus
+`/v1/support/icon/<id>` (favicon fetched server-side, so visitors never call a third party). The support
+page and `/galaxy/` read the wall. Invoice details for each payment are visible in the Stripe dashboard
+under the payment's Checkout summary (name, company, address, tax ID custom field).

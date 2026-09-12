@@ -51,6 +51,11 @@ class Settings(BaseSettings):
     firebase_project_id: str = ""
     firebase_service_account_json: str = ""
 
+    # Stripe webhook signing secrets (Developers > Webhooks). Live and sandbox
+    # endpoints have different secrets; either may be empty to disable.
+    stripe_webhook_secret: str = ""
+    stripe_webhook_secret_test: str = ""
+
     # Protects APK upload + version metadata PUT (sideload beta ops).
     app_version_admin_token: str = ""
 

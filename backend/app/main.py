@@ -12,6 +12,7 @@ from app.routers import (
     devices,
     families,
     health,
+    support,
 )
 
 settings = get_settings()
@@ -47,6 +48,7 @@ app.include_router(children.router)
 app.include_router(care_events.router)
 app.include_router(devices.router)
 app.include_router(families.router)
+app.include_router(support.router)
 
 
 @app.get("/")

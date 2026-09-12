@@ -34,7 +34,7 @@
     <meta name="twitter:image" content="https://enfold.baby/og-image.jpg?v=20260902-brand" />
     <link rel="preload" href="/fonts/Nunito-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="/fonts/Fraunces-SemiBold.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=20260907-support" />
+    <link rel="stylesheet" href="/styles.css?v=20260912-wall" />
   </head>
   <body class="help-page">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -138,6 +138,29 @@
           </p>
         </article>
 
+
+        <article class="help-room" id="wall">
+          <h2>Support so far</h2>
+          <p>
+            Every moon planted, counted live. Supporters who chose to be named get their own
+            moon; the biggest moons rise first.
+          </p>
+          <div class="wall-stats" id="wall-stats" aria-live="polite">
+            <div class="wall-stat"><strong id="wall-count">0</strong><span>moons planted</span></div>
+            <div class="wall-stat"><strong id="wall-total">€0</strong><span>given so far</span></div>
+            <div class="wall-stat"><strong id="wall-tea">0</strong><span>warm bottles</span></div>
+            <div class="wall-stat"><strong id="wall-nest">0</strong><span>extra hours of sleep</span></div>
+            <div class="wall-stat"><strong id="wall-moon">0</strong><span>whole quiet nights</span></div>
+            <div class="wall-stat"><strong id="wall-wish">0</strong><span>chosen amounts</span></div>
+          </div>
+          <ul class="wall-moons" id="wall-moons" aria-label="Named supporters"></ul>
+          <p class="help-status" id="wall-empty">
+            No moons yet. The first one hangs highest.
+          </p>
+          <p class="help-status">
+            <a class="button button-secondary" id="wall-galaxy-link" href="/galaxy/">Travel the galaxy of moons</a>
+          </p>
+        </article>
         <article class="help-room" id="credits">
           <h2>The mobile above the crib</h2>
           <p>
@@ -343,6 +366,40 @@
             label +
             ". We’ll send a checkout link.";
         });
+      })();
+    </script>
+    <script>
+      (function () {
+        var testMode = /[?&]stripe=test(&|$)/.test(location.search);
+        var api = "https://api.enfold.baby/v1/support/wall" + (testMode ? "?mode=test" : "");
+        if (testMode) { document.getElementById("wall-galaxy-link").href = "/galaxy/?stripe=test"; }
+        var euro = function (cents) { return "€" + Math.round(cents / 100).toLocaleString("en-GB"); };
+        var tierLabel = { tea: "a warm bottle", nest: "an extra hour of sleep", moon: "a whole quiet night", wish: "a chosen amount" };
+        var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+        fetch(api, { headers: { Accept: "application/json" } })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            document.getElementById("wall-count").textContent = d.count;
+            document.getElementById("wall-total").textContent = euro(d.total_cents);
+            ["tea", "nest", "moon", "wish"].forEach(function (k) {
+              document.getElementById("wall-" + k).textContent = d.tiers[k] || 0;
+            });
+            var list = document.getElementById("wall-moons");
+            var empty = document.getElementById("wall-empty");
+            if (!d.moons.length) { if (d.count > 0) { empty.textContent = "Every supporter so far chose to stay private. Thank you all the same."; } return; }
+            empty.hidden = true;
+            var max = d.moons[0].amount_cents || 1;
+            list.innerHTML = d.moons.map(function (m) {
+              var size = 44 + Math.round(36 * Math.sqrt(m.amount_cents / max));
+              var initials = esc(m.name).trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join("").toUpperCase();
+              var face = m.has_icon
+                ? '<img src="https://api.enfold.baby/v1/support/icon/' + m.id + '" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode(\'' + initials + '\'))">'
+                : initials;
+              var name = m.link ? '<a href="' + esc(m.link) + '" rel="nofollow noopener" target="_blank">' + esc(m.name) + '</a>' : esc(m.name);
+              return '<li class="wall-moon tier-' + esc(m.tier) + '"><span class="wall-moon-face" style="width:' + size + 'px;height:' + size + 'px">' + face + '</span><span class="wall-moon-name">' + name + '</span><span class="wall-moon-meta">' + euro(m.amount_cents) + " · " + tierLabel[m.tier] + '</span></li>';
+            }).join("");
+          })
+          .catch(function () { document.getElementById("wall-empty").textContent = "The moons are behind a cloud right now. Try again in a minute."; });
       })();
     </script>
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>

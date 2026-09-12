@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Galaxy of moons · Enfold</title>
+    <meta
+      name="description"
+      content="Every moon planted for Enfold, hanging in one endless sky. Drag to travel, tap a moon to meet the parent or company behind it."
+    />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#faf7f2" />
+    <meta name="color-scheme" content="light" />
+    <link rel="canonical" href="https://enfold.baby/galaxy/" />
+    <link rel="icon" href="/favicon.png?v=20260902-brand" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg?v=20260902-brand" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20260902-brand" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Enfold" />
+    <meta property="og:title" content="Galaxy of moons · Enfold" />
+    <meta
+      property="og:description"
+      content="Every moon planted for Enfold, hanging in one endless sky. Drag to travel, tap a moon to meet the parent or company behind it."
+    />
+    <meta property="og:url" content="https://enfold.baby/galaxy/" />
+    <meta property="og:image" content="https://enfold.baby/og-image.jpg?v=20260902-brand" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Galaxy of moons · Enfold" />
+    <meta
+      name="twitter:description"
+      content="Every moon planted for Enfold, hanging in one endless sky. Drag to travel, tap a moon to meet the parent or company behind it."
+    />
+    <meta name="twitter:image" content="https://enfold.baby/og-image.jpg?v=20260902-brand" />
+    <link
+      rel="preload"
+      href="/fonts/Nunito-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/Fraunces-SemiBold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/styles.css?v=20260912-wall" />
+    <style>
+      .galaxy-page { background: #14192b; color: #f3ede4; }
+      .galaxy-page .site-header { background: transparent; }
+      .galaxy-page .brand-name, .galaxy-page .header-nav a { color: #f3ede4; }
+      .galaxy-wrap { position: relative; height: calc(100vh - 88px); min-height: 520px; overflow: hidden; touch-action: none; cursor: grab; }
+      .galaxy-wrap.dragging { cursor: grabbing; }
+      #galaxy { display: block; width: 100%; height: 100%; }
+      .galaxy-hud { position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; font-family: "Nunito", system-ui, sans-serif; font-size: 0.9rem; color: #e4eee8; pointer-events: none; }
+      .galaxy-hud a, .galaxy-hud button { pointer-events: auto; }
+      .galaxy-hud .pill { background: rgba(20, 25, 43, 0.75); border: 1px solid rgba(228, 238, 232, 0.25); border-radius: 999px; padding: 8px 14px; }
+      .galaxy-hud a.pill { color: #e4eee8; text-decoration: none; }
+      .galaxy-card { position: absolute; max-width: 280px; background: #faf7f2; color: #3d3229; border-radius: 16px; padding: 12px 14px; box-shadow: 0 18px 40px -20px rgba(0,0,0,0.8); font-family: "Nunito", system-ui, sans-serif; font-size: 0.92rem; pointer-events: auto; }
+      .galaxy-card strong { display: block; font-size: 1rem; }
+      .galaxy-card a { color: #4a675c; font-weight: 800; }
+      .galaxy-card[hidden] { display: none; }
+      .galaxy-title { position: absolute; left: 16px; top: 12px; right: 16px; pointer-events: none; }
+      .galaxy-title h1 { font-family: "Fraunces", Georgia, serif; font-size: 1.5rem; margin: 0; color: #faf7f2; }
+      .galaxy-title p { margin: 4px 0 0; color: #cdd7d1; font-family: "Nunito", system-ui, sans-serif; font-size: 0.9rem; }
+    </style>
+  </head>
+  <body class="legal-page galaxy-page">
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Enfold home">
+        <img class="brand-mark" src="/images/enfold-mark.png?v=20260902-brand" width="32" height="32" alt="" />
+        <span class="brand-name">Enfold</span>
+      </a>
+
+      <nav class="header-nav" aria-label="Site navigation">
+        <a href="/#features">Inside the app</a>
+        <a href="/roadmap/">Roadmap</a>
+        <a href="/open/">Open</a>
+        <a href="/support/">Support</a>
+      </nav>
+
+      <a
+        class="button button-small button-primary header-cta"
+        href="/#notify"
+        >Notify me</a>
+    </header>
+
+    <main id="main">
+      <div class="galaxy-wrap" id="galaxy-wrap">
+        <canvas id="galaxy" aria-label="Galaxy of supporter moons"></canvas>
+        <div class="galaxy-title">
+          <h1>Galaxy of moons</h1>
+          <p id="galaxy-sub">Loading the sky…</p>
+        </div>
+        <div class="galaxy-card" id="galaxy-card" hidden></div>
+        <div class="galaxy-hud">
+          <span class="pill" id="galaxy-hint">Drag to travel · scroll to zoom · tap a moon</span>
+          <a class="pill" href="/support/#donate">Plant your own moon</a>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        var testMode = /[?&]stripe=test(&|$)/.test(location.search);
+        var api = "https://api.enfold.baby/v1/support/wall" + (testMode ? "?mode=test" : "");
+        var canvas = document.getElementById("galaxy");
+        var wrap = document.getElementById("galaxy-wrap");
+        var card = document.getElementById("galaxy-card");
+        var sub = document.getElementById("galaxy-sub");
+        var ctx = canvas.getContext("2d");
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var W = 0, H = 0;
+        var cam = { x: 0, y: 0, z: 1 };
+        var moons = [];
+        var stars = [];
+        var icons = {};
+        var euro = function (c) { return "€" + Math.round(c / 100).toLocaleString("en-GB"); };
+        var tierLabel = { tea: "a warm bottle", nest: "an extra hour of sleep", moon: "a whole quiet night", wish: "a chosen amount" };
+        var tint = { tea: "#e9d9a8", nest: "#9fbfae", moon: "#d98ea0", wish: "#c9d3f0" };
+
+        function resize() {
+          W = wrap.clientWidth; H = wrap.clientHeight;
+          canvas.width = W * dpr; canvas.height = H * dpr;
+          canvas.style.width = W + "px"; canvas.style.height = H + "px";
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        function seedStars() {
+          stars = [];
+          for (var i = 0; i < 1400; i++) {
+            stars.push({ x: (Math.random() - 0.5) * 9000, y: (Math.random() - 0.5) * 9000, r: Math.random() * 1.6 + 0.6, a: Math.random() * 0.5 + 0.5, tw: Math.random() * 6.28 });
+          }
+        }
+        // Golden-angle spiral: biggest supporters nearest the centre.
+        function layout(list) {
+          var max = list.length ? list[0].amount_cents : 1;
+          return list.map(function (m, i) {
+            var t = i * 2.39996;
+            var d = i === 0 ? 0 : 150 + 110 * Math.sqrt(i) * 1.5;
+            var r = 22 + 40 * Math.sqrt(m.amount_cents / max);
+            return { m: m, x: Math.cos(t) * d, y: Math.sin(t) * d, r: r, phase: Math.random() * 6.28 };
+          });
+        }
+        function draw(ts) {
+          ctx.clearRect(0, 0, W, H);
+          var g = ctx.createRadialGradient(W / 2, H / 2, 40, W / 2, H / 2, Math.max(W, H));
+          g.addColorStop(0, "#1b2340"); g.addColorStop(1, "#0e1220");
+          ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+          ctx.save();
+          ctx.translate(W / 2 + cam.x, H / 2 + cam.y); ctx.scale(cam.z, cam.z);
+          for (var i = 0; i < stars.length; i++) {
+            var s = stars[i];
+            ctx.globalAlpha = s.a * (0.7 + 0.3 * Math.sin(ts / 900 + s.tw));
+            ctx.fillStyle = "#faf7f2"; ctx.beginPath(); ctx.arc(s.x, s.y, s.r / cam.z, 0, 6.28); ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+          for (var j = 0; j < moons.length; j++) {
+            var o = moons[j]; var bob = Math.sin(ts / 1400 + o.phase) * 3;
+            var y = o.y + bob;
+            ctx.shadowColor = tint[o.m.tier] || "#e9d9a8"; ctx.shadowBlur = 30;
+            var rg = ctx.createRadialGradient(o.x - o.r * 0.35, y - o.r * 0.35, o.r * 0.1, o.x, y, o.r);
+            rg.addColorStop(0, "#fffdf6"); rg.addColorStop(0.6, tint[o.m.tier] || "#e9d9a8"); rg.addColorStop(1, "#8b7a4f");
+            ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(o.x, y, o.r, 0, 6.28); ctx.fill();
+            ctx.shadowBlur = 0;
+            var ic = icons[o.m.id];
+            if (ic && ic.ok) {
+              ctx.save(); ctx.beginPath(); ctx.arc(o.x, y, o.r * 0.55, 0, 6.28); ctx.clip();
+              ctx.drawImage(ic.img, o.x - o.r * 0.55, y - o.r * 0.55, o.r * 1.1, o.r * 1.1); ctx.restore();
+            } else {
+              ctx.fillStyle = "#3d3229"; ctx.font = "800 " + Math.max(10, o.r * 0.6) + "px Nunito, system-ui, sans-serif";
+              ctx.textAlign = "center"; ctx.textBaseline = "middle";
+              var ini = o.m.name.trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join("").toUpperCase();
+              ctx.fillText(ini, o.x, y + 1);
+            }
+            ctx.fillStyle = "#f3ede4"; ctx.font = "700 " + Math.max(11, 13 / Math.sqrt(cam.z)) + "px Nunito, system-ui, sans-serif";
+            ctx.textAlign = "center"; ctx.textBaseline = "top";
+            ctx.fillText(o.m.name.length > 22 ? o.m.name.slice(0, 21) + "…" : o.m.name, o.x, y + o.r + 8);
+          }
+          ctx.restore();
+          requestAnimationFrame(draw);
+        }
+        function worldFromEvent(e) {
+          var rect = canvas.getBoundingClientRect();
+          var px = (e.clientX - rect.left) - W / 2 - cam.x; var py = (e.clientY - rect.top) - H / 2 - cam.y;
+          return { x: px / cam.z, y: py / cam.z };
+        }
+        function hit(p) {
+          for (var i = moons.length - 1; i >= 0; i--) { var o = moons[i]; var dx = p.x - o.x, dy = p.y - o.y; if (dx * dx + dy * dy <= o.r * o.r) return o; }
+          return null;
+        }
+        function showCard(o, e) {
+          var m = o.m;
+          card.innerHTML = "<strong>" + esc(m.name) + "</strong>" + euro(m.amount_cents) + " · " + tierLabel[m.tier] + (m.since ? "<br><small>since " + esc(m.since) + "</small>" : "") + (m.link ? '<br><a href="' + esc(m.link) + '" rel="nofollow noopener" target="_blank">Visit ↗</a>' : "");
+          var rect = canvas.getBoundingClientRect();
+          card.style.left = Math.min(e.clientX - rect.left + 12, W - 290) + "px";
+          card.style.top = Math.min(e.clientY - rect.top + 12, H - 120) + "px";
+          card.hidden = false;
+        }
+        function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+
+        var drag = null, moved = false;
+        wrap.addEventListener("pointerdown", function (e) { drag = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y }; moved = false; wrap.classList.add("dragging"); wrap.setPointerCapture(e.pointerId); });
+        wrap.addEventListener("pointermove", function (e) { if (!drag) return; var dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 4) moved = true; cam.x = drag.cx + dx; cam.y = drag.cy + dy; });
+        wrap.addEventListener("pointerup", function (e) { wrap.classList.remove("dragging"); if (drag && !moved) { var o = hit(worldFromEvent(e)); if (o) showCard(o, e); else card.hidden = true; } drag = null; });
+        wrap.addEventListener("wheel", function (e) { e.preventDefault(); var f = e.deltaY < 0 ? 1.1 : 0.9; cam.z = Math.min(3, Math.max(0.25, cam.z * f)); }, { passive: false });
+        window.addEventListener("resize", resize);
+
+        resize(); seedStars(); requestAnimationFrame(draw);
+        fetch(api, { headers: { Accept: "application/json" } })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            moons = layout(d.moons);
+            sub.textContent = d.count + (d.count === 1 ? " moon" : " moons") + " planted · " + euro(d.total_cents) + " given" + (d.moons.length < d.count ? " · " + (d.count - d.moons.length) + " chose to stay private" : "");
+            if (!d.moons.length) sub.textContent += " · the first named moon hangs at the centre";
+            d.moons.forEach(function (m) {
+              if (!m.has_icon) return;
+              var img = new Image(); img.onload = function () { icons[m.id] = { img: img, ok: true }; }; img.src = "https://api.enfold.baby/v1/support/icon/" + m.id;
+            });
+          })
+          .catch(function () { sub.textContent = "The sky is behind a cloud right now. Try again in a minute."; });
+      })();
+    </script>
+
+    <footer class="site-footer">
+      <div class="footer-main section-shell">
+        <div class="footer-brand">
+          <a class="brand" href="/" aria-label="Enfold home">
+            <img class="brand-mark" src="/images/enfold-mark.png?v=20260902-brand" width="32" height="32" alt="" />
+            <span class="brand-name">Enfold</span>
+          </a>
+          <p>Calm baby care, from bump to toddler.</p>
+        </div>
+        <div class="footer-links">
+          <a href="/#features">Inside the app</a>
+          <a href="/support/">Support</a>
+          <a href="/open/">Open</a>
+          <a href="/roadmap/">Roadmap</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/terms/">Terms</a>
+          <a href="mailto:support@enfold.baby">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom section-shell">
+        <p class="disclaimer">
+          Enfold provides general educational information and does not replace professional
+          medical advice. In an emergency, call your local emergency number.
+        </p>
+        <p class="footer-meta">
+          <span>© Enfold</span>
+          <span aria-hidden="true">·</span>
+          <span
+            >by <a href="https://x.com/Gl0deanR" target="_blank" rel="noopener noreferrer">Gl0deanR</a>
+            @ <a href="https://globinary.io/en" target="_blank" rel="noopener noreferrer">GLOBINARY</a></span
+          >
+        </p>
+        <p class="footer-meta footer-imprint">
+          <span>GLOBINARY DEVELOPMENT SYSTEM SRL</span>
+          <span aria-hidden="true">·</span>
+          <span>CUI 46825774</span>
+          <span aria-hidden="true">·</span>
+          <span>J24/1890/2022</span>
+          <span aria-hidden="true">·</span>
+          <span>Baia Mare, Romania</span>
+          <span aria-hidden="true">·</span>
+          <a href="/delete-account/">Delete account</a>
+        </p>
+      </div>
+    </footer>
+
+    <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+    <noscript
+      ><img
+        src="https://queue.simpleanalyticscdn.com/noscript.gif"
+        alt=""
+        referrerpolicy="no-referrer-when-downgrade"
+    /></noscript>
+  </body>
+</html>
