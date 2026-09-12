@@ -104,7 +104,7 @@
           <h2>Plant a moon</h2>
           <p>
             Not an ad. Not a guilt trip. A tip for the night shift so Enfold stays free
-            and ad-free. Stripe checkout: when the links are live, these buttons open it.
+            and ad-free. Each button opens a Stripe checkout page; nothing is bought inside the app and nothing unlocks.
           </p>
           <p>
             <strong>1% of every moon</strong> goes to
@@ -126,14 +126,15 @@
               <span>a whole quiet night</span>
             </button>
             <button type="button" class="help-nest" data-kind="wish" data-label="your own amount">
-              <strong>?</strong>
+              <strong>€1+</strong>
               <span>choose an amount</span>
             </button>
           </div>
           <p class="help-status" id="help-donate-status" role="status">
-            Stripe is being tucked in. Until the moons have checkout links, email
-            <a href="mailto:support@enfold.baby?subject=Plant%20a%20moon%20for%20Enfold">support@enfold.baby</a>
-            with the words <em>plant a moon</em>.
+            Payments are handled by Stripe. A moon is a gift with nothing in return; if you
+            change your mind, email
+            <a href="mailto:support@enfold.baby?subject=Moon%20refund">support@enfold.baby</a>
+            and we refund it, no questions asked.
           </p>
         </article>
 
@@ -226,7 +227,12 @@
         var SHARE =
           "Enfold is a calm, ad-free baby care app: feeds, sleep, diapers, growth, and a quiet “you’re doing fine.” Google Play soon, iOS shortly after.\nhttps://enfold.baby";
         // Paste Stripe Payment Link URLs here when you have them.
-        var STRIPE_LINKS = { tea: "", nest: "", moon: "", wish: "" };
+        var STRIPE_LINKS = {
+          tea: "https://donate.stripe.com/dRmdR98IDdrY9XhasW5Ne00",
+          nest: "https://donate.stripe.com/9B6cN59MH3Ro4CX30u5Ne01",
+          moon: "https://donate.stripe.com/00wdR98IDbjQ4CXgRk5Ne02",
+          wish: "https://donate.stripe.com/eVq8wP8ID5Zw2uPbx05Ne03"
+        };
 
         var stars = document.getElementById("help-stars");
         var countEl = document.getElementById("help-star-count");
