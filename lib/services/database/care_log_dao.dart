@@ -18,8 +18,29 @@ class CareLogDao extends DatabaseAccessor<AppDatabase> with _$CareLogDaoMixin {
 
   Expression<bool> _isActive($CareEventsTable e) => e.deletedAt.isNull();
 
-  Future<String> ensureDefaultBaby() async {
-    final existing = await (select(babies)..limit(1)).getSingleOrNull();
+  Future<String>? _ensureDefaultBabyInFlight;
+
+  /// Returns the one local baby, creating it on first launch.
+  ///
+  /// Many providers call this at the same time on a fresh install. Without
+  /// serialising them, each saw an empty table and inserted its own "Baby",
+  /// so the name typed in onboarding landed on a row other screens never
+  /// read. Concurrent callers now share one future and the oldest row wins.
+  Future<String> ensureDefaultBaby() {
+    final inFlight = _ensureDefaultBabyInFlight;
+    if (inFlight != null) return inFlight;
+    final future = _ensureDefaultBabyOnce().whenComplete(() {
+      _ensureDefaultBabyInFlight = null;
+    });
+    _ensureDefaultBabyInFlight = future;
+    return future;
+  }
+
+  Future<String> _ensureDefaultBabyOnce() async {
+    final existing = await (select(babies)
+          ..orderBy([(b) => OrderingTerm.asc(b.createdAt)])
+          ..limit(1))
+        .getSingleOrNull();
     if (existing != null) return existing.id;
 
     final id = _uuid.v4();

@@ -1,5 +1,5 @@
-import 'package:bloomdue_baby/features/onboarding/onboarding_screen.dart';
-import 'package:bloomdue_baby/services/database/database_provider.dart';
+import 'package:enfold/features/onboarding/onboarding_screen.dart';
+import 'package:enfold/services/database/database_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -64,6 +64,10 @@ void main() {
     expect(find.text('Home'), findsOneWidget);
   });
 
+  // The baby path is covered by test/features/onboarding/onboarding_actions_test.dart
+  // and test/services/ensure_default_baby_test.dart; a widget-level version never
+  // settles in the test harness (focused TextField + router redirect).
+
   testWidgets('skip completes onboarding', (tester) async {
     final db = createTestDatabase();
     final container = ProviderContainer(
@@ -84,5 +88,34 @@ void main() {
 
     expect(await db.settingsDao.isOnboardingCompleted(), isTrue);
     expect(find.text('Home'), findsOneWidget);
+  });
+
+  testWidgets('welcome hero stays visible on a landscape tablet', (tester) async {
+    final db = createTestDatabase();
+    final container = ProviderContainer(
+      overrides: [databaseProvider.overrideWithValue(db)],
+    );
+    addTearDown(container.dispose);
+    addTearDown(db.close);
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    tester.view.physicalSize = const Size(1280, 800);
+    tester.view.devicePixelRatio = 1.0;
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: _testRouter()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final hero = tester.renderObject<RenderBox>(
+      find.byKey(const Key('onboarding_welcome_hero')),
+    );
+    expect(hero.size.height, greaterThan(280));
+    expect(hero.size.width / hero.size.height, lessThan(2.4));
+    expect(find.text('Get started'), findsOneWidget);
+    expect(find.text('Skip for now'), findsOneWidget);
   });
 }
