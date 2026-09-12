@@ -18,16 +18,28 @@ class Settings(BaseSettings):
     magic_code_expire_minutes: int = 10
     dev_magic_code_log: bool = True
 
+    # Store-review account: this email always gets reviewer_code as its sign-in
+    # code and no email is sent, so a Play reviewer can log in without an inbox.
+    # Both must be set on the server for it to apply; empty disables it.
+    reviewer_email: str = ""
+    reviewer_code: str = ""
+
     smtp_host: str = ""
     smtp_port: int = 587
     smtp_user: str = ""
     smtp_password: str = ""
-    smtp_from_email: str = ""
-    smtp_from_name: str = "BloomDue"
+    smtp_from_email: str = "noreply@enfold.baby"
+    smtp_from_name: str = "Enfold"
     smtp_use_ssl: bool = False
 
-    # Where private-beta form submissions are delivered.
-    beta_request_to_email: str = "contact@globinary.io"
+    # AWS SES (eu-central-1). Keys are required on the OVH VPS (no instance role).
+    ses_region: str = ""
+    ses_access_key_id: str = ""
+    ses_secret_access_key: str = ""
+
+    # Human inbox for replies and launch-notify form notifications.
+    contact_email: str = "support@enfold.baby"
+    beta_request_to_email: str = "support@enfold.baby"
     beta_request_rate_limit_per_ip: int = 5
     beta_request_rate_limit_window_seconds: int = 3600
 

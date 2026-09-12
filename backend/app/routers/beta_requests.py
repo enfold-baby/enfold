@@ -86,7 +86,7 @@ async def create_beta_request(
     except Exception as exc:
         raise HTTPException(
             status_code=503,
-            detail="We couldn't send your request right now. Please email contact@globinary.io.",
+            detail="We couldn't send your request right now. Please email support@enfold.baby.",
         ) from exc
 
     return BetaRequestResponse(status="sent")
