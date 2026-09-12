@@ -6,6 +6,7 @@ import '../../logs/providers/logs_providers.dart';
 import '../../today/models/care_log_entry.dart';
 import '../../today/models/log_type.dart';
 import '../../today/providers/today_log_provider.dart';
+import '../../../core/datetime/calendar_day.dart';
 
 bool matchesPumpingFilters(
   CareLogEntry entry, {
@@ -25,7 +26,8 @@ final pumpingLogsProvider = StreamProvider<List<CareLogEntry>>((ref) {
   final db = ref.read(databaseProvider);
   final period = ref.watch(pumpingLogPeriodProvider);
   final side = ref.watch(pumpingSideFilterProvider);
-  final range = period.resolveRange(_todayEnd);
+  final day = ref.watch(currentCalendarDayProvider);
+  final range = period.resolveRange(() => calendarDayEnd(day));
 
   return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
     (babyId) => db.careLogDao
@@ -57,8 +59,3 @@ final todayPumpingLogsProvider = Provider<AsyncValue<List<CareLogEntry>>>(
   },
 );
 
-DateTime _todayEnd() {
-  final now = DateTime.now();
-  final start = DateTime(now.year, now.month, now.day);
-  return start.add(const Duration(days: 1));
-}

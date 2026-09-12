@@ -7,6 +7,7 @@ import '../../today/models/care_log_entry.dart';
 import '../../today/models/log_type.dart';
 import '../models/log_detail_filters.dart';
 import '../models/log_period_filter.dart';
+import '../../../core/datetime/calendar_day.dart';
 
 LogType? resolveLogType(String apiType, CareLogDetails details) {
   if (apiType == 'note' &&
@@ -61,7 +62,8 @@ final hubLogsProvider = StreamProvider<List<CareLogEntry>>((ref) {
   final db = ref.read(databaseProvider);
   final typeFilter = ref.watch(hubLogTypeFilterProvider);
   final period = ref.watch(hubLogPeriodProvider);
-  final range = period.resolveRange(_todayEnd);
+  final day = ref.watch(currentCalendarDayProvider);
+  final range = period.resolveRange(() => calendarDayEnd(day));
 
   return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
     (babyId) => db.careLogDao
@@ -93,7 +95,8 @@ final feedLogsProvider = StreamProvider<List<CareLogEntry>>((ref) {
   final period = ref.watch(feedLogPeriodProvider);
   final feedMode = ref.watch(feedModeFilterProvider);
   final breastDelivery = ref.watch(feedDeliveryFilterProvider);
-  final range = period.resolveRange(_todayEnd);
+  final day = ref.watch(currentCalendarDayProvider);
+  final range = period.resolveRange(() => calendarDayEnd(day));
 
   return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
     (babyId) => db.careLogDao
@@ -132,7 +135,8 @@ final diaperLogsProvider = StreamProvider<List<CareLogEntry>>((ref) {
   final wet = ref.watch(diaperWetFilterProvider);
   final dirty = ref.watch(diaperDirtyFilterProvider);
   final consistency = ref.watch(diaperConsistencyFilterProvider);
-  final range = period.resolveRange(_todayEnd);
+  final day = ref.watch(currentCalendarDayProvider);
+  final range = period.resolveRange(() => calendarDayEnd(day));
 
   return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
     (babyId) => db.careLogDao
@@ -168,7 +172,8 @@ final sleepLogsProvider = StreamProvider<List<CareLogEntry>>((ref) {
   final db = ref.read(databaseProvider);
   final period = ref.watch(sleepLogPeriodProvider);
   final inProgress = ref.watch(sleepStatusFilterProvider);
-  final range = period.resolveRange(_todayEnd);
+  final day = ref.watch(currentCalendarDayProvider);
+  final range = period.resolveRange(() => calendarDayEnd(day));
 
   return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
     (babyId) => db.careLogDao
@@ -190,7 +195,7 @@ final sleepLogsProvider = StreamProvider<List<CareLogEntry>>((ref) {
 
 final openSleepProvider = StreamProvider<CareLogEntry?>((ref) {
   final db = ref.read(databaseProvider);
-  final end = _todayEnd();
+  final end = calendarDayEnd(ref.watch(currentCalendarDayProvider));
   final start = end.subtract(const Duration(days: 90));
 
   return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
@@ -210,8 +215,3 @@ final openSleepProvider = StreamProvider<CareLogEntry?>((ref) {
   );
 });
 
-DateTime _todayEnd() {
-  final now = DateTime.now();
-  final start = DateTime(now.year, now.month, now.day);
-  return start.add(const Duration(days: 1));
-}

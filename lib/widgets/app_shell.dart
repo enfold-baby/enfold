@@ -3,15 +3,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/theme/app_colors.dart';
+import '../features/pregnancy/providers/pregnancy_providers.dart';
 import '../services/sync/periodic_sync.dart';
-import '../services/update/update_service.dart';
+import 'quick_add_sheet.dart';
+import '../core/datetime/calendar_day.dart';
 
 class AppShell extends ConsumerStatefulWidget {
   const AppShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
-  static const _destinations = [
+  /// Docked + lives on tab homes (and Learn articles). Nested log lists and
+  /// growth already have their own add button.
+  static bool showDockedQuickAdd(String location) {
+    const roots = {'/', '/logs', '/learn', '/settings'};
+    if (roots.contains(location)) return true;
+    return location.startsWith('/learn/');
+  }
+
+  static const _tabs = [
     (icon: Icons.today_outlined, selectedIcon: Icons.today, label: 'Today'),
     (
       icon: Icons.edit_note_outlined,
@@ -20,11 +30,10 @@ class AppShell extends ConsumerStatefulWidget {
     ),
     (icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book, label: 'Learn'),
     (
-      icon: Icons.favorite_outline,
-      selectedIcon: Icons.favorite,
-      label: 'Pregnancy',
+      icon: Icons.settings_outlined,
+      selectedIcon: Icons.settings,
+      label: 'Settings',
     ),
-    (icon: Icons.settings_outlined, selectedIcon: Icons.settings, label: 'Settings'),
   ];
 
   @override
@@ -32,152 +41,141 @@ class AppShell extends ConsumerStatefulWidget {
 }
 
 class _AppShellState extends ConsumerState<AppShell> {
-  bool _updateChecked = false;
-  final _updateService = UpdateService();
   PeriodicSyncController? _periodicSync;
+  CalendarDayTicker? _dayTicker;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      _checkForUpdate();
       // Keep partner logs warm while the app is open (pauses in background).
       _periodicSync = PeriodicSyncController(ref)..start();
+      _dayTicker = CalendarDayTicker(ref)..start();
     });
   }
 
   @override
   void dispose() {
     _periodicSync?.dispose();
+    _dayTicker?.dispose();
     super.dispose();
-  }
-
-  Future<void> _checkForUpdate() async {
-    if (_updateChecked) return;
-    _updateChecked = true;
-
-    final update = await _updateService.checkForUpdate();
-    if (update != null && mounted) {
-      _showUpdateDialog(update);
-    }
-  }
-
-  void _showUpdateDialog(AppUpdateInfo update) {
-    showDialog<void>(
-      context: context,
-      barrierDismissible: !update.forceUpdate,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Update available'),
-        content: Text(
-          'A new BloomDue version (${update.version}, build ${update.buildNumber}) '
-          'is ready. You can update now or later.',
-        ),
-        actions: [
-          if (!update.forceUpdate)
-            TextButton(
-              onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text('Later'),
-            ),
-          FilledButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              _downloadAndInstall(update);
-            },
-            child: const Text('Update'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _downloadAndInstall(AppUpdateInfo update) {
-    final progress = ValueNotifier<double>(0);
-
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => PopScope(
-        canPop: false,
-        child: AlertDialog(
-          title: const Text('Downloading update…'),
-          content: ValueListenableBuilder<double>(
-            valueListenable: progress,
-            builder: (_, value, _) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                LinearProgressIndicator(value: value <= 0 ? null : value),
-                const SizedBox(height: 12),
-                Text(
-                  value <= 0 ? 'Starting…' : '${(value * 100).toInt()}%',
-                  style: const TextStyle(fontWeight: FontWeight.w800),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-
-    _updateService
-        .downloadAndInstall(
-          update.downloadUrl,
-          onProgress: (p) => progress.value = p,
-        )
-        .then((_) {
-          if (mounted) Navigator.of(context).pop();
-        })
-        .catchError((Object _) {
-          if (!mounted) return;
-          Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Could not download the update. Try again later.'),
-            ),
-          );
-        });
   }
 
   @override
   Widget build(BuildContext context) {
+    final router = GoRouter.of(context);
+    return ListenableBuilder(
+      listenable: router.routerDelegate,
+      builder: (context, _) {
+        final location = router.state.matchedLocation;
+        return _buildScaffold(location);
+      },
+    );
+  }
+
+  Widget _buildScaffold(String location) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final shell = widget.navigationShell;
+    final expecting = ref.watch(isExpectingProvider);
+    final barColor = isDark ? AppColors.nightElevated : AppColors.creamDeep;
+    final showAdd = AppShell.showDockedQuickAdd(location);
 
     return Scaffold(
+      extendBody: false,
       body: shell,
-      bottomNavigationBar: DecoratedBox(
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.nightElevated : AppColors.creamDeep,
-          border: Border(
-            top: BorderSide(
-              color: isDark
-                  ? AppColors.nightLine
-                  : AppColors.bark.withValues(alpha: 0.1),
-            ),
-          ),
-          boxShadow: isDark
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.35),
-                    blurRadius: 16,
-                    offset: const Offset(0, -4),
-                  ),
-                ]
-              : null,
-        ),
-        child: NavigationBar(
-          selectedIndex: shell.currentIndex,
-          onDestinationSelected: shell.goBranch,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          destinations: [
-            for (final d in AppShell._destinations)
-              NavigationDestination(
-                icon: Icon(d.icon),
-                selectedIcon: Icon(d.selectedIcon),
-                label: d.label,
+      floatingActionButton: showAdd
+          ? FloatingActionButton(
+              key: const Key('quick_add_fab'),
+              tooltip: 'Add',
+              backgroundColor: isDark ? AppColors.sageDeep : AppColors.sage,
+              foregroundColor: AppColors.cream,
+              onPressed: () =>
+                  showQuickAddSheet(context, expecting: expecting),
+              child: const Icon(Icons.add, size: 28),
+            )
+          : null,
+      floatingActionButtonLocation: showAdd
+          ? FloatingActionButtonLocation.centerDocked
+          : null,
+      bottomNavigationBar: BottomAppBar(
+        color: barColor,
+        shape: showAdd ? const CircularNotchedRectangle() : null,
+        notchMargin: 8,
+        padding: EdgeInsets.zero,
+        height: 64,
+        child: Row(
+          children: [
+            for (var i = 0; i < 2; i++)
+              Expanded(
+                child: _NavItem(
+                  icon: AppShell._tabs[i].icon,
+                  selectedIcon: AppShell._tabs[i].selectedIcon,
+                  label: AppShell._tabs[i].label,
+                  isSelected: shell.currentIndex == i,
+                  isDark: isDark,
+                  onTap: () => shell.goBranch(i, initialLocation: true),
+                ),
+              ),
+            if (showAdd) const SizedBox(width: 56),
+            for (var i = 2; i < 4; i++)
+              Expanded(
+                child: _NavItem(
+                  icon: AppShell._tabs[i].icon,
+                  selectedIcon: AppShell._tabs[i].selectedIcon,
+                  label: AppShell._tabs[i].label,
+                  isSelected: shell.currentIndex == i,
+                  isDark: isDark,
+                  onTap: () => shell.goBranch(i, initialLocation: true),
+                ),
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  const _NavItem({
+    required this.icon,
+    required this.selectedIcon,
+    required this.label,
+    required this.isSelected,
+    required this.isDark,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final IconData selectedIcon;
+  final String label;
+  final bool isSelected;
+  final bool isDark;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isSelected
+        ? (isDark ? AppColors.nightAccent : AppColors.sageDeep)
+        : AppColors.navUnselected(isDark ? Brightness.dark : Brightness.light);
+
+    return InkResponse(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(isSelected ? selectedIcon : icon, color: color, size: 24),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+              color: color,
+            ),
+          ),
+        ],
       ),
     );
   }

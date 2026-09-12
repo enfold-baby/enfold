@@ -6,6 +6,7 @@ import '../../logs/providers/logs_providers.dart';
 import '../../today/models/care_log_entry.dart';
 import '../../today/models/log_type.dart';
 import '../../today/providers/today_log_provider.dart';
+import '../../../core/datetime/calendar_day.dart';
 
 final tummyLogPeriodProvider = StateProvider<LogPeriodFilter>(
   (ref) => const LogPeriodFilter(),
@@ -14,7 +15,8 @@ final tummyLogPeriodProvider = StateProvider<LogPeriodFilter>(
 final tummyLogsProvider = StreamProvider<List<CareLogEntry>>((ref) {
   final db = ref.read(databaseProvider);
   final period = ref.watch(tummyLogPeriodProvider);
-  final range = period.resolveRange(_todayEnd);
+  final day = ref.watch(currentCalendarDayProvider);
+  final range = period.resolveRange(() => calendarDayEnd(day));
 
   return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
     (babyId) => db.careLogDao
@@ -62,8 +64,3 @@ String formatTummyMinutes(int minutes) {
   return '${hours}h ${remainder}m';
 }
 
-DateTime _todayEnd() {
-  final now = DateTime.now();
-  final start = DateTime(now.year, now.month, now.day);
-  return start.add(const Duration(days: 1));
-}

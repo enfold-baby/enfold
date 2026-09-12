@@ -2,16 +2,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/auth/display_name.dart';
 import '../../../services/auth/auth_providers.dart';
-import '../../../services/database/app_database.dart';
 import '../../../services/database/database_provider.dart';
 import '../../../services/sync/sync_providers.dart';
 import '../../logs/providers/logs_providers.dart' show mapCareEvents;
 import '../models/care_log_details.dart';
 import '../models/care_log_entry.dart';
 import '../models/log_type.dart';
+import '../../../core/datetime/calendar_day.dart';
 
 final todayLogProvider = StreamProvider<List<CareLogEntry>>((ref) {
   final db = ref.read(databaseProvider);
+  // Re-subscribe after midnight so "today" moves with the calendar.
+  ref.watch(currentCalendarDayProvider);
   return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
     (babyId) => db.careLogDao.watchTodayLogs(babyId).map(mapCareEvents),
   );
@@ -78,20 +80,24 @@ class CareLogActions {
     await _ref.read(syncActionsProvider).syncIfSignedIn();
   }
 
-  Future<String> startSleepNow() async {
+  Future<String> startSleepNow() => startSleepAt(DateTime.now());
+
+  /// Open a sleep that started in the past (or just now) and is still going.
+  Future<String> startSleepAt(DateTime start, {String note = ''}) async {
     final db = _ref.read(databaseProvider);
     final babyId = await db.careLogDao.ensureDefaultBaby();
-    final now = DateTime.now();
+    final began = start.isAfter(DateTime.now()) ? DateTime.now() : start;
     final details = CareLogDetails(
-      sleepStart: now,
+      sleepStart: began,
       sleepInProgress: true,
     );
     final author = _authorStamp();
     final id = await db.careLogDao.insertLog(
       babyId: babyId,
       type: LogType.sleep.apiType,
-      occurredAt: now,
+      occurredAt: began,
       detailsJson: details.toJsonString(),
+      note: note,
       loggedByUserId: author.userId,
       loggedByDisplayName: author.displayName,
     );
@@ -116,6 +122,7 @@ class CareLogActions {
     final author = _authorStamp();
     await db.careLogDao.updateLog(
       logId: logId,
+      occurredAt: end,
       detailsJson: updated.toJsonString(),
       loggedByUserId: author.userId,
       loggedByDisplayName: author.displayName,
