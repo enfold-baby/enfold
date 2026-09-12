@@ -1,53 +1,38 @@
-# Todo — store release (private beta)
+# Store release — Play
 
-> **Priority:** P2 · **Status:** Internal APK/AAB only · waiting on **DUNS** / store org
+> **Status (2026-09-10):** App created in Play Console (id 4975658902210008908), all App content declarations done except the IARC content rating (Raul starts it), store listing saved with icon, feature graphic and 4 screenshots, release `1.0.0+20` published to internal testing. Reviewer account: `~/Documents/enfold/play-reviewer-account.md`. Next: Raul installs from the internal test link, content rating, then production. See `~/Desktop/LAUNCH-CHECKLIST.md`.
 
-## Current state
+## Android Play checklist
 
-| Platform | Status |
+| Item | Status |
 |---|---|
-| Android sideload APK | ✅ `flutter build apk --release` (debug keystore OK for friends/family) |
-| Android signed release | 🔲 Uses debug keystore — swap before open beta |
-| iOS TestFlight | 🔲 Needs Apple Developer + signing |
-| Privacy policy URL | ✅ https://bloomdue.baby/privacy/ |
-| Terms URL | ✅ https://bloomdue.baby/terms/ |
+| Application id | `baby.enfold.app` |
+| Privacy policy | https://enfold.baby/privacy/ |
+| Terms | https://enfold.baby/terms/ |
+| In-app Privacy / Terms | Settings → Legal |
+| In-app account deletion | Settings → Delete my account |
+| Sideload installer permission | Removed |
+| Upload keystore | `android/upload-keystore.jks` (gitignored) + `android/key.properties` |
+| Play App Signing | Enable in Play Console — let Google generate the **app signing** key. Our JKS is the **upload** key only. |
+| Feature graphic | `assets/brand/store/play-feature-graphic.jpg` (1024×500) |
+| Phone screenshots | `assets/brand/store/screenshots/` (4 × 1080×1920, Pixel 8 emulator, reviewer family data), uploaded 2026-09-10. Regenerate after UI changes. |
 
-**Version:** `0.1.0+9` in `pubspec.yaml` — increment `+N` before each store upload.
+## Build the Play AAB
 
-## Android — release keystore
+```bash
+flutter build appbundle --release
+# output: build/app/outputs/bundle/release/app-release.aab
+```
 
-1. Generate keystore (once, store password safely):
-   ```bash
-   keytool -genkey -v -keystore bloomdue-release.jks -keyalg RSA -keysize 2048 -validity 10000 -alias bloomdue
-   ```
-2. Create `android/key.properties` (gitignored)
-3. Update `android/app/build.gradle.kts` signing config
-4. Build: `flutter build appbundle --release`
-5. Upload AAB to Play Console → internal testing track
+First Play Console upload:
 
-## iOS — TestFlight
+1. Create the app with package `baby.enfold.app`.
+2. Turn on **Play App Signing** and let Google generate the app signing key.
+3. Upload the AAB signed with the local **upload** keystore.
+4. Fill Data safety, content rating, privacy URL, screenshots.
 
-1. Apple Developer account + App ID `baby.bloomdue.app`
-2. Xcode signing (automatic or manual profiles)
-3. Push Notifications capability (needed for FCM later)
-4. `flutter build ipa --release`
-5. Upload via Transporter or Xcode Organizer
+Back up `android/upload-keystore.jks` and `android/key.properties`. Losing the upload key blocks later updates.
 
-Simulator works for UI day-to-day without a physical iPhone.
+## iOS TestFlight
 
-## Before any store upload
-
-- [x] Privacy policy URL on landing page  
-- [x] Terms URL on landing page  
-- [ ] Medical disclaimer visible in app + store listing  
-- [ ] Screenshots (Today, Learn, Logs — demo tooling exists)  
-- [ ] `flutter test` green  
-- [ ] Smoke test on physical device (S24 + iPhone if possible)  
-- [ ] Signed Android keystore  
-- [ ] DUNS / developer accounts ready  
-
-## References
-
-- [`BRANDING.md`](../../BRANDING.md) — bundle ID, beta badge  
-- [`scripts/build_beta.sh`](../../scripts/build_beta.sh)  
-- Landing legal: `landing/public/privacy/`, `landing/public/terms/`  
+Still needs an Apple Developer account + App ID `baby.enfold.app`. DUNS is for the Apple org account, not Play.

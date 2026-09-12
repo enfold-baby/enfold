@@ -1,8 +1,8 @@
 {
   "id": "newborn-weight-loss-first-week",
-  "title": "Newborn weight loss — how much is normal?",
+  "title": "Newborn weight loss: how much is normal?",
   "summary": "Most babies lose a little weight after birth, then regain it as feeding ramps up.",
-  "whatsNormal": "It is normal for full-term newborns to lose weight in the first days of life.\n\n• Many lose up to about 7–10% of birth weight in the first week\n• Weight loss often peaks around day 3–4, then trends back up\n• Regaining birth weight by day 10–14 is a common benchmark\n• Frequent feeding and good wet diapers help weight climb\n\nYour pediatrician plots weight on a growth chart at visits — that context matters more than one number at home.",
+  "whatsNormal": "It is normal for full-term newborns to lose weight in the first days of life.\n\n• Many lose up to about 7–10% of birth weight in the first week\n• Weight loss often peaks around day 3–4, then trends back up\n• Regaining birth weight by day 10–14 is a common benchmark\n• Frequent feeding and good wet diapers help weight climb\n\nYour pediatrician plots weight on a growth chart at visits, that context matters more than one number at home.",
   "watchFor": [
     "Weight loss beyond what your clinician discussed at the hospital or first visit",
     "Fewer wet diapers than expected after day 4",
@@ -10,10 +10,10 @@
     "No swallowing or satisfied periods after feeds"
   ],
   "callDoctorIf": [
-    "You were told to recheck weight sooner — follow that plan",
+    "You were told to recheck weight sooner, follow that plan",
     "Signs of dehydration: sunken soft spot, dry mouth, no wet diapers 12+ hours after day 3",
     "Fever under 3 months",
-    "You are worried about feeding or weight — lactation support and a weight check can help"
+    "You are worried about feeding or weight, lactation support and a weight check can help"
   ],
   "reviewer": {
     "name": "Pending physician review",
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

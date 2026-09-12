@@ -1,8 +1,8 @@
 {
   "id": "purple-crying-period",
-  "title": "The period of PURPLE crying — when fussiness peaks",
+  "title": "The period of PURPLE crying: when fussiness peaks",
   "summary": "Increased crying between about 2 weeks and 3–4 months is common and usually temporary.",
-  "whatsNormal": "PURPLE is an acronym describing normal increased crying in early infancy — not a disease.\n\n• Peak of crying often around 6–8 weeks\n• Evening fussiness is typical\n• Baby may look like they are in pain but are otherwise healthy, feeding, and gaining weight\n• Crying can start and stop without an obvious cause\n\nSoothing helps but does not always stop crying immediately. It is OK to put baby down in a safe sleep space and take a short break if you feel overwhelmed — never shake a baby.",
+  "whatsNormal": "PURPLE is an acronym describing normal increased crying in early infancy, not a disease.\n\n• Peak of crying often around 6–8 weeks\n• Evening fussiness is typical\n• Baby may look like they are in pain but are otherwise healthy, feeding, and gaining weight\n• Crying can start and stop without an obvious cause\n\nSoothing helps but does not always stop crying immediately. It is OK to put baby down in a safe sleep space and take a short break if you feel overwhelmed, never shake a baby.",
   "watchFor": [
     "Crying with fever, vomiting, or a bulging soft spot",
     "High-pitched, weak, or moaning cry that is new and different",
@@ -10,10 +10,10 @@
     "Crying only on one side or with clear injury to an arm or leg"
   ],
   "callDoctorIf": [
-    "You think this is more than normal fussiness — trust your instinct and call",
+    "You think this is more than normal fussiness, trust your instinct and call",
     "Signs of illness: fever under 3 months, green vomit, or breathing difficulty",
-    "You feel unable to cope or angry enough to harm baby — put baby in a safe crib and call your clinician, a crisis line, or a trusted person immediately",
-    "Possible shaken baby or head injury — emergency care"
+    "You feel unable to cope or angry enough to harm baby, put baby in a safe crib and call your clinician, a crisis line, or a trusted person immediately",
+    "Possible shaken baby or head injury, emergency care"
   ],
   "reviewer": {
     "name": "Pending physician review",
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

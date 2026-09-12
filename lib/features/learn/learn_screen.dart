@@ -56,7 +56,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
             padding: const EdgeInsets.all(24),
             child: Text(
               'Could not load learn cards.',
-              style: GoogleFonts.nunito(color: AppColors.barkSoft),
+              style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
             ),
           ),
         ),
@@ -79,11 +79,11 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Doctor-reviewed guidance. Reassurance before panic.',
+                'Plain-language guidance for real parent days. Reassurance before panic.',
                 style: GoogleFonts.nunito(
                   fontSize: 15,
                   height: 1.45,
-                  color: AppColors.barkSoft,
+                  color: AppColors.mutedText(Theme.of(context).brightness),
                 ),
               ),
               const SizedBox(height: 16),
@@ -112,7 +112,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.nunito(
                       fontSize: 15,
-                      color: AppColors.barkSoft,
+                      color: AppColors.mutedText(Theme.of(context).brightness),
                     ),
                   ),
                 )
@@ -177,7 +177,7 @@ class _LearnCardTile extends StatelessWidget {
                       style: GoogleFonts.nunito(
                         fontSize: 14,
                         height: 1.4,
-                        color: AppColors.barkSoft,
+                        color: AppColors.mutedText(Theme.of(context).brightness),
                       ),
                     ),
                   ],
@@ -191,7 +191,8 @@ class _LearnCardTile extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.sage.withValues(alpha: 0.15),
+                    color: AppColors.accent(Theme.of(context).brightness)
+                        .withValues(alpha: 0.18),
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
@@ -199,7 +200,7 @@ class _LearnCardTile extends StatelessWidget {
                     style: GoogleFonts.nunito(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.sageDeep,
+                      color: AppColors.accent(Theme.of(context).brightness),
                     ),
                   ),
                 ),
@@ -207,7 +208,7 @@ class _LearnCardTile extends StatelessWidget {
               const SizedBox(width: 4),
               Icon(
                 Icons.chevron_right,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
               ),
             ],
           ),

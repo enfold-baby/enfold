@@ -1,8 +1,8 @@
 {
   "id": "first-bath-newborn",
-  "title": "First baths — sponge bath until the cord falls off",
+  "title": "First baths: sponge bath until the cord falls off",
   "summary": "Newborns do not need daily baths. Gentle sponge baths keep the cord dry.",
-  "whatsNormal": "Until the umbilical stump falls off:\n\n• Sponge baths only — wipe face, neck folds, hands, and diaper area\n• Keep stump dry; fold diaper below it\n• 2–3 baths per week is enough for most healthy newborns\n• Warm room, warm water, never leave baby unattended on a high surface\n\nAfter the stump falls off and the belly button heals, short tub baths are fine — support head and neck throughout.",
+  "whatsNormal": "Until the umbilical stump falls off:\n\n• Sponge baths only, wipe face, neck folds, hands, and diaper area\n• Keep stump dry; fold diaper below it\n• 2–3 baths per week is enough for most healthy newborns\n• Warm room, warm water, never leave baby unattended on a high surface\n\nAfter the stump falls off and the belly button heals, short tub baths are fine, support head and neck throughout.",
   "watchFor": [
     "Chilling: blue lips, mottled skin, or weak cry after bath",
     "Soap in eyes causing lasting redness",
@@ -10,7 +10,7 @@
     "Dry, cracked skin from too-frequent bathing"
   ],
   "callDoctorIf": [
-    "Cord redness, pus, or bleeding — see umbilical cord care guide",
+    "Cord redness, pus, or bleeding, see umbilical cord care guide",
     "Rash or irritation that worsens after bathing products",
     "Baby seems to struggle breathing during or after bath",
     "You want product recommendations for sensitive newborn skin"
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

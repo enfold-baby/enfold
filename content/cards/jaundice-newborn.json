@@ -1,6 +1,6 @@
 {
   "id": "jaundice-newborn",
-  "title": "Newborn jaundice — what yellow is OK?",
+  "title": "Newborn jaundice: what yellow is OK?",
   "summary": "Yellow skin is common in newborns. Most cases are mild and resolve with feeding and time.",
   "whatsNormal": "Jaundice is a yellow tint to skin and eyes from bilirubin, a breakdown product of red blood cells.\n\n• Often appears day 2–4 and peaks around day 5–7 in full-term babies\n• Starts on the face and moves down the body as levels rise\n• Mild jaundice with good feeding and wet diapers is common\n• Gently pressing skin on the nose or chest can show yellow undertone\n\nFrequent feeding helps clear bilirubin through stool. Sunlight through a window is not a substitute for medical follow-up if jaundice is significant.",
   "watchFor": [
@@ -13,7 +13,7 @@
     "Yellow skin or eyes in the first 24 hours of life",
     "Baby will not wake for feeds or has fewer wet diapers than expected",
     "Fever, vomiting, or unusual fussiness with jaundice",
-    "Your pediatrician or hospital asked you to recheck bilirubin — follow that plan"
+    "Your pediatrician or hospital asked you to recheck bilirubin, follow that plan"
   ],
   "reviewer": {
     "name": "Pending physician review",
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

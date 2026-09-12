@@ -1,6 +1,6 @@
 {
   "id": "reflux-vs-gerd",
-  "title": "Reflux vs GERD — what's normal spitting up?",
+  "title": "Reflux vs GERD: what's normal spitting up?",
   "summary": "Most reflux is normal baby spit-up. GERD is when reflux causes pain or poor growth.",
   "whatsNormal": "Gastroesophageal reflux (GER) is milk coming back up from a still-maturing valve between stomach and esophagus.\n\n• Small spit-up after most feeds is common in the first months\n• Happy baby between episodes\n• Steady weight gain at checkups\n• Often improves by 4–6 months as baby sits more and eats solids\n\nKeeping baby upright 20–30 minutes after feeds and smaller, more frequent feeds can help mild reflux. Thickening or medication is only for cases your clinician identifies.",
   "watchFor": [
@@ -13,7 +13,7 @@
     "Green (bile) or bloody spit-up or vomit",
     "Signs of dehydration or fever under 3 months",
     "Baby in clear pain during or after every feed",
-    "You wonder if this is more than normal spit-up — a visit can clarify"
+    "You wonder if this is more than normal spit-up, a visit can clarify"
   ],
   "reviewer": {
     "name": "Pending physician review",
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

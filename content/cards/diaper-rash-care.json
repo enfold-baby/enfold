@@ -1,8 +1,8 @@
 {
   "id": "diaper-rash-care",
-  "title": "Diaper rash — soothe and when to call",
+  "title": "Diaper rash: soothe and when to call",
   "summary": "Most diaper rash improves with air time and barrier cream. Some patterns need a look.",
-  "whatsNormal": "Diaper rash is red, irritated skin in the diaper area from wetness, stool, or friction.\n\n• Mild pinkness that improves within 1–2 days of home care is common\n• Change diapers often and clean gently — pat dry, do not rub hard\n• Air time without a diaper helps healing\n• Thick zinc oxide barrier cream after each change protects skin\n\nBreastfed stool can be frequent and acidic — more changes usually help more than harsh wipes.",
+  "whatsNormal": "Diaper rash is red, irritated skin in the diaper area from wetness, stool, or friction.\n\n• Mild pinkness that improves within 1–2 days of home care is common\n• Change diapers often and clean gently, pat dry, do not rub hard\n• Air time without a diaper helps healing\n• Thick zinc oxide barrier cream after each change protects skin\n\nBreastfed stool can be frequent and acidic, more changes usually help more than harsh wipes.",
   "watchFor": [
     "Rash spreading beyond the diaper area or into skin folds",
     "Blisters, open sores, or bleeding",
@@ -10,10 +10,10 @@
     "Baby seems in pain with every diaper change"
   ],
   "callDoctorIf": [
-    "Bright red rash with satellite spots (small red dots nearby) — possible yeast",
+    "Bright red rash with satellite spots (small red dots nearby), possible yeast",
     "Pus, honey-colored crusts, or fever with rash",
     "Rash with bloody stool or severe diarrhea",
-    "You are unsure — a photo for your pediatrician's nurse line is a good start"
+    "You are unsure, a photo for your pediatrician's nurse line is a good start"
   ],
   "reviewer": {
     "name": "Pending physician review",
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

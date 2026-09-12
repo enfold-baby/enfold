@@ -1,8 +1,8 @@
 {
   "id": "rash-newborn",
-  "title": "Newborn rash — benign or concerning?",
+  "title": "Newborn rash: benign or concerning?",
   "summary": "Many newborn rashes are harmless and fade on their own. A few patterns need a look.",
-  "whatsNormal": "Several common rashes appear in the first days and weeks.\n\n• Erythema toxicum — small red bumps with white centers, often day 2–5, fades in days\n• Milia — tiny white bumps on nose and cheeks; not acne; resolves in weeks\n• Heat rash — fine red dots in skin folds when baby is warm\n• Diaper rash — red irritated skin in the diaper area; often improves with air time and barrier cream\n\nBenign rashes usually do not bother the baby much and do not come with fever or poor feeding.",
+  "whatsNormal": "Several common rashes appear in the first days and weeks.\n\n• Erythema toxicum, small red bumps with white centers, often day 2–5, fades in days\n• Milia, tiny white bumps on nose and cheeks; not acne; resolves in weeks\n• Heat rash, fine red dots in skin folds when baby is warm\n• Diaper rash, red irritated skin in the diaper area; often improves with air time and barrier cream\n\nBenign rashes usually do not bother the baby much and do not come with fever or poor feeding.",
   "watchFor": [
     "Rash with fever in a baby under 3 months",
     "Blisters, open sores, or honey-colored crusts",
@@ -13,7 +13,7 @@
     "Rash with difficulty breathing, swelling of face, or vomiting",
     "Purple or non-blanching spots (do not pale when you press)",
     "Diaper rash with broken skin, pus, or no improvement in 2–3 days of home care",
-    "You are unsure — a photo for your pediatrician's nurse line is often enough to start"
+    "You are unsure, a photo for your pediatrician's nurse line is often enough to start"
   ],
   "reviewer": {
     "name": "Pending physician review",
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

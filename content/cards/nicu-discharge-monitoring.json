@@ -1,19 +1,19 @@
 {
   "id": "nicu-discharge-monitoring",
-  "title": "NICU discharge — home monitoring basics",
+  "title": "NICU discharge: home monitoring basics",
   "summary": "Going home from the NICU brings new routines. Follow your team's plan first.",
-  "whatsNormal": "Every NICU graduate has a personalized discharge plan. General patterns many families see:\n\n• More frequent pediatrician and specialist follow-up at first\n• Feeding may be slower — small volumes, paced feeds, or fortified milk as directed\n• Home pulse oximetry or apnea monitoring only if prescribed — use exactly as taught\n• Corrected age for milestones when baby was preterm (see preemie milestones card)\n\nKeep discharge paperwork, medication schedules, and follow-up appointments in one place. BloomDue can help log feeds and diapers; your NICU team sets medical targets.",
+  "whatsNormal": "Every NICU graduate has a personalized discharge plan. General patterns many families see:\n\n• More frequent pediatrician and specialist follow-up at first\n• Feeding may be slower, small volumes, paced feeds, or fortified milk as directed\n• Home pulse oximetry or apnea monitoring only if prescribed, use exactly as taught\n• Corrected age for milestones when baby was preterm (see preemie milestones card)\n\nKeep discharge paperwork, medication schedules, and follow-up appointments in one place. Enfold can help log feeds and diapers; your NICU team sets medical targets.",
   "watchFor": [
     "Breathing faster than usual, nostrils flaring, or retractions (skin sucking in between ribs)",
     "Bluish or gray color around lips during feeds or rest",
-    "Temperature instability — feels cold or feverish",
+    "Temperature instability, feels cold or feverish",
     "Feeding taking much longer than at discharge or refusing feeds"
   ],
   "callDoctorIf": [
     "Any apnea or bradycardia event on home monitor per your team's instructions",
-    "Fever in a young or preterm infant — thresholds may differ; use your discharge plan",
+    "Fever in a young or preterm infant, thresholds may differ; use your discharge plan",
     "Vomiting entire feeds repeatedly or signs of dehydration",
-    "Anything your NICU team listed as \"call immediately\" — those rules override general guides"
+    "Anything your NICU team listed as \"call immediately\", those rules override general guides"
   ],
   "reviewer": {
     "name": "Pending physician review",
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

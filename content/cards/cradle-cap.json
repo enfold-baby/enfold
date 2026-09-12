@@ -1,8 +1,8 @@
 {
   "id": "cradle-cap",
-  "title": "Cradle cap — flaky scalp in babies",
+  "title": "Cradle cap: flaky scalp in babies",
   "summary": "Yellowish scales on the scalp are common and usually harmless.",
-  "whatsNormal": "Cradle cap (seborrheic dermatitis) looks like greasy yellow or white flakes on the scalp.\n\n• Common in the first weeks to months\n• Not itchy for most babies and not contagious\n• May also appear on eyebrows or behind ears\n• Often clears on its own over weeks to months\n\nGentle care: soft brush, occasional baby shampoo, and a little oil before shampoo to loosen scales — never pick hard at scales.",
+  "whatsNormal": "Cradle cap (seborrheic dermatitis) looks like greasy yellow or white flakes on the scalp.\n\n• Common in the first weeks to months\n• Not itchy for most babies and not contagious\n• May also appear on eyebrows or behind ears\n• Often clears on its own over weeks to months\n\nGentle care: soft brush, occasional baby shampoo, and a little oil before shampoo to loosen scales, never pick hard at scales.",
   "watchFor": [
     "Spreading redness or oozing on the scalp",
     "Rash spreading to face, neck folds, or diaper area with heavy redness",
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

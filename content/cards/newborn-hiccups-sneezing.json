@@ -1,8 +1,8 @@
 {
   "id": "newborn-hiccups-sneezing",
-  "title": "Hiccups and sneezing — normal newborn quirks?",
+  "title": "Hiccups and sneezing: normal newborn quirks?",
   "summary": "Frequent hiccups and sneezes are usually normal reflexes, not illness.",
-  "whatsNormal": "Newborns have immature nervous and digestive systems — quirky sounds are common.\n\n• Hiccups: often after feeds or when belly is full; harmless if baby is comfortable\n• Sneezing: clears nose of mucus and dust; not the same as allergy sneezing in older kids\n• Stuffy nose without fever is common — saline drops and gentle suction if needed\n• Periodic breathing (short pauses) can be normal in sleep — ask your clinician what to watch for\n\nNeither hiccups nor sneezing alone usually means your baby is sick.",
+  "whatsNormal": "Newborns have immature nervous and digestive systems, quirky sounds are common.\n\n• Hiccups: often after feeds or when belly is full; harmless if baby is comfortable\n• Sneezing: clears nose of mucus and dust; not the same as allergy sneezing in older kids\n• Stuffy nose without fever is common, saline drops and gentle suction if needed\n• Periodic breathing (short pauses) can be normal in sleep, ask your clinician what to watch for\n\nNeither hiccups nor sneezing alone usually means your baby is sick.",
   "watchFor": [
     "Hiccups with forceful vomiting every time",
     "Sneezing with thick green discharge, fever, or poor feeding",
@@ -10,10 +10,10 @@
     "Blue or gray color around lips during feeds or after sneezing fits"
   ],
   "callDoctorIf": [
-    "Breathing difficulty or pauses that worry you — video for your clinician helps",
+    "Breathing difficulty or pauses that worry you, video for your clinician helps",
     "Fever under 3 months",
     "Signs of dehydration or refusing feeds",
-    "You cannot tell normal quirks from illness — call; that is OK"
+    "You cannot tell normal quirks from illness, call; that is OK"
   ],
   "reviewer": {
     "name": "Pending physician review",
@@ -21,5 +21,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

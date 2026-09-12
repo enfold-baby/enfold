@@ -1,5 +1,5 @@
-name: bloomdue_baby
-description: "BloomDue — calm baby care from bump to toddler."
+name: enfold
+description: "Enfold — calm baby care from bump to toddler."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.1.0+9
+version: 1.0.0+22
 
 environment:
   sdk: ^3.12.1
@@ -46,9 +46,12 @@ dependencies:
   pdf: ^3.11.3
   printing: ^5.14.2
   package_info_plus: ^9.0.1
-  # FCM — uncomment when Firebase project exists (see feature/todos/FCM_PARTNER_PUSH.md):
-  # firebase_core: ^3.13.0
-  # firebase_messaging: ^15.2.5
+  firebase_core: ^3.13.0
+  firebase_messaging: ^15.2.5
+  url_launcher: ^6.3.1
+  flutter_local_notifications: ^19.4.2
+  flutter_timezone: ^4.1.1
+  timezone: ^0.10.1
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +67,8 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: assets/brand/app_icon.png
-  adaptive_icon_background: "#FAF7F2"
+  adaptive_icon_background: "#FAF6EB"
+  adaptive_icon_foreground_inset: 12
   adaptive_icon_foreground: assets/brand/app_icon_foreground.png
   remove_alpha_ios: true
 
@@ -80,7 +84,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/brand/
+    - assets/brand/app_icon.png
     - assets/illustrations/
     - content/manifest.json
     - content/cards/

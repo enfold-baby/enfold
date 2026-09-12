@@ -1,16 +1,16 @@
 {
   "id": "vitamin-d-supplementation",
   "title": "Vitamin D for breastfed babies",
-  "summary": "Many breastfed infants need a daily vitamin D supplement — formula often already has it.",
-  "whatsNormal": "Vitamin D supports bone health. Breast milk alone may not provide enough for some babies.\n\n• AAP guidance: 400 IU vitamin D daily for breastfed or partially breastfed infants, starting soon after birth unless your clinician advises otherwise\n• Standard infant formula is fortified — fully formula-fed babies may not need extra unless directed\n• Drops are typical; give as your pediatrician or product label recommends\n• Consistency matters more than perfect timing each day\n\nIf you combo-feed, ask your clinician whether supplementation is still needed.",
+  "summary": "Many breastfed infants need a daily vitamin D supplement, formula often already has it.",
+  "whatsNormal": "Vitamin D supports bone health. Breast milk alone may not provide enough for some babies.\n\n• AAP guidance: 400 IU vitamin D daily for breastfed or partially breastfed infants, starting soon after birth unless your clinician advises otherwise\n• Standard infant formula is fortified, fully formula-fed babies may not need extra unless directed\n• Drops are typical; give as your pediatrician or product label recommends\n• Consistency matters more than perfect timing each day\n\nIf you combo-feed, ask your clinician whether supplementation is still needed.",
   "watchFor": [
     "Giving adult or high-dose vitamin products not meant for infants",
-    "Missing doses for many days in a row — resume when you remember; do not double up without asking",
-    "Rash or vomiting after starting drops — uncommon but mention it"
+    "Missing doses for many days in a row, resume when you remember; do not double up without asking",
+    "Rash or vomiting after starting drops, uncommon but mention it"
   ],
   "callDoctorIf": [
-    "You are unsure which product or dose to use — your pediatrician can recommend a brand",
-    "Baby was premature or has special nutrition plan — follow NICU or specialist guidance",
+    "You are unsure which product or dose to use, your pediatrician can recommend a brand",
+    "Baby was premature or has special nutrition plan, follow NICU or specialist guidance",
     "You want to discuss vitamin D in the context of your feeding plan",
     "Any reaction you think is from the supplement"
   ],
@@ -20,5 +20,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }

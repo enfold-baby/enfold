@@ -1,6 +1,8 @@
-# Bloomdue Roadmap
+# Enfold Roadmap
 
-Bloomdue is a free, no-ads baby and pregnancy companion for parents. The first release starts after birth with practical daily tracking, then expands into medical records, guided doctor-reviewed education, and pregnancy workflows.
+Enfold is a free, no-ads baby and pregnancy companion for parents. The first release starts after birth with practical daily tracking, then expands into medical records, guided doctor-reviewed education, and pregnancy workflows.
+
+**Now (2026-09-10):** `1.0.0+20` (Play live numbering). 4-tab shell + Add FAB, care logs (still-sleeping), daily vitamin reminder, growth history charts, Learn (25 cards, review pending), partner sync, FCM (Android), SES magic-codes from `noreply@enfold.baby`, landing + `/support/`. Play listing is the next ops step. 2026-09-10: `/delete-account/` page, footer imprint, real 404s and nightly DB backups (`ops/`) are live; analyzer excludes `build/`. 2026-09-12: fixed duplicate-baby race on first launch (typed name was lost), medication reminder Given/Later actions did nothing on Android (actions now open the app), lists auto-load pages on scroll, Learn copy no longer claims doctor review, em dashes removed from app and card copy, sideload updater deleted; version 1.0.0+21. Romanian is planned, not started — see `feature/todos/I18N_RO.md`. Detail: `feature/roadmaps/VERSION.md`.
 
 ## Phase 0: Foundation
 
@@ -24,7 +26,7 @@ Bloomdue is a free, no-ads baby and pregnancy companion for parents. The first r
 
 ## Phase 3: Guided Care Program
 
-- Age-based educational cards and checklists in English and Romanian.
+- Age-based educational cards and checklists in English first; Romanian later (`feature/todos/I18N_RO.md`).
 - Red-flag educational content with clear escalation wording.
 - Content review workflow for neonatology, gynecology, and pediatrics contributors.
 
@@ -37,4 +39,4 @@ Bloomdue is a free, no-ads baby and pregnancy companion for parents. The first r
 
 - Parents can log in, create a baby profile, log care events offline, reconnect, and sync safely. *(sync create/edit/delete live in private beta)*
 - Every medical or safety-related text is reviewed and versioned. *(learn cards: formal sign-off pending)*
-- Privacy policy, terms, data deletion, export, and support paths are ready before public launch. *(privacy + terms live on bloomdue.baby; store signing + DUNS pending)*
+- Privacy policy, terms, data deletion, export, and support paths are ready before public launch. *(privacy + terms + `/support/` live; in-app account delete live; Play upload keystore ready; listing screenshots still needed)*

@@ -1,18 +1,18 @@
 {
   "id": "sleep-safety-aap",
-  "title": "Safe sleep — AAP basics for newborns",
+  "title": "Safe sleep: AAP basics for newborns",
   "summary": "Simple sleep environment choices reduce risk. Same room, separate surface.",
-  "whatsNormal": "Newborns sleep a lot — often 14–17 hours in a 24-hour period, in short stretches.\n\n• Back to sleep for every sleep (naps and night)\n• Firm, flat sleep surface with a fitted sheet only — no pillows, blankets, or bumpers\n• Room-sharing (same room) without bed-sharing is recommended for at least the first 6 months\n• Pacifier at sleep time is OK once breastfeeding is established, if you use one\n\nSwaddling is fine if hips can move and you stop when baby shows signs of rolling.",
+  "whatsNormal": "Newborns sleep a lot, often 14–17 hours in a 24-hour period, in short stretches.\n\n• Back to sleep for every sleep (naps and night)\n• Firm, flat sleep surface with a fitted sheet only, no pillows, blankets, or bumpers\n• Room-sharing (same room) without bed-sharing is recommended for at least the first 6 months\n• Pacifier at sleep time is OK once breastfeeding is established, if you use one\n\nSwaddling is fine if hips can move and you stop when baby shows signs of rolling.",
   "watchFor": [
-    "Falling asleep with baby on a couch, armchair, or adult bed — high risk",
+    "Falling asleep with baby on a couch, armchair, or adult bed, high risk",
     "Overheating: sweaty neck, flushed skin, or room too warm",
-    "Products marketed as \"sleep positioners\" or inclined sleepers — not recommended",
+    "Products marketed as \"sleep positioners\" or inclined sleepers, not recommended",
     "Tired parents nodding off while holding baby on a soft surface"
   ],
   "callDoctorIf": [
-    "Episodes of breathing pause, color change, or choking during sleep — describe to your pediatrician promptly",
-    "Baby turns blue or gray around lips during feeds or sleep — seek emergency care",
-    "You need help with safe sleep when exhausted — ask your clinician or postpartum support; plan shifts if possible"
+    "Episodes of breathing pause, color change, or choking during sleep, describe to your pediatrician promptly",
+    "Baby turns blue or gray around lips during feeds or sleep, seek emergency care",
+    "You need help with safe sleep when exhausted, ask your clinician or postpartum support; plan shifts if possible"
   ],
   "reviewer": {
     "name": "Pending physician review",
@@ -20,5 +20,5 @@
     "specialty": "Neonatology / Pediatrics",
     "reviewedAt": "2026-07-01"
   },
-  "disclaimer": "BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
+  "disclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately."
 }
