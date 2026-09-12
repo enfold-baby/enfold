@@ -8,7 +8,7 @@
     <path d="M22 44c0-9-3.9-14.1-11.1-16.8M22 44c0-10.5 3.3-15.7 11.4-18.3" stroke="#C96B7E" stroke-width="2.4" stroke-linecap="round" opacity=".45"/>
     <path d="M22 27.8c-3.9 0-6.8-2.9-6.8-6.5 0-2.2 1.2-4.3 3.3-5.5C18 11.2 19.9 9 22 9s3.9 2.2 2.7 6.8c2.1 1.2 3.3 3.3 3.3 5.5 0 3.6-2.9 6.5-6.8 6.5Z" fill="#C96B7E"/>
     <circle cx="22" cy="20.3" r="3" fill="#FAF7F2"/>
-    <text x="50" y="30" fill="#3D3229" font-family="Georgia, serif" font-size="34" font-weight="700">BloomDue</text>
+    <text x="50" y="30" fill="#3D3229" font-family="Georgia, serif" font-size="34" font-weight="700">Enfold</text>
   </g>
 
   <g transform="translate(72 190)">
@@ -21,8 +21,8 @@
       <tspan x="0" dy="36">for the questions that arrive at 3am.</tspan>
     </text>
     <g transform="translate(0 285)">
-      <rect width="318" height="58" rx="29" fill="#5C7F71"/>
-      <text x="28" y="37" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="20" font-weight="700">Free · private beta · no ads</text>
+      <rect width="268" height="58" rx="29" fill="#5C7F71"/>
+      <text x="28" y="37" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="20" font-weight="700">Free · no ads</text>
     </g>
   </g>
 

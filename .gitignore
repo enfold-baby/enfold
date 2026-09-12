@@ -25,6 +25,7 @@ key.properties
 **/google-services.json
 **/GoogleService-Info.plist
 firebase_options.dart
+backend/secrets/*.json
 
 # Python API (backend/)
 *.pyc
@@ -108,3 +109,4 @@ screenshots/
 
 # Sideload APK uploads (local/prod data)
 backend/uploads/
+.playwright-mcp/
