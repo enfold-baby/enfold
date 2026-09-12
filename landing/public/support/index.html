@@ -227,12 +227,20 @@
         var SHARE =
           "Enfold is a calm, ad-free baby care app: feeds, sleep, diapers, growth, and a quiet “you’re doing fine.” In review on Google Play, iOS shortly after.\nhttps://enfold.baby";
         // Paste Stripe Payment Link URLs here when you have them.
-        var STRIPE_LINKS = {
+        var LIVE_LINKS = {
           tea: "https://donate.stripe.com/dRmdR98IDdrY9XhasW5Ne00",
           nest: "https://donate.stripe.com/9B6cN59MH3Ro4CX30u5Ne01",
           moon: "https://donate.stripe.com/00wdR98IDbjQ4CXgRk5Ne02",
           wish: "https://donate.stripe.com/eVq8wP8ID5Zw2uPbx05Ne03"
         };
+        // Stripe sandbox links, used only with ?stripe=test (test cards, no real money).
+        var TEST_LINKS = {
+          tea: "https://donate.stripe.com/test_dRmdR98IDdrY9XhasW5Ne00",
+          nest: "https://donate.stripe.com/test_9B6cN59MH3Ro4CX30u5Ne01",
+          moon: "https://donate.stripe.com/test_00wdR98IDbjQ4CXgRk5Ne02",
+          wish: "https://donate.stripe.com/test_eVq8wP8ID5Zw2uPbx05Ne03"
+        };
+        var STRIPE_LINKS = /[?&]stripe=test(&|$)/.test(location.search) ? TEST_LINKS : LIVE_LINKS;
 
         var stars = document.getElementById("help-stars");
         var countEl = document.getElementById("help-star-count");
