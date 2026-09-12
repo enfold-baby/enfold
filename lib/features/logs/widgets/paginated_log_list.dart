@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../widgets/paginated_column.dart';
 import '../../../services/auth/auth_providers.dart';
 import '../../settings/providers/units_providers.dart';
 import '../../today/models/care_log_entry.dart';
@@ -29,7 +30,6 @@ class PaginatedLogList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authSessionProvider).valueOrNull;
     final isSignedIn = session != null;
-    // Show “you” / Mom / Dad whenever signed in so multi-caregiver logging is clear.
     final showAttribution = isSignedIn;
     final useImperial = ref.watch(useImperialUnitsProvider).valueOrNull ?? false;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -39,9 +39,11 @@ class PaginatedLogList extends ConsumerWidget {
         padding: EdgeInsets.symmetric(vertical: 24),
         child: Center(child: CircularProgressIndicator()),
       ),
-      error: (_, __) => Text(
+      error: (_, _) => Text(
         'Could not load logs.',
-        style: GoogleFonts.nunito(color: AppColors.barkSoft),
+        style: GoogleFonts.nunito(
+          color: AppColors.mutedText(Theme.of(context).brightness),
+        ),
       ),
       data: (logs) {
         if (logs.isEmpty) {
@@ -60,47 +62,29 @@ class PaginatedLogList extends ConsumerWidget {
             ),
             child: Text(
               emptyMessage,
-              style: GoogleFonts.nunito(color: AppColors.barkSoft),
+              style: GoogleFonts.nunito(
+                color: AppColors.mutedText(Theme.of(context).brightness),
+              ),
             ),
           );
         }
 
-        final visibleCount = visibleCountProvider != null
-            ? ref.watch(visibleCountProvider!)
-            : logs.length;
-        final shown = logs.take(visibleCount).toList();
-        final hasMore = logs.length > shown.length;
-
-        return Column(
-          children: [
-            for (final entry in shown)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: LogEntryTile(
-                  entry: entry,
-                  useImperial: useImperial,
-                  isSignedIn: isSignedIn,
-                  showAttribution: showAttribution,
-                  currentUserId: session?.user.id,
-                  onTap: () => showLogEntryActions(context, ref, entry),
-                ),
-              ),
-            if (hasMore) ...[
-              const SizedBox(height: 4),
-              OutlinedButton(
-                key: const Key('load_more_logs'),
-                onPressed: () {
-                  if (visibleCountProvider != null) {
-                    ref.read(visibleCountProvider!.notifier).state +=
-                        pageSize;
-                  }
-                },
-                child: Text(
-                  'Load more (${logs.length - shown.length} remaining)',
-                ),
-              ),
-            ],
-          ],
+        return PaginatedColumn<CareLogEntry>(
+          items: logs,
+          pageSize: pageSize,
+          visibleCountProvider: visibleCountProvider,
+          loadMoreKey: const Key('load_more_logs'),
+          itemBuilder: (context, entry) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: LogEntryTile(
+              entry: entry,
+              useImperial: useImperial,
+              isSignedIn: isSignedIn,
+              showAttribution: showAttribution,
+              currentUserId: session?.user.id,
+              onTap: () => showLogEntryActions(context, ref, entry),
+            ),
+          ),
         );
       },
     );

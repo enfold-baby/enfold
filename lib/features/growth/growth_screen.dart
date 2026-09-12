@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/datetime/log_date_bounds.dart';
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../baby/providers/baby_profile_providers.dart';
@@ -11,10 +12,13 @@ import 'data/milestone_catalog.dart';
 import 'models/milestone_definition.dart';
 import 'providers/growth_providers.dart';
 import 'utils/baby_age.dart';
+import 'widgets/growth_trend_chart.dart';
 import 'widgets/measurement_summary_card.dart';
 import 'widgets/measurement_tile.dart';
 import 'widgets/milestone_tile.dart';
 import '../../widgets/sync_refresh.dart';
+import '../../widgets/paginated_column.dart';
+import 'models/growth_measurement_entry.dart';
 
 class GrowthScreen extends ConsumerWidget {
   const GrowthScreen({super.key});
@@ -35,7 +39,10 @@ class GrowthScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Growth & milestones')),
       floatingActionButton: FloatingActionButton(
         key: const Key('add_growth_measurement'),
-        onPressed: () => context.push(AppRoutes.growthAdd),
+        onPressed: () {
+          final location = GoRouter.of(context).state.matchedLocation;
+          context.push(AppRoutes.growthAddFrom(location));
+        },
         backgroundColor: AppColors.sage,
         foregroundColor: AppColors.cream,
         child: const Icon(Icons.add),
@@ -63,7 +70,7 @@ class GrowthScreen extends ConsumerWidget {
               style: GoogleFonts.nunito(
                 fontSize: 15,
                 height: 1.45,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 24),
@@ -73,7 +80,7 @@ class GrowthScreen extends ConsumerWidget {
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.2,
-                color: AppColors.sage,
+                color: AppColors.accent(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 12),
@@ -81,7 +88,7 @@ class GrowthScreen extends ConsumerWidget {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (_, __) => Text(
                 'Could not load measurements.',
-                style: GoogleFonts.nunito(color: AppColors.barkSoft),
+                style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
               ),
               data: (measurements) {
                 final latest = measurements.isEmpty ? null : measurements.first;
@@ -89,6 +96,11 @@ class GrowthScreen extends ConsumerWidget {
                   children: [
                     MeasurementSummaryCard(
                       latest: latest,
+                      useImperial: useImperial,
+                    ),
+                    const SizedBox(height: 16),
+                    GrowthTrendChart(
+                      measurements: measurements,
                       useImperial: useImperial,
                     ),
                     if (measurements.length > 1) ...[
@@ -99,16 +111,19 @@ class GrowthScreen extends ConsumerWidget {
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1.2,
-                          color: AppColors.sage,
+                          color: AppColors.accent(Theme.of(context).brightness),
                         ),
                       ),
                       const SizedBox(height: 8),
-                      for (final entry in measurements.skip(1))
-                        MeasurementTile(
+                      PaginatedColumn<GrowthMeasurementEntry>(
+                        items: measurements.skip(1).toList(),
+                        loadMoreKey: const Key('load_more_measurements'),
+                        itemBuilder: (context, entry) => MeasurementTile(
                           entry: entry,
                           useImperial: useImperial,
                           onDelete: () => _confirmDelete(context, ref, entry.id),
                         ),
+                      ),
                     ],
                   ],
                 );
@@ -135,7 +150,7 @@ class GrowthScreen extends ConsumerWidget {
                         fontSize: 13,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.2,
-                        color: AppColors.sage,
+                        color: AppColors.accent(Theme.of(context).brightness),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -145,7 +160,7 @@ class GrowthScreen extends ConsumerWidget {
                       style: GoogleFonts.nunito(
                         fontSize: 14,
                         height: 1.45,
-                        color: AppColors.barkSoft,
+                        color: AppColors.mutedText(Theme.of(context).brightness),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -166,9 +181,11 @@ class GrowthScreen extends ConsumerWidget {
                           for (final status in groups[group]!)
                             MilestoneTile(
                               status: status,
-                              onToggle: () => ref
-                                  .read(growthActionsProvider)
-                                  .toggleMilestone(status.definition),
+                              onToggle: () => handleMilestoneToggle(
+                                context,
+                                ref,
+                                status,
+                              ),
                             ),
                         ],
                       ),
@@ -208,4 +225,78 @@ class GrowthScreen extends ConsumerWidget {
     if (confirmed != true || !context.mounted) return;
     await ref.read(growthActionsProvider).deleteMeasurement(id);
   }
+}
+
+enum _MilestoneEditChoice { changeDate, clear }
+
+Future<void> handleMilestoneToggle(
+  BuildContext context,
+  WidgetRef ref,
+  MilestoneStatus status,
+) async {
+  final actions = ref.read(growthActionsProvider);
+  if (status.isAchieved) {
+    final choice = await showDialog<_MilestoneEditChoice>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          key: const Key('milestone_edit_dialog'),
+          title: Text(status.definition.title),
+          content: const Text(
+            'Change the date they reached this, or mark it as not yet.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              key: const Key('milestone_clear'),
+              onPressed: () =>
+                  Navigator.of(dialogContext).pop(_MilestoneEditChoice.clear),
+              child: const Text('Not yet'),
+            ),
+            FilledButton(
+              key: const Key('milestone_change_date'),
+              onPressed: () => Navigator.of(dialogContext)
+                  .pop(_MilestoneEditChoice.changeDate),
+              child: const Text('Change date'),
+            ),
+          ],
+        );
+      },
+    );
+    if (!context.mounted || choice == null) return;
+    if (choice == _MilestoneEditChoice.clear) {
+      await actions.clearMilestone(status.definition);
+      return;
+    }
+    final date = await pickMilestoneDate(context, status.achievedAt);
+    if (date == null || !context.mounted) return;
+    await actions.setMilestoneAchieved(status.definition, date);
+    return;
+  }
+
+  final date = await pickMilestoneDate(context, DateTime.now());
+  if (date == null || !context.mounted) return;
+  await actions.setMilestoneAchieved(status.definition, date);
+}
+
+Future<DateTime?> pickMilestoneDate(
+  BuildContext context,
+  DateTime? initial,
+) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  var initialDate = initial ?? today;
+  if (initialDate.isAfter(today)) initialDate = today;
+  initialDate = LogDateBounds.clampInitial(initialDate, now: today);
+  if (initialDate.isAfter(today)) initialDate = today;
+  return showDatePicker(
+    context: context,
+    initialDate: initialDate,
+    firstDate: LogDateBounds.firstDate(today),
+    lastDate: today,
+    helpText: 'When did they reach this?',
+  );
 }
