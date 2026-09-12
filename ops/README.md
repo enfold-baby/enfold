@@ -18,7 +18,9 @@ ssh u_bloomdue@135.125.226.37 'chmod +x ~/bin/backup-db.sh && (crontab -l 2>/dev
 
 Failure alerts: the script pings the healthchecks.io check `enfold-db-backup` (project under
 raul@globinary.io, period 1 day, grace 3 h, email alert). The ping URL lives in `~/.backup-env`
-on the server as `HEALTHCHECK_URL=...` and the crontab sources it before the script. Copies live only on the VPS; pull a dump off-site
+on the server as `export HEALTHCHECK_URL=...` and the crontab sources it before the script.
+The `export` matters: without it the variable stays in cron's shell and the script never pings
+(that is why the check alerted on 11 Sep 2026 although the dump itself succeeded). Copies live only on the VPS; pull a dump off-site
 (`scp` to the Mac) before risky work.
 
 Restore:
