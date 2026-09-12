@@ -1,5 +1,5 @@
-import 'package:bloomdue_baby/features/medication/log_medication_screen.dart';
-import 'package:bloomdue_baby/features/medication/medication_logs_screen.dart';
+import 'package:enfold/features/medication/log_medication_screen.dart';
+import 'package:enfold/features/medication/medication_logs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

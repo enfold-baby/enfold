@@ -134,7 +134,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
         content: Text(
           'You will stop sharing with your partner.\n\n'
           '• On this phone, synced care logs will be cleared so you start fresh.\n'
-          '• Your partner’s family keeps all their logs and baby data — nothing '
+          '• Your partner’s family keeps all their logs and baby data. Nothing '
           'is deleted for them on the server.\n\n'
           'You can join again later with a new invite code.',
           style: GoogleFonts.nunito(),
@@ -232,7 +232,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                     'Shared with ${family.members.length - 1} partner',
                     style: GoogleFonts.nunito(
                       fontWeight: FontWeight.w700,
-                      color: AppColors.sage,
+                      color: AppColors.accent(brightness),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -259,7 +259,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                     key: const Key('partner_invite_code'),
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.creamDeep,
+                      color: AppColors.softSurface(brightness),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -269,7 +269,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                           'Your invite code',
                           style: GoogleFonts.nunito(
                             fontWeight: FontWeight.w800,
-                            color: AppColors.sage,
+                            color: AppColors.accent(brightness),
                           ),
                         ),
                         const SizedBox(height: 4),

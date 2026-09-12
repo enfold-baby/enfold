@@ -1,3 +1,6 @@
+import 'package:intl/intl.dart';
+
+import '../../../core/datetime/clock_format.dart';
 import 'care_log_details.dart';
 import 'log_type.dart';
 
@@ -33,6 +36,32 @@ class CareLogEntry {
     if (name != null && name.isNotEmpty) return name;
     return 'Partner';
   }
+
+  /// Primary time shown on log tiles.
+  ///
+  /// Completed sleep uses start–end so a nap logged at wake and one
+  /// saved as a range look the same. In-progress sleep shows the start.
+  String listTimeLabel({String locale = 'en_US', bool use24Hour = false}) {
+    final dateFmt = DateFormat('MMM d', locale);
+    final timeFmt = ClockFormat.time(use24Hour: use24Hour, locale: locale);
+    if (type == LogType.sleep) {
+      final start = details.sleepStart ?? loggedAt;
+      if (details.sleepInProgress == true) {
+        return '${dateFmt.format(start)} · ${timeFmt.format(start)}';
+      }
+      final end = details.sleepEnd;
+      if (end != null) {
+        if (_sameCalendarDay(start, end)) {
+          return '${dateFmt.format(start)} · ${timeFmt.format(start)}–${timeFmt.format(end)}';
+        }
+        return '${dateFmt.format(start)}, ${timeFmt.format(start)} – ${dateFmt.format(end)}, ${timeFmt.format(end)}';
+      }
+    }
+    return '${dateFmt.format(loggedAt)} · ${timeFmt.format(loggedAt)}';
+  }
+
+  static bool _sameCalendarDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
 
   String? detailSummary({bool useImperial = false}) {
     final summary = details.summarize(type, useImperial: useImperial);

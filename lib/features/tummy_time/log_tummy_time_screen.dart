@@ -141,7 +141,7 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
               'How long on tummy?',
               style: GoogleFonts.nunito(
                 fontSize: 15,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 20),
@@ -151,7 +151,7 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.1,
-                color: AppColors.sage,
+                color: AppColors.accent(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 8),
@@ -170,7 +170,7 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
                       fontWeight: FontWeight.w700,
                       color: _durationController.text == '$minutes'
                           ? AppColors.cream
-                          : AppColors.bark,
+                          : AppColors.mutedText(Theme.of(context).brightness),
                     ),
                   ),
               ],

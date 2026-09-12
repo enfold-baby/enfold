@@ -19,7 +19,7 @@ router = APIRouter(prefix="/v1/app-version", tags=["app-version"])
 
 _BACKEND_ROOT = Path(__file__).resolve().parents[2]
 _VERSION_FILE = _BACKEND_ROOT / "app_version.json"
-_APK_PATH = _BACKEND_ROOT / "uploads" / "bloomdue-baby.apk"
+_APK_PATH = _BACKEND_ROOT / "uploads" / "enfold.apk"
 
 
 class AppVersionUpdate(BaseModel):
@@ -102,7 +102,7 @@ async def download_apk():
     return FileResponse(
         path=_APK_PATH,
         media_type="application/vnd.android.package-archive",
-        filename="bloomdue-baby.apk",
+        filename="enfold.apk",
     )
 
 

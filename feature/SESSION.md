@@ -1,38 +1,44 @@
 # Last session
 
-**Date:** 2026-08-11  
-**Version:** `0.1.0+9` · Drift schema **v10**  
-**API prod:** `https://api.bloomdue.baby` · **API local:** `http://127.0.0.1:8282` (emulator `http://10.0.2.2:8282`)  
-**Contact:** `contact@globinary.io`  
-**Mail:** Microsoft Graph as `contact@globinary.io`; beta → `contact@globinary.io`; no Sent folder  
+**Date:** 2026-09-10  
+**Version:** `1.0.0+20` · Drift schema **v13** · 55 unit/widget + 3 integration test files  
+**API:** `https://api.enfold.baby` · local `http://127.0.0.1:8282` (emulator `http://10.0.2.2:8282`)  
+**Contact:** `support@enfold.baby`  
+**Display:** Enfold · bundle `baby.enfold.app`
 
-## Done this session / recent
+## Done recently
 
-- Partner dogfood (Android + iOS): invite, join, leave, caregiver Mom/Dad profile  
-- Caregiver profile UI + `PATCH /v1/auth/me`  
-- Pull partner events from **all** family children (merge workaround)  
-- Pull-to-refresh app-wide  
-- **Partner hygiene:** join rebinds to host baby; never create 2nd child when family has one  
-- **Periodic foreground sync** (~45s while app resumed)  
-- Multi-child full switcher still planned → `todos/MULTI_CHILD.md`  
+Sideload APK **`enfold-1.0.0-20.apk`** on Desktop — first **1.0.0** (Play live numbering). Includes vitamin reminder, 12/24h, log Load more, no Private beta badge.
+
+- **Daily vitamin reminder:** optional, one time of day. Today shows “not logged yet” + Given. Local ping, no streak. Drift **v13**. 2×/day and short courses later.
+- **Time format:** Settings → Time. 12-hour (AM/PM) or 24-hour. Default 12-hour. Drift v12.
+- **4-tab shell:** Today / Logs / Learn / Settings. Center-docked **Add** FAB → quick-add sheet (all log types + growth; pregnancy when expecting).
+- **Pregnancy** is no longer a tab — Settings row, Today shortcut while expecting, and quick-add.
+- **Growth trend charts** on Growth (weight / length / head history; not WHO percentiles).
+- Care-log date pickers: **3 years back**, last date **tomorrow** (`LogDateBounds`).
+- Pull-to-refresh on Today, Logs, Growth, Settings. Periodic partner pull ~45s while open.
+- Evening check-in (local, off by default). Leave family. Caregiver profile (Mom/Dad/name).
+- API client is `EnfoldApiClient`. `/help/` redirects to `/support/`. Public `/roadmap/` HTML updated locally (redeploy landing to publish).
+- Already in this tree: Enfold rebrand, SES from `noreply@enfold.baby`, FCM Android, Play upload keystore, in-app account delete, still-sleeping + Today banner, dark secondary AA.
 
 ## Next up
 
-1. Multi-child MVP (active switcher) when ready — after partner one-child is solid  
-2. Push local commits to GitHub / prod API parity when you want  
-3. Store path when DUNS ready · FCM later  
+1. Founder: connect Stripe plugin (`/mcps` → stripe → `i`), then hang Payment Links on `/support/`
+2. Install `~/Desktop/enfold-1.0.0-20.apk` on the phone
+3. Play Console: phone screenshots, Data safety, upload AAB (`1.0.0+20`)
+4. iOS family installs: Apple Developer + TestFlight (cannot sideload like Android)
 
-## Local dev
+## Blockers / waiting on
 
-```bash
-docker compose up -d
-flutter run -d emulator-5554
-```
+- Stripe plugin: **auth required**
+- iOS FCM: APNs `.p8`
+- Play: phone screenshots on a real phone
+- Apple Developer / TestFlight
 
 ## Quick resume
 
 ```
-Read feature/SESSION.md and feature/todos/README.md in bloomdue_baby.
-Continue mobile features on Android emulator + local API.
-Commit local no coauthor; user pushes GitHub.
+Read feature/SESSION.md, feature/PICKUP.md, and feature/todos/README.md.
+Enfold 1.0.0+20, Drift v13, API https://api.enfold.baby.
+Keep markdown current as we ship (feature/MAINTAIN.md).
 ```

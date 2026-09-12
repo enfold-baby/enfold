@@ -33,10 +33,11 @@ class AccountSwitchService {
     return last != null && last != incomingUserId;
   }
 
-  /// Clear care logs, growth, milestones, pregnancy rows; unlink server child.
+  /// Clear care logs, routines, growth, milestones, pregnancy; unlink server child.
   Future<void> clearLocalCareData() async {
     await _db.transaction(() async {
       await _db.delete(_db.careEvents).go();
+      await _db.delete(_db.medicationRoutines).go();
       await _db.delete(_db.growthMeasurements).go();
       await _db.delete(_db.milestoneAchievements).go();
       await _db.delete(_db.pregnancyAppointments).go();

@@ -1,5 +1,5 @@
-import 'package:bloomdue_baby/services/auth/account_switch_service.dart';
-import 'package:bloomdue_baby/services/database/app_database.dart';
+import 'package:enfold/services/auth/account_switch_service.dart';
+import 'package:enfold/services/database/app_database.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -112,10 +112,22 @@ void main() {
             createdAt: now,
           ),
         );
+    await db.into(db.medicationRoutines).insert(
+          MedicationRoutinesCompanion.insert(
+            id: 'r1',
+            babyId: babyId,
+            name: 'Vitamin D drops',
+            hour: 9,
+            minute: 0,
+            createdAt: now,
+            updatedAt: now,
+          ),
+        );
 
     await service.applySwitchChoice(AccountSwitchChoice.startFresh);
 
     expect(await db.select(db.careEvents).get(), isEmpty);
+    expect(await db.select(db.medicationRoutines).get(), isEmpty);
     expect(await db.select(db.growthMeasurements).get(), isEmpty);
     expect(await db.select(db.milestoneAchievements).get(), isEmpty);
     expect(await db.select(db.pregnancyProfiles).get(), isEmpty);

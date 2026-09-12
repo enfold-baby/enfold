@@ -1,4 +1,4 @@
-import 'package:bloomdue_baby/features/growth/growth_screen.dart';
+import 'package:enfold/features/growth/growth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -23,5 +23,7 @@ void main() {
     expect(find.text('Milestones'), findsOneWidget);
     expect(find.text('First social smile'), findsOneWidget);
     expect(find.byKey(const Key('add_growth_measurement')), findsOneWidget);
+    expect(find.byKey(const Key('growth_trend_chart')), findsOneWidget);
+    expect(find.text('Trend'), findsOneWidget);
   });
 }

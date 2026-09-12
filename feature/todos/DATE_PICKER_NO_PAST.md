@@ -8,7 +8,7 @@
 - Due date pickers (onboarding expecting + Pregnancy screen): `firstDate` = local today  
 - Appointment date picker: today or future only  
 - Helpers + unit tests: `lib/features/pregnancy/expecting_date_bounds.dart`  
-- Care-log date pickers unchanged (past backfill still allowed)
+- Care-log date pickers still allow past backfill, later bounded by `LogDateBounds` (3 years back … tomorrow)
 
 ## Intent
 
@@ -21,7 +21,7 @@ When the family is still in the **expecting / pregnancy** stage, date pickers sh
 - Any onboarding “expecting” path that sets dates  
 - (Review) other “scheduled for” fields that only make sense as today-or-future while expecting  
 
-**Out of scope for first pass:** care logs that legitimately happen in the past (feeds, sleep backfill) — those should still allow past times within a sensible window.
+**Out of scope for first pass:** care logs that legitimately happen in the past (feeds, sleep backfill) — those should still allow past times within a sensible window. Shipped later as `LogDateBounds` (3 years back, last date tomorrow).
 
 ## Acceptance sketch
 
@@ -29,7 +29,7 @@ When the family is still in the **expecting / pregnancy** stage, date pickers sh
 - [x] Appointment dates: no past days (or only “today” if we want same-day visits).  
 - [x] Existing saved past due dates (edge case / late setup) still display; editing re-applies the constraint.  
 - [x] Unit/widget tests for date bounds.  
-- [x] No change to historical care-event logging.
+- [x] No change to historical care-event logging (later: `LogDateBounds` on care-log pickers).
 
 ## Notes
 

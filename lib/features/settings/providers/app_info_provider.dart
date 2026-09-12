@@ -13,8 +13,6 @@ class AppPackageInfo {
   final String appName;
 
   String get versionLabel => 'v$version ($buildNumber)';
-
-  bool get isBeta => version.startsWith('0.');
 }
 
 final appPackageInfoProvider = FutureProvider<AppPackageInfo>((ref) async {

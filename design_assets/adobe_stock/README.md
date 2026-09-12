@@ -21,7 +21,7 @@ Licensed on 2026-07-17 with the Adobe Stock Standard License:
   - AI/EPS and JPEG, 1 plan credit
   - Adobe Stock identifies this asset as generated with AI
 
-The source artwork may be cropped, recolored, and composed into BloomDue UI
+The source artwork may be cropped, recolored, and composed into Enfold UI
 illustrations, but must not be distributed as standalone source artwork.
 
 App-specific raster compositions generated from the licensed references:

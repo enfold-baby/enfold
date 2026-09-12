@@ -30,7 +30,7 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
   final _noteController = TextEditingController();
   bool _busy = false;
   bool _loading = false;
-  bool _inProgress = false;
+  bool _stillSleeping = false;
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
     setState(() {
       _loading = false;
       _mode = _SleepMode.range;
-      _inProgress = inProgress;
+      _stillSleeping = inProgress;
       _sleepStart = details.sleepStart ?? row.occurredAt;
       _sleepEnd = inProgress
           ? DateTime.now()
@@ -73,28 +73,87 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
     super.dispose();
   }
 
+  bool get _openEnded =>
+      _stillSleeping || (!widget.isEditing && _mode == _SleepMode.now);
+
   int? get _durationMinutes {
+    if (_openEnded) return null;
     if (_sleepEnd.isBefore(_sleepStart)) return null;
     return _sleepEnd.difference(_sleepStart).inMinutes;
   }
 
-  Future<void> _saveRange() async {
-    setState(() => _busy = true);
-    final duration = _durationMinutes;
-    final details = CareLogDetails(
-      sleepStart: _sleepStart,
-      sleepEnd: _inProgress ? null : _sleepEnd,
-      durationMinutes: _inProgress ? null : duration,
-      sleepInProgress: _inProgress,
+  DateTime get _clampedStart {
+    final now = DateTime.now();
+    return _sleepStart.isAfter(now) ? now : _sleepStart;
+  }
+
+  Future<bool> _guardExistingOpenSleep() async {
+    final openSleep = ref.read(openSleepProvider).valueOrNull;
+    if (openSleep == null) return true;
+    if (widget.isEditing && openSleep.id == widget.logId) return true;
+    if (!mounted) return false;
+    setState(() => _busy = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('A sleep is already in progress')),
     );
+    return false;
+  }
+
+  Future<void> _save() async {
+    setState(() => _busy = true);
     final note = _noteController.text.trim();
     final actions = ref.read(careLogActionsProvider);
+    final start = _clampedStart;
+
+    if (_openEnded) {
+      if (!await _guardExistingOpenSleep()) return;
+      final details = CareLogDetails(
+        sleepStart: start,
+        sleepInProgress: true,
+      );
+      if (widget.isEditing) {
+        await actions.updateLogEntry(
+          logId: widget.logId!,
+          type: LogType.sleep,
+          occurredAt: start,
+          details: details,
+          note: note,
+        );
+      } else {
+        await actions.startSleepAt(start, note: note);
+      }
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              widget.isEditing ? 'Sleep updated' : 'Sleeping now. Start saved',
+            ),
+          ),
+        );
+      Navigator.of(context).pop();
+      return;
+    }
+
+    final duration = _durationMinutes;
+    if (duration == null) {
+      setState(() => _busy = false);
+      return;
+    }
+    final details = CareLogDetails(
+      sleepStart: start,
+      sleepEnd: _sleepEnd,
+      durationMinutes: duration,
+      sleepInProgress: false,
+    );
 
     if (widget.isEditing) {
       await actions.updateLogEntry(
         logId: widget.logId!,
         type: LogType.sleep,
-        occurredAt: _inProgress ? _sleepStart : _sleepEnd,
+        occurredAt: _sleepEnd,
         details: details,
         note: note,
       );
@@ -102,12 +161,7 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
       await actions.saveLog(
         type: LogType.sleep,
         occurredAt: _sleepEnd,
-        details: CareLogDetails(
-          sleepStart: _sleepStart,
-          sleepEnd: _sleepEnd,
-          durationMinutes: duration,
-          sleepInProgress: false,
-        ),
+        details: details,
         note: note,
       );
     }
@@ -123,30 +177,10 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
     Navigator.of(context).pop();
   }
 
-  Future<void> _startNow() async {
-    setState(() => _busy = true);
-    final openSleep = ref.read(openSleepProvider).valueOrNull;
-    if (openSleep != null) {
-      if (!mounted) return;
-      setState(() => _busy = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('A sleep is already in progress')),
-      );
-      return;
-    }
-
-    await ref.read(careLogActionsProvider).startSleepNow();
-
-    if (!mounted) return;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('Sleep started')));
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget build(BuildContext context) {
     final duration = _durationMinutes;
+    final brightness = Theme.of(context).brightness;
 
     if (_loading) {
       return Scaffold(
@@ -178,99 +212,104 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
                   ),
                 ],
                 selected: {_mode},
-                onSelectionChanged: (value) =>
-                    setState(() => _mode = value.first),
+                onSelectionChanged: (value) {
+                  final next = value.first;
+                  setState(() {
+                    _mode = next;
+                    if (next == _SleepMode.now) {
+                      _sleepStart = DateTime.now();
+                      _stillSleeping = true;
+                    } else {
+                      _stillSleeping = false;
+                    }
+                  });
+                },
               ),
-            if (widget.isEditing && _inProgress) ...[
-              Text(
-                'Still sleeping — update start time or add a note.',
-                style: GoogleFonts.nunito(color: AppColors.barkSoft),
+            const SizedBox(height: 20),
+            Text(
+              _openEnded
+                  ? 'When did they drift off? Leave the end empty if they are still asleep.'
+                  : 'From when to when?',
+              style: GoogleFonts.nunito(
+                color: AppColors.mutedText(brightness),
               ),
-              const SizedBox(height: 16),
+            ),
+            const SizedBox(height: 16),
+            TimeField(
+              label: 'Fell asleep',
+              value: _sleepStart,
+              onChanged: (value) => setState(() => _sleepStart = value),
+            ),
+            if (!_openEnded) ...[
+              const SizedBox(height: 12),
+              TimeField(
+                label: 'Woke up',
+                value: _sleepEnd,
+                onChanged: (value) => setState(() => _sleepEnd = value),
+              ),
             ],
             if (_mode == _SleepMode.range || widget.isEditing) ...[
-              if (!widget.isEditing) const SizedBox(height: 20),
-              if (!widget.isEditing)
-                Text(
-                  'From when to when?',
-                  style: GoogleFonts.nunito(color: AppColors.barkSoft),
+              const SizedBox(height: 8),
+              SwitchListTile(
+                key: const Key('sleep_still_sleeping'),
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  'Still sleeping',
+                  style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
                 ),
-              if (!widget.isEditing) const SizedBox(height: 16),
-              TimeField(
-                label: 'Fell asleep',
-                value: _sleepStart,
-                onChanged: (value) => setState(() => _sleepStart = value),
-              ),
-              if (!_inProgress) ...[
-                const SizedBox(height: 12),
-                TimeField(
-                  label: 'Woke up',
-                  value: _sleepEnd,
-                  onChanged: (value) => setState(() => _sleepEnd = value),
-                ),
-              ],
-              if (!_inProgress && duration != null) ...[
-                const SizedBox(height: 16),
-                Text(
-                  duration < 60
-                      ? 'Duration: ${duration}min'
-                      : 'Duration: ${duration ~/ 60}h ${duration % 60}m',
-                  key: const Key('sleep_duration_preview'),
+                subtitle: Text(
+                  'No wake-up yet. You can tap Wake up on Today later.',
                   style: GoogleFonts.nunito(
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.sleepBlue,
+                    color: AppColors.mutedText(brightness),
                   ),
                 ),
-              ],
-              const SizedBox(height: 16),
-              TextField(
-                key: const Key('sleep_note'),
-                controller: _noteController,
-                decoration: const InputDecoration(labelText: 'Note (optional)'),
-                textCapitalization: TextCapitalization.sentences,
+                value: _stillSleeping,
+                onChanged: (value) => setState(() => _stillSleeping = value),
               ),
-              const SizedBox(height: 24),
-              FilledButton(
-                key: const Key('save_sleep_log'),
-                onPressed: _busy || (!_inProgress && duration == null)
-                    ? null
-                    : _saveRange,
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.sleepBlue,
-                  foregroundColor: AppColors.cream,
-                  minimumSize: const Size.fromHeight(52),
-                ),
-                child: Text(
-                  _busy
-                      ? 'Saving…'
-                      : widget.isEditing
-                          ? 'Save changes'
-                          : 'Save sleep',
-                ),
-              ),
-            ] else ...[
-              const SizedBox(height: 20),
+            ],
+            if (!_openEnded && duration != null) ...[
+              const SizedBox(height: 8),
               Text(
-                'Tap below when baby drifts off. Come back and tap Wake up on the Logs screen when they are up.',
+                duration < 60
+                    ? 'Duration: ${duration}min'
+                    : 'Duration: ${duration ~/ 60}h ${duration % 60}m',
+                key: const Key('sleep_duration_preview'),
                 style: GoogleFonts.nunito(
-                  fontSize: 15,
-                  height: 1.45,
-                  color: AppColors.barkSoft,
-                ),
-              ),
-              const SizedBox(height: 24),
-              FilledButton.icon(
-                key: const Key('start_sleep_now'),
-                onPressed: _busy ? null : _startNow,
-                icon: const Icon(Icons.bedtime_outlined),
-                label: Text(_busy ? 'Starting…' : 'Started sleeping now'),
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.sleepBlue,
-                  foregroundColor: AppColors.cream,
-                  minimumSize: const Size.fromHeight(52),
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.readableInk(AppColors.sleepBlue, brightness),
                 ),
               ),
             ],
+            const SizedBox(height: 16),
+            TextField(
+              key: const Key('sleep_note'),
+              controller: _noteController,
+              decoration: const InputDecoration(labelText: 'Note (optional)'),
+              textCapitalization: TextCapitalization.sentences,
+            ),
+            const SizedBox(height: 24),
+            FilledButton(
+              key: !widget.isEditing && _mode == _SleepMode.now
+                  ? const Key('start_sleep_now')
+                  : const Key('save_sleep_log'),
+              onPressed: _busy || (!_openEnded && duration == null)
+                  ? null
+                  : _save,
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.sleepBlue,
+                foregroundColor: AppColors.cream,
+                minimumSize: const Size.fromHeight(52),
+              ),
+              child: Text(
+                _busy
+                    ? 'Saving…'
+                    : _openEnded
+                        ? 'Save, still sleeping'
+                        : widget.isEditing
+                            ? 'Save changes'
+                            : 'Save sleep',
+              ),
+            ),
           ],
         ),
       ),

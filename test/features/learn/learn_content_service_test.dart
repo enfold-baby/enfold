@@ -1,5 +1,5 @@
-import 'package:bloomdue_baby/features/learn/models/learn_card.dart';
-import 'package:bloomdue_baby/features/learn/services/learn_content_service.dart';
+import 'package:enfold/features/learn/models/learn_card.dart';
+import 'package:enfold/features/learn/services/learn_content_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

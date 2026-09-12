@@ -20,6 +20,7 @@ class LearnSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final ink = AppColors.readableInk(color, Theme.of(context).brightness);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +30,7 @@ class LearnSection extends StatelessWidget {
             Container(
               width: 10,
               height: 10,
-              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              decoration: BoxDecoration(color: ink, shape: BoxShape.circle),
             ),
             const SizedBox(width: 8),
             Text(
@@ -38,7 +39,7 @@ class LearnSection extends StatelessWidget {
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.1,
-                color: color,
+                color: ink,
               ),
             ),
           ],
@@ -64,7 +65,7 @@ class LearnSection extends StatelessWidget {
                     '•  ',
                     style: GoogleFonts.nunito(
                       fontSize: 15,
-                      color: AppColors.barkSoft,
+                      color: AppColors.mutedText(Theme.of(context).brightness),
                     ),
                   ),
                   Expanded(

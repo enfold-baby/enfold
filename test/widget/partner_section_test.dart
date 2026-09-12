@@ -1,10 +1,10 @@
-import 'package:bloomdue_baby/features/settings/widgets/partner_section.dart';
-import 'package:bloomdue_baby/services/api/api_exception.dart';
-import 'package:bloomdue_baby/services/api/bloomdue_api_client.dart';
-import 'package:bloomdue_baby/services/api/family_models.dart';
-import 'package:bloomdue_baby/services/auth/auth_providers.dart';
-import 'package:bloomdue_baby/services/auth/auth_session.dart';
-import 'package:bloomdue_baby/services/database/database_provider.dart';
+import 'package:enfold/features/settings/widgets/partner_section.dart';
+import 'package:enfold/services/api/api_exception.dart';
+import 'package:enfold/services/api/enfold_api_client.dart';
+import 'package:enfold/services/api/family_models.dart';
+import 'package:enfold/services/auth/auth_providers.dart';
+import 'package:enfold/services/auth/auth_session.dart';
+import 'package:enfold/services/database/database_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,14 +20,14 @@ class _SignedInAuthNotifier extends AuthSessionNotifier {
       token: 'token',
       user: AuthUser(
         id: 'user-1',
-        email: 'parent@bloomdue.baby',
+        email: 'parent@enfold.baby',
         displayName: 'Parent',
       ),
     );
   }
 }
 
-class _FakePartnerApi extends BloomdueApiClient {
+class _FakePartnerApi extends EnfoldApiClient {
   _FakePartnerApi() : super(httpClient: http.Client());
 
   @override
@@ -36,7 +36,7 @@ class _FakePartnerApi extends BloomdueApiClient {
   }
 }
 
-class _SharedFamilyApi extends BloomdueApiClient {
+class _SharedFamilyApi extends EnfoldApiClient {
   _SharedFamilyApi() : super(httpClient: http.Client());
 
   var leaveCalls = 0;
@@ -46,8 +46,8 @@ class _SharedFamilyApi extends BloomdueApiClient {
     return const FamilyInfo(
       id: 'fam-1',
       members: [
-        FamilyMember(id: 'u1', email: 'parent@bloomdue.baby', displayName: 'Parent'),
-        FamilyMember(id: 'u2', email: 'partner@bloomdue.baby', displayName: 'Partner'),
+        FamilyMember(id: 'u1', email: 'parent@enfold.baby', displayName: 'Parent'),
+        FamilyMember(id: 'u2', email: 'partner@enfold.baby', displayName: 'Partner'),
       ],
     );
   }
@@ -58,7 +58,7 @@ class _SharedFamilyApi extends BloomdueApiClient {
     return const FamilyInfo(
       id: 'fam-solo',
       members: [
-        FamilyMember(id: 'u1', email: 'parent@bloomdue.baby', displayName: 'Parent'),
+        FamilyMember(id: 'u1', email: 'parent@enfold.baby', displayName: 'Parent'),
       ],
     );
   }

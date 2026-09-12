@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build BloomDue Baby beta artifacts (run from repo root).
+# Build Enfold beta artifacts (run from repo root).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

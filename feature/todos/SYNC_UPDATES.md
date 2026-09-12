@@ -26,7 +26,7 @@ Partners can see stale entries if one parent edits or deletes locally.
 
 ### Flutter
 
-1. Add `updateCareEvent()` and `deleteCareEvent()` to `BloomdueApiClient`
+1. Add `updateCareEvent()` and `deleteCareEvent()` to `EnfoldApiClient`
 2. Extend `SyncService.syncPending()` to handle:
    - rows with `pendingSync` + existing server id (updates)
    - rows with `deletedAt` set + were previously synced (deletes)
@@ -50,6 +50,6 @@ Partners can see stale entries if one parent edits or deletes locally.
 ## Key files
 
 - `lib/services/sync/sync_service.dart`
-- `lib/services/api/bloomdue_api_client.dart`
+- `lib/services/api/enfold_api_client.dart`
 - `lib/features/today/providers/today_log_provider.dart`
 - `lib/services/database/care_log_dao.dart`

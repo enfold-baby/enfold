@@ -1,4 +1,4 @@
-import 'package:bloomdue_baby/services/database/app_database.dart';
+import 'package:enfold/services/database/app_database.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -54,6 +54,24 @@ void main() {
 
       expect(await db.settingsDao.partnerActivityPushEnabled(), isTrue);
       expect(await db.settingsDao.partnerGentleNudgeEnabled(), isTrue);
+    });
+
+    test('care reminders default off and persist', () async {
+      final db = _testDb();
+      addTearDown(db.close);
+
+      expect(await db.settingsDao.careRemindersEnabled(), isFalse);
+      await db.settingsDao.setCareRemindersEnabled(true);
+      expect(await db.settingsDao.careRemindersEnabled(), isTrue);
+    });
+
+    test('24-hour clock defaults off and persists', () async {
+      final db = _testDb();
+      addTearDown(db.close);
+
+      expect(await db.settingsDao.use24HourTime(), isFalse);
+      await db.settingsDao.setUse24HourTime(true);
+      expect(await db.settingsDao.use24HourTime(), isTrue);
     });
 
     test('lastSignedInUserId defaults null and persists', () async {

@@ -50,7 +50,7 @@ class LogPeriodBar extends ConsumerWidget {
             'Showing ${period.periodLabel()}',
             style: GoogleFonts.nunito(
               fontSize: 13,
-              color: isDark ? AppColors.cream : AppColors.barkSoft,
+              color: AppColors.mutedText(Theme.of(context).brightness),
             ),
           ),
         ],
@@ -105,13 +105,15 @@ class _PeriodChip extends StatelessWidget {
         fontSize: 13,
         color: selected
             ? AppColors.cream
-            : (isDark ? AppColors.cream : AppColors.bark),
+            : AppColors.mutedText(
+                isDark ? Brightness.dark : Brightness.light,
+              ),
       ),
-      selectedColor: AppColors.sage,
+      selectedColor: isDark ? AppColors.sageDeep : AppColors.sage,
       backgroundColor: isDark ? AppColors.nightElevated : AppColors.creamDeep,
       side: BorderSide(
         color: selected
-            ? AppColors.sage
+            ? (isDark ? AppColors.sageDeep : AppColors.sage)
             : (isDark ? AppColors.nightLine : AppColors.bark.withValues(alpha: 0.12)),
       ),
       showCheckmark: false,

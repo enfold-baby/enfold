@@ -90,13 +90,23 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
   }
 
   Future<void> _save() async {
-    setState(() => _busy = true);
     final useImperial = ref.read(useImperialUnitsProvider).valueOrNull ?? false;
+    final amountMl = _parseAmountMl(useImperial);
+    if (amountMl == null || amountMl <= 0) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('Add how much you pumped.')),
+        );
+      return;
+    }
+
+    setState(() => _busy = true);
     final duration = int.tryParse(_durationController.text.trim());
 
     final details = CareLogDetails(
       breastSide: _side,
-      bottleMl: _parseAmountMl(useImperial),
+      bottleMl: amountMl,
       durationMinutes: duration,
     );
     final note = _noteController.text.trim();
@@ -157,7 +167,7 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
               'How much did you pump?',
               style: GoogleFonts.nunito(
                 fontSize: 15,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 20),
@@ -179,9 +189,8 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
-                labelText: useImperial
-                    ? 'Amount (fl oz, optional)'
-                    : 'Amount (ml, optional)',
+                labelText: useImperial ? 'Amount (fl oz)' : 'Amount (ml)',
+                hintText: useImperial ? 'e.g. 3.0' : 'e.g. 90',
               ),
             ),
             const SizedBox(height: 16),

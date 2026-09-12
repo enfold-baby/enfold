@@ -1,12 +1,12 @@
-import 'package:bloomdue_baby/features/settings/widgets/account_section.dart';
-import 'package:bloomdue_baby/services/api/bloomdue_api_client.dart';
-import 'package:bloomdue_baby/services/auth/account_switch_service.dart';
-import 'package:bloomdue_baby/services/auth/auth_providers.dart';
-import 'package:bloomdue_baby/services/auth/auth_session.dart';
-import 'package:bloomdue_baby/services/database/app_database.dart';
-import 'package:bloomdue_baby/services/database/database_provider.dart';
-import 'package:bloomdue_baby/services/sync/sync_providers.dart';
-import 'package:bloomdue_baby/services/sync/sync_service.dart';
+import 'package:enfold/features/settings/widgets/account_section.dart';
+import 'package:enfold/services/api/enfold_api_client.dart';
+import 'package:enfold/services/auth/account_switch_service.dart';
+import 'package:enfold/services/auth/auth_providers.dart';
+import 'package:enfold/services/auth/auth_session.dart';
+import 'package:enfold/services/database/app_database.dart';
+import 'package:enfold/services/database/database_provider.dart';
+import 'package:enfold/services/sync/sync_providers.dart';
+import 'package:enfold/services/sync/sync_service.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +44,7 @@ class _SeqAuthNotifier extends AuthSessionNotifier {
 }
 
 class _NoopSync extends SyncService {
-  _NoopSync() : super(api: BloomdueApiClient(httpClient: http.Client()), db: AppDatabase.forTesting(NativeDatabase.memory()));
+  _NoopSync() : super(api: EnfoldApiClient(httpClient: http.Client()), db: AppDatabase.forTesting(NativeDatabase.memory()));
 
   @override
   Future<SyncResult> syncAll({

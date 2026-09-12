@@ -1,7 +1,7 @@
-# BloomDue — feature docs hub
+# Enfold — feature docs hub
 
-> **Last updated:** 2026-08-10 · **App version:** `0.1.0+9` · **Drift schema:** v10  
-> **Prod:** landing + API live · monorepo synced local / GitHub / VPS
+> **Last updated:** 2026-09-10 · **App version:** `1.0.0+20` · **Drift schema:** v13  
+> **Prod:** landing + API live · support page live · FCM sender live · SES mail live
 
 Central index for what's built, what's next, and how to resume work.
 
@@ -27,16 +27,23 @@ Central index for what's built, what's next, and how to resume work.
 
 | Area | Status |
 |---|---|
-| Core logging (feed / diaper / sleep) | ✅ Shipped |
-| Extended logs (meds / pump / tummy) | ✅ Shipped |
-| Learn + triage (25 cards) | ✅ Shipped — physician review pending |
-| Partner sharing + sync (create/edit/delete) | ✅ Shipped |
-| Last logged by + gentle nudge | ✅ Shipped |
-| Landing + legal + beta form | ✅ Live on prod |
-| FCM activity push | 🟡 Prepared — needs Firebase project |
-| Store release (signed builds) | 🔲 Waiting DUNS / signing |
-| Romanian i18n | 🔲 v0.2 |
+| App shell | ✅ 4 tabs (Today / Logs / Learn / Settings) + docked Add FAB |
+| Time format | ✅ Settings: 12-hour (AM/PM) or 24-hour |
+| Core logging (feed / diaper / sleep) | ✅ Still-sleeping + backdated start + date bounds |
+| Extended logs (meds / pump / tummy) | ✅ Daily vitamin reminder (one time of day) |
+| Growth + milestones | ✅ History trend charts (not WHO percentiles) |
+| Pregnancy | ✅ Full-screen route (not a tab) |
+| Learn + triage (25 cards) | ✅ Physician review pending |
+| Partner sharing + sync (create/edit/delete) | ✅ Leave family + caregiver profile |
+| Last logged by + gentle nudge | ✅ |
+| FCM activity push | ✅ Wired (Android client + VPS sender). iOS needs APNs key |
+| Magic-code email | ✅ SES live from `noreply@enfold.baby`; Graph fallback |
+| Landing + legal + launch-notify form | ✅ Google Play soon, iOS shortly after |
+| Help / support / credits | ✅ https://enfold.baby/support/ — Stripe links pending |
+| Play upload path | ✅ Upload keystore + AAB. Screenshots / listing still needed |
+| Romanian i18n | 🔲 Plan locked, not started |
+| Store listing live | 🔲 Play next · iOS TestFlight later |
 
-## Continue mobile work
+## Continue work
 
-Default: open [SESSION.md](./SESSION.md) → [todos/README.md](./todos/README.md) → ship the next small item (e.g. no-past-dates while expecting).
+Open [SESSION.md](./SESSION.md) → [todos/README.md](./todos/README.md). **Update markdown whenever we ship** ([MAINTAIN.md](./MAINTAIN.md)).

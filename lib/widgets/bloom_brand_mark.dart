@@ -18,7 +18,12 @@ class BloomBrandMark extends StatelessWidget {
       filterQuality: FilterQuality.high,
     );
 
-    if (!showBackdrop) return image;
+    if (!showBackdrop) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(size * 0.22),
+        child: image,
+      );
+    }
 
     return Container(
       width: size + 24,

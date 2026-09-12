@@ -1,5 +1,5 @@
-import 'package:bloomdue_baby/features/logs/models/hub_type_filter.dart';
-import 'package:bloomdue_baby/features/today/models/log_type.dart';
+import 'package:enfold/features/logs/models/hub_type_filter.dart';
+import 'package:enfold/features/today/models/log_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,6 +1,6 @@
 # Keeping docs up to date
 
-> **Rule:** Any coding session that ships or materially advances work **must** update these docs before ending. Takes ~2 minutes. Future-you (and fresh agents) depend on it.
+> **Rule:** Any coding session that ships or materially advances work **must** update these docs **as we go**, not only at the end. Future-you (and fresh agents) depend on it. The founder asked for this explicitly.
 
 ## End-of-session checklist
 
@@ -24,6 +24,7 @@ Run through this after meaningful work — skip only for pure Q&A with no code c
 | Drift schema bump | `README.md` header, `features/STATUS.md`, `PICKUP.md` prompts |
 | `pubspec.yaml` version bump | `README.md`, `feature/README.md`, `PICKUP.md`, `BRANDING.md` |
 | VPS deploy | Note in `SESSION.md` + relevant `deploy/` todo doc |
+| Public shipped/next/later lists | `landing/public/roadmap/index.html` |
 | Tests added/removed | Bump count in `feature/README.md` + `PICKUP.md` |
 | Firebase / store / content progress | Check boxes in the specific `todos/*.md` |
 
@@ -35,7 +36,7 @@ Keep it short — one screen max:
 # Last session
 
 **Date:** YYYY-MM-DD
-**Version:** 0.1.0+4 · schema v8 · 84 tests
+**Version:** 1.0.0+20 · schema v13 · 55 unit/widget + 3 integration test files
 
 ## Done this session
 - Bullet list
@@ -71,7 +72,7 @@ Then link from `todos/README.md`.
 
 **Start:** Read `feature/SESSION.md` → `feature/todos/README.md` → linked todo doc.
 
-**End:** Run the checklist above. Never leave `SESSION.md` stale.
+**End:** Run the checklist above. Never leave `SESSION.md` stale. The founder asked that markdown stay current **as we ship each new thing**, not only at session close.
 
 ## Files that stay stable (rarely touch)
 

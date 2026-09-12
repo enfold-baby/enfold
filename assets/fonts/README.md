@@ -1,6 +1,6 @@
-# BloomDue fonts
+# Enfold fonts
 
-BloomDue bundles the following Google Fonts so typography works offline and
+Enfold bundles the following Google Fonts so typography works offline and
 renders consistently in tests and release builds:
 
 - Nunito: Regular, SemiBold, Bold, ExtraBold, Black

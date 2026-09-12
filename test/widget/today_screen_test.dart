@@ -1,8 +1,8 @@
-import 'package:bloomdue_baby/core/router/app_router.dart';
-import 'package:bloomdue_baby/features/logs/log_feed_screen.dart';
-import 'package:bloomdue_baby/features/today/models/log_type.dart';
-import 'package:bloomdue_baby/features/today/providers/today_log_provider.dart';
-import 'package:bloomdue_baby/features/today/today_screen.dart';
+import 'package:enfold/core/router/app_router.dart';
+import 'package:enfold/features/logs/log_feed_screen.dart';
+import 'package:enfold/features/today/models/log_type.dart';
+import 'package:enfold/features/today/providers/today_log_provider.dart';
+import 'package:enfold/features/today/today_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

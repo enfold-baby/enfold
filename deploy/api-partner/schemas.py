@@ -79,3 +79,7 @@ class CareEventResponse(BaseModel):
 class DeviceRegister(BaseModel):
     platform: str = Field(min_length=1, max_length=32)
     fcm_token: str = Field(min_length=1)
+
+
+class DeviceUnregister(BaseModel):
+    fcm_token: str = Field(min_length=1)

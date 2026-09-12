@@ -1,68 +1,74 @@
-# Partner activity push — FCM (prepared, finish together)
+# Partner activity push — FCM
 
-> **Priority:** P1 · **Status:** Scaffolded in app + VPS. Waiting on Firebase project + credentials.  
+> **Priority:** P1 · **Status:** Live (2026-09). Android + iOS client files gitignored. API service account on VPS; `PushSender.configured` is true. Sideload **1.0.0+20** includes Android Firebase.  
 > **User-facing toggle:** Settings → Partner notifications → *When partner logs* (off by default).
 
-## What's already done
+Android / iOS application id: `baby.enfold.app`. Display name is **Enfold**.
 
-### Flutter app
-- `PushService.registerIfPossible()` → `POST /v1/devices`
-- `FcmTokenSource` abstraction; `NoOpFcmTokenSource` returns `null` (safe no-op)
-- `pushBootstrapProvider` registers on sign-in when toggle is on
-- Toggling *When partner logs* on triggers registration attempt
-- Settings copy notes Firebase is required
-- `pubspec.yaml` has commented `firebase_core` / `firebase_messaging` deps
+## Firebase project (done)
 
-### VPS backend (`deploy/api-partner/`, live on api.bloomdue.baby)
-- `care_events.created_by_user_id` + `created_by_display_name` on create
-- `notify_family_partners()` in `push.py` — no-op until FCM credentials set
-- `POST /v1/devices` stores FCM tokens per user
-- `.env` keys expected: `FIREBASE_PROJECT_ID`, `FIREBASE_SERVICE_ACCOUNT_JSON`
+Client files and the API service account are in place (gitignored). The original setup steps are below for reference.
 
-## Finish together — checklist
+## Original setup steps
 
-### 1. Firebase Console (you + agent)
-- [ ] Create Firebase project (e.g. `bloomdue-baby`)
-- [ ] Add **Android** app — package `baby.bloomdue.app`
-- [ ] Add **iOS** app — bundle `baby.bloomdue.app` (or current Xcode bundle id)
-- [ ] Enable **Cloud Messaging**
-- [ ] Download `google-services.json` → `android/app/`
-- [ ] Download `GoogleService-Info.plist` → `ios/Runner/`
-- [ ] Create service account with FCM permissions → JSON for VPS
+Firebase Console: [https://console.firebase.google.com](https://console.firebase.google.com)
 
-### 2. Flutter wiring (agent)
-- [ ] Uncomment `firebase_core` + `firebase_messaging` in `pubspec.yaml`
-- [ ] Android: Google Services Gradle plugin in `android/settings.gradle.kts` + `android/app/build.gradle.kts`
-- [ ] iOS: Push Notifications capability, Background Modes → remote notifications
-- [ ] `Firebase.initializeApp()` in `main.dart`
-- [ ] Add `FirebaseFcmTokenSource` implementing `FcmTokenSource`
-- [ ] Override `fcmTokenSourceProvider` to use Firebase implementation
-- [ ] Request notification permission (iOS + Android 13+)
-- [ ] Listen for token refresh → re-call `registerIfPossible`
+1. Create a project named **Enfold** (or **enfold-baby**). Skip Google Analytics if you want.
+2. **Add an Android app**
+   - Package name: **`baby.enfold.app`** (must match exactly)
+   - App nickname: Enfold
+   - SHA-1: optional for FCM
+   - Download **`google-services.json`**
+3. **Add an iOS app** (optional until TestFlight)
+   - Bundle ID: **`baby.enfold.app`**
+   - Download **`GoogleService-Info.plist`**
+4. Enable **Cloud Messaging** (usually on by default): Project settings → Cloud Messaging.
+5. Create a **service account key** for the API:
+   - Project settings → Service accounts → **Generate new private key**
+   - Saves a JSON file like `enfold-xxxxx-firebase-adminsdk-xxxxx.json`
 
-### 3. VPS wiring (agent)
-- [ ] Set `FIREBASE_PROJECT_ID` and `FIREBASE_SERVICE_ACCOUNT_JSON` in production `.env`
-- [ ] Implement FCM HTTP v1 in `backend/app/services/push.py` (replace `send_placeholder`)
-- [ ] Redeploy: `deploy/api-partner/deploy_partner.sh` (or push.py-only patch)
+Then drop the files here (or send them to me in chat):
 
-### 4. Verify end-to-end
-- [ ] Parent A: sign in, join family, enable *When partner logs*, grant notification permission
-- [ ] Parent B: log a feed → Parent A receives push
-- [ ] Pull sync shows `created_by_display_name` on partner's entries
-- [ ] Toggle off → no new pushes (token may remain registered; optional unregister later)
+| File | Put it here | Status |
+|---|---|---|
+| `google-services.json` | `android/app/google-services.json` | **Done** — package `baby.enfold.app`, project `enfold-28c4e` |
+| `GoogleService-Info.plist` | `ios/Runner/GoogleService-Info.plist` | **Done** — bundle `baby.enfold.app`, added to the Xcode resources |
+| Service account JSON | `backend/secrets/firebase-sa.json` (never commit) | **Done locally** — `firebase-adminsdk` on `enfold-28c4e` |
 
-## Key files
+SHA-1 of the upload keystore is optional for FCM. Add it later if you turn on Google Sign-In or App Check. For Play App Signing, add both the **upload** SHA-1 and the **App signing** SHA-1 from Play Console.
 
-| Layer | Path |
-|---|---|
-| This doc | `feature/todos/FCM_PARTNER_PUSH.md` |
-| Token abstraction | `lib/services/push/fcm_token_source.dart` |
-| Registration flow | `lib/services/push/push_providers.dart` |
-| API client | `lib/services/api/bloomdue_api_client.dart` → `registerDevice()` |
-| Settings UI | `lib/features/settings/widgets/partner_notifications_section.dart` |
-| Backend push | `deploy/api-partner/push.py` |
-| Backend deploy | `deploy/api-partner/deploy_partner.sh` |
+Done on the API:
 
-## Prompt for next session
+- Service account at VPS `backend/secrets/firebase-sa.json` (mode 600), mounted at `/app/secrets/firebase-sa.json`
+- `FIREBASE_PROJECT_ID=enfold-28c4e`
+- `FIREBASE_SERVICE_ACCOUNT_JSON=/app/secrets/firebase-sa.json`
+- Backend recreated; Google OAuth token refresh succeeds
 
-> "Let's finish FCM partner push — see `feature/todos/FCM_PARTNER_PUSH.md`"
+Rebuild the Android/iOS app so devices pick up the native config and can register an FCM token.
+
+Those three files are gitignored. Do not paste the service account JSON into GitHub.
+
+**iOS send:** in Firebase Console → Project settings → Cloud Messaging, upload an Apple **APNs auth key** (`.p8` from Apple Developer) if you have not already. Without it, Android partner pushes work and iOS tokens may register but iOS devices will not receive notifications.
+
+## Already implemented
+
+### Flutter
+- `firebase_core` + `firebase_messaging`
+- `FirebaseFcmTokenSource` + `POST /v1/devices` on sign-in when the toggle is on
+- Token refresh re-registers
+- Toggle off → `POST /v1/devices/unregister`
+- Android 13+ `POST_NOTIFICATIONS` + `partner_activity` notification channel + `ic_stat_enfold` status icon
+- Google Services Gradle plugin applies only if `google-services.json` exists
+- iOS background modes + push entitlements
+
+### API
+- FCM HTTP v1 in `backend/app/services/push.py`
+- Upsert device tokens; drop tokens FCM marks unregistered
+- Unique index on `devices.fcm_token` (alembic `20260903_0003`)
+
+## Verify end-to-end (after the files above)
+
+1. Parent A: sign in, join family, enable *When partner logs*, allow notifications
+2. Parent B: log a feed → Parent A receives a push
+3. Pull sync still shows the partner's display name on the entry
+4. Toggle off on A → B's next log should not notify A

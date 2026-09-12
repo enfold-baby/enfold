@@ -85,6 +85,10 @@ class DeviceRegister(BaseModel):
     fcm_token: str = Field(min_length=1)
 
 
+class DeviceUnregister(BaseModel):
+    fcm_token: str = Field(min_length=1)
+
+
 class BetaRequestCreate(BaseModel):
     email: EmailStr
     name: str = Field(default="", max_length=120)

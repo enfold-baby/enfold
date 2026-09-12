@@ -1,14 +1,14 @@
-# BloomDue Baby
+# Enfold.baby
 
-Calm baby care from bump to toddler — Flutter app for [bloomdue.baby](https://bloomdue.baby).
+Calm baby care from bump to toddler — Flutter app for [enfold.baby](https://enfold.baby).
 
 | | |
 |---|---|
-| **Version** | `0.1.0+9` (private beta) |
-| **Bundle ID** | `baby.bloomdue.app` |
-| **API** | `https://api.bloomdue.baby` |
-| **Landing** | `https://bloomdue.baby` (legal + beta form live) |
-| **Drift** | schema v10 |
+| **Version** | `1.0.0+20` |
+| **Bundle ID** | `baby.enfold.app` |
+| **API** | `https://api.enfold.baby` |
+| **Landing** | `https://enfold.baby` (legal, launch-notify, `/support/`) |
+| **Drift** | schema v13 |
 
 ## Docs
 
@@ -43,8 +43,8 @@ flutter run
 | Path | What |
 |---|---|
 | `lib/`, `android/`, `ios/` | Flutter mobile app (this is the app) |
-| `landing/` | Marketing site for https://bloomdue.baby (prod snapshot) |
-| `backend/` | FastAPI for https://api.bloomdue.baby (prod snapshot) |
+| `landing/` | Marketing site for https://enfold.baby (prod snapshot) |
+| `backend/` | FastAPI for https://api.enfold.baby (prod snapshot) |
 | `docker-compose.prod.yml` | VPS stack: landing + API + Postgres + Redis |
 | `docs/PLATFORM_README.md` | Platform deploy notes from the VPS repo |
 
@@ -52,9 +52,10 @@ flutter run
 
 | Target | Script |
 |---|---|
-| Full platform (VPS) | `./deploy-bloomdue-app.sh` |
-| Landing page | `landing/deploy.sh` |
-| API email (SMTP) | `deploy/api-email/deploy_smtp.sh` |
-| API partner (FCM attrs) | `deploy/api-partner/deploy_partner.sh` |
+| Landing page | `landing/deploy.sh` as `u_bloomdue@135.125.226.37` |
+| API email | SES live from `noreply@enfold.baby`; Graph fallback → `feature/todos/SES_MAIL.md` |
+| API partner / FCM | Wired; see `feature/todos/FCM_PARTNER_PUSH.md` |
 
-Never commit `.env` — use `.env.example` / `.env.prod.example` only.
+Never commit `.env`, `google-services.json`, `GoogleService-Info.plist`, or `backend/secrets/*.json`. Use `.env.example` / `.env.prod.example` only.
+
+**Where we left off:** [`feature/SESSION.md`](./feature/SESSION.md). **Keep docs current as we ship.**

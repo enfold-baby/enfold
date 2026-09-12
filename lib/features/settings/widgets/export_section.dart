@@ -8,6 +8,7 @@ import 'package:printing/printing.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../services/database/database_provider.dart';
 import '../../../services/export/visit_pdf_service.dart';
+import '../providers/time_format_providers.dart';
 import '../providers/units_providers.dart';
 
 final visitPdfServiceProvider = Provider<VisitPdfService>(
@@ -17,8 +18,38 @@ final visitPdfServiceProvider = Provider<VisitPdfService>(
 Future<void> shareVisitPdf(Uint8List bytes) {
   return Printing.sharePdf(
     bytes: bytes,
-    filename: 'bloomdue-7day-summary.pdf',
+    filename: 'enfold-7day-summary.pdf',
   );
+}
+
+/// Explains the visit PDF before opening the system share sheet.
+Future<bool> confirmVisitPdfExport(BuildContext context) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) {
+      return AlertDialog(
+        key: const Key('export_pdf_confirm_dialog'),
+        title: const Text('Share a 7-day visit PDF?'),
+        content: const Text(
+          'Creates a one-page summary of feeds, diapers, sleep, and other care '
+          'from the last 7 days, handy for a partner or a pediatrician visit.',
+        ),
+        actions: [
+          TextButton(
+            key: const Key('export_pdf_cancel'),
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            key: const Key('export_pdf_confirm'),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: const Text('Create PDF'),
+          ),
+        ],
+      );
+    },
+  );
+  return confirmed == true;
 }
 
 class ExportSection extends ConsumerStatefulWidget {
@@ -33,6 +64,8 @@ class _ExportSectionState extends ConsumerState<ExportSection> {
   String? _status;
 
   Future<void> _exportPdf() async {
+    final confirmed = await confirmVisitPdfExport(context);
+    if (!confirmed || !mounted) return;
     setState(() {
       _busy = true;
       _status = null;
@@ -44,17 +77,19 @@ class _ExportSectionState extends ConsumerState<ExportSection> {
       final baby = await db.careLogDao.getBaby(babyId);
       final events = await db.careLogDao.getLogsForLastDays(babyId, 7);
       final useImperial = await ref.read(useImperialUnitsProvider.future);
+      final use24Hour = await ref.read(use24HourTimeProvider.future);
       final pdfService = ref.read(visitPdfServiceProvider);
       final bytes = await pdfService.buildSevenDaySummary(
         babyName: baby?.name ?? 'Baby',
         events: events,
         generatedAt: DateTime.now(),
         useImperialUnits: useImperial,
+        use24HourTime: use24Hour,
       );
 
       await Printing.sharePdf(
         bytes: bytes,
-        filename: 'bloomdue-7day-summary.pdf',
+        filename: 'enfold-7day-summary.pdf',
       );
 
       if (!mounted) return;

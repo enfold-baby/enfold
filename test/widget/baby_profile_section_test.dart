@@ -1,5 +1,5 @@
-import 'package:bloomdue_baby/features/settings/widgets/baby_profile_section.dart';
-import 'package:bloomdue_baby/services/database/database_provider.dart';
+import 'package:enfold/features/settings/widgets/baby_profile_section.dart';
+import 'package:enfold/services/database/database_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

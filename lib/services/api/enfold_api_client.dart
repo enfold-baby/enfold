@@ -42,8 +42,8 @@ class ChildProfile {
   }
 }
 
-class BloomdueApiClient {
-  BloomdueApiClient({
+class EnfoldApiClient {
+  EnfoldApiClient({
     http.Client? httpClient,
     String? baseUrl,
   })  : _http = httpClient ?? http.Client(),
@@ -82,6 +82,10 @@ class BloomdueApiClient {
       token: token,
     );
     return AuthUser.fromJson(body['user'] as Map<String, dynamic>);
+  }
+
+  Future<void> deleteAccount({required String token}) async {
+    await _delete('/v1/auth/me', token: token);
   }
 
   Future<List<ChildProfile>> listChildren(String token) async {
@@ -163,6 +167,17 @@ class BloomdueApiClient {
         'platform': platform,
         'fcm_token': fcmToken,
       },
+      token: token,
+    );
+  }
+
+  Future<void> unregisterDevice({
+    required String token,
+    required String fcmToken,
+  }) async {
+    await _post(
+      '/v1/devices/unregister',
+      {'fcm_token': fcmToken},
       token: token,
     );
   }
@@ -279,14 +294,30 @@ class BloomdueApiClient {
   }
 
   Object? _decode(http.Response response) {
-    final body = response.body.isEmpty ? null : jsonDecode(response.body);
+    final raw = response.body;
+    Object? body;
+    if (raw.isNotEmpty) {
+      try {
+        body = jsonDecode(raw);
+      } on FormatException {
+        body = raw.trim();
+      }
+    }
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return body ?? <String, dynamic>{};
     }
     final message = switch (body) {
-      Map<String, dynamic> map => map['detail']?.toString() ?? 'Request failed',
-      _ => 'Request failed',
+      Map<String, dynamic> map => _detailMessage(map) ?? 'Request failed',
+      String text when text.isNotEmpty => text,
+      _ => 'Request failed (${response.statusCode})',
     };
     throw ApiException(message, statusCode: response.statusCode);
+  }
+
+  String? _detailMessage(Map<String, dynamic> map) {
+    final detail = map['detail'];
+    if (detail is String && detail.trim().isNotEmpty) return detail.trim();
+    if (detail != null) return detail.toString();
+    return null;
   }
 }

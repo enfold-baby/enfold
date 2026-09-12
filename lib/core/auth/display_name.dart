@@ -1,4 +1,4 @@
-import '../../services/api/bloomdue_api_client.dart';
+import '../../services/api/enfold_api_client.dart';
 
 String authorLabelForUser(AuthUser user) {
   final name = user.displayName.trim();

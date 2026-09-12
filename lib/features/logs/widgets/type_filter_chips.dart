@@ -68,7 +68,7 @@ class DetailFilterChips<T> extends StatelessWidget {
             fontSize: 13,
             fontWeight: FontWeight.w800,
             letterSpacing: 1.1,
-            color: AppColors.sage,
+            color: AppColors.accent(Theme.of(context).brightness),
           ),
         ),
         const SizedBox(height: 8),
@@ -126,7 +126,9 @@ class _FilterChip extends StatelessWidget {
         fontSize: 13,
         color: selected
             ? AppColors.cream
-            : (isDark ? AppColors.cream : AppColors.bark),
+            : AppColors.mutedText(
+                isDark ? Brightness.dark : Brightness.light,
+              ),
       ),
       selectedColor: activeColor,
       backgroundColor: isDark ? AppColors.nightElevated : AppColors.creamDeep,

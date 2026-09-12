@@ -1,4 +1,4 @@
-import 'package:bloomdue_baby/app.dart';
+import 'package:enfold/app.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +19,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const BloomDueApp(),
+        child: const EnfoldApp(),
       ),
     );
     await tester.pump(const Duration(milliseconds: 500));
@@ -39,11 +39,8 @@ void main() {
     expect(find.text('Is this normal?'), findsOneWidget);
     expect(find.byKey(const Key('learn_card_spit-up-vs-vomiting')), findsOneWidget);
 
-    await tester.tap(find.text('Pregnancy'));
-    await tester.pump(const Duration(milliseconds: 300));
-    await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Track the journey'), findsOneWidget);
-    expect(find.byKey(const Key('kick_counter_card')), findsOneWidget);
+    expect(find.byKey(const Key('quick_add_fab')), findsOneWidget);
+    expect(find.text('Pregnancy'), findsNothing);
 
     await tester.tap(find.text('Settings'));
     await tester.pump(const Duration(milliseconds: 300));
@@ -55,7 +52,8 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('v0.1.0 (1)'), findsOneWidget);
     expect(find.byKey(const Key('about_version')), findsOneWidget);
-    expect(find.byKey(const Key('about_beta_badge')), findsOneWidget);
+    expect(find.byKey(const Key('about_beta_badge')), findsNothing);
+    expect(find.text('Private beta'), findsNothing);
 
     await tester.tap(find.text('Dark'));
     await tester.pump(const Duration(milliseconds: 300));

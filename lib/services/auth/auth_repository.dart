@@ -1,19 +1,19 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../api/api_exception.dart';
-import '../api/bloomdue_api_client.dart';
+import '../api/enfold_api_client.dart';
 import 'auth_session.dart';
 
-const _tokenKey = 'bloomdue_access_token';
+const _tokenKey = 'enfold_access_token';
 
 class AuthRepository {
   AuthRepository({
-    required BloomdueApiClient api,
+    required EnfoldApiClient api,
     FlutterSecureStorage? storage,
   })  : _api = api,
         _storage = storage ?? const FlutterSecureStorage();
 
-  final BloomdueApiClient _api;
+  final EnfoldApiClient _api;
   final FlutterSecureStorage _storage;
 
   Future<AuthSession?> loadSession() async {
@@ -44,6 +44,11 @@ class AuthRepository {
   }
 
   Future<void> signOut() async {
+    await _storage.delete(key: _tokenKey);
+  }
+
+  Future<void> deleteAccount(String token) async {
+    await _api.deleteAccount(token: token);
     await _storage.delete(key: _tokenKey);
   }
 

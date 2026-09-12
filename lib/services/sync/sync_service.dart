@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 
 import '../api/api_exception.dart';
-import '../api/bloomdue_api_client.dart';
+import '../api/enfold_api_client.dart';
 import '../api/family_models.dart';
 import '../auth/auth_session.dart';
 import '../database/app_database.dart';
@@ -26,12 +26,12 @@ class SyncResult {
 
 class SyncService {
   SyncService({
-    required BloomdueApiClient api,
+    required EnfoldApiClient api,
     required AppDatabase db,
   })  : _api = api,
         _db = db;
 
-  final BloomdueApiClient _api;
+  final EnfoldApiClient _api;
   final AppDatabase _db;
 
   static const pullLookbackDays = 2;

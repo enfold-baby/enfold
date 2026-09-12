@@ -6,8 +6,8 @@ Provide calm, doctor-reviewed, age-aware guidance without turning the app into a
 
 ## Content Model
 
-- English and Romanian text from the start.
-- Reviewer attribution internally; public text can say it is medically reviewed by the Bloomdue medical team.
+- English now. Romanian later (device RO → RO, else EN, Settings override) — see `feature/todos/I18N_RO.md`.
+- Reviewer attribution internally; public text can say it is medically reviewed by the Enfold medical team.
 - Versioned content so updates can be audited.
 
 ## MVP Topics

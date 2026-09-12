@@ -26,7 +26,7 @@ class PregnancyScreen extends ConsumerWidget {
         error: (error, _) => Center(
           child: Text(
             'Could not load pregnancy profile.',
-            style: GoogleFonts.nunito(color: AppColors.barkSoft),
+            style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
           ),
         ),
         data: (profile) {
@@ -51,7 +51,7 @@ class PregnancyScreen extends ConsumerWidget {
                 style: GoogleFonts.nunito(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.barkSoft,
+                  color: AppColors.mutedText(Theme.of(context).brightness),
                 ),
               ),
               const SizedBox(height: 4),
@@ -101,7 +101,7 @@ class PregnancyScreen extends ConsumerWidget {
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.2,
-                      color: AppColors.sage,
+                      color: AppColors.accent(Theme.of(context).brightness),
                     ),
                   ),
                   const Spacer(),
@@ -133,7 +133,7 @@ class PregnancyScreen extends ConsumerWidget {
                     'Save questions for your next prenatal visit.',
                     style: GoogleFonts.nunito(
                       fontSize: 15,
-                      color: AppColors.barkSoft,
+                      color: AppColors.mutedText(Theme.of(context).brightness),
                     ),
                   ),
                 )
@@ -298,14 +298,14 @@ class _DueDateCard extends StatelessWidget {
             'Due date',
             style: GoogleFonts.nunito(
               fontWeight: FontWeight.w800,
-              color: AppColors.sage,
+              color: AppColors.accent(Theme.of(context).brightness),
             ),
           ),
           const SizedBox(height: 8),
           if (dueDate == null)
             Text(
               'Set your due date to see your current week.',
-              style: GoogleFonts.nunito(color: AppColors.barkSoft),
+              style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
             )
           else ...[
             Text(
@@ -321,7 +321,7 @@ class _DueDateCard extends StatelessWidget {
                 'Week $week${daysLeft != null && daysLeft! >= 0 ? ' · $daysLeft days to go' : ''}',
                 style: GoogleFonts.nunito(
                   fontSize: 15,
-                  color: AppColors.barkSoft,
+                  color: AppColors.mutedText(Theme.of(context).brightness),
                 ),
               ),
           ],
@@ -387,13 +387,13 @@ class _KickCounterCard extends StatelessWidget {
             'Kick counter',
             style: GoogleFonts.nunito(
               fontWeight: FontWeight.w800,
-              color: AppColors.sage,
+              color: AppColors.accent(Theme.of(context).brightness),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Tap when you feel movement. Count resets each day.',
-            style: GoogleFonts.nunito(color: AppColors.barkSoft),
+            style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
           ),
           const SizedBox(height: 16),
           Text(
@@ -469,7 +469,7 @@ class _AppointmentTile extends StatelessWidget {
               dateFormat.format(appointment.scheduledAt!),
             if (appointment.notes.isNotEmpty) appointment.notes,
           ].join(' · '),
-          style: GoogleFonts.nunito(color: AppColors.barkSoft),
+          style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
         ),
         trailing: IconButton(
           icon: const Icon(Icons.delete_outline),

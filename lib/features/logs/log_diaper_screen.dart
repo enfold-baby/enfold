@@ -128,7 +128,7 @@ class _LogDiaperScreenState extends ConsumerState<LogDiaperScreen> {
               'What happened?',
               style: GoogleFonts.nunito(
                 fontSize: 15,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 20),

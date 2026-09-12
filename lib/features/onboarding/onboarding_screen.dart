@@ -85,52 +85,65 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     if (picked != null) setState(() => _birthDate = picked);
   }
 
+  bool get _wideWelcome {
+    final size = MediaQuery.sizeOf(context);
+    return size.shortestSide >= 600 && size.width / size.height >= 1.15;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
+            final landscapeSplit = _wideWelcome;
+            final maxWidth = landscapeSplit
+                ? constraints.maxWidth
+                : (constraints.maxWidth >= 600 ? 560.0 : constraints.maxWidth);
             return SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight - 40,
-                ),
-                child: IntrinsicHeight(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _OnboardingHeader(
-                        step: _step,
-                        busy: _busy,
-                        onBack: _goBack,
-                      ),
-                      const SizedBox(height: 12),
-                      Expanded(
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 280),
-                          switchInCurve: Curves.easeOutCubic,
-                          switchOutCurve: Curves.easeInCubic,
-                          transitionBuilder: (child, animation) =>
-                              FadeTransition(
-                                opacity: animation,
-                                child: SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: const Offset(0.04, 0),
-                                    end: Offset.zero,
-                                  ).animate(animation),
-                                  child: child,
-                                ),
-                              ),
-                          child: switch (_step) {
-                            _OnboardingStep.welcome => _welcomeStep(),
-                            _OnboardingStep.journey => _journeyStep(),
-                            _OnboardingStep.details => _detailsStep(),
-                          },
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight - 40,
+                    maxWidth: maxWidth,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _OnboardingHeader(
+                          step: _step,
+                          busy: _busy,
+                          onBack: _goBack,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 12),
+                        Expanded(
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 280),
+                            switchInCurve: Curves.easeOutCubic,
+                            switchOutCurve: Curves.easeInCubic,
+                            transitionBuilder: (child, animation) =>
+                                FadeTransition(
+                                  opacity: animation,
+                                  child: SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(0.04, 0),
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: child,
+                                  ),
+                                ),
+                            child: switch (_step) {
+                              _OnboardingStep.welcome => _welcomeStep(),
+                              _OnboardingStep.journey => _journeyStep(),
+                              _OnboardingStep.details => _detailsStep(),
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -152,82 +165,55 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Widget _welcomeStep() {
-    final theme = Theme.of(context);
-    final brightness = theme.brightness;
-    final isDark = brightness == Brightness.dark;
-
+    final wide = _wideWelcome;
     return Column(
       key: const ValueKey(_OnboardingStep.welcome),
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 8),
-        Container(
-          height: 210,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: isDark
-                  ? [AppColors.nightElevated, AppColors.nightCard]
-                  : [AppColors.sageMist, AppColors.bloomMist],
-            ),
-            borderRadius: BorderRadius.circular(32),
-            border: Border.all(
-              color: isDark
-                  ? AppColors.nightLine
-                  : Colors.white.withValues(alpha: 0.9),
-            ),
-          ),
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(31),
-                  child: Image.asset(
-                    BloomIllustrations.familyCare,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                    color: isDark
-                        ? AppColors.nightCard.withValues(alpha: 0.72)
-                        : null,
-                    colorBlendMode: isDark ? BlendMode.multiply : null,
-                    excludeFromSemantics: true,
+        if (wide)
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: _welcomeHero(fit: BoxFit.contain),
+                ),
+                const SizedBox(width: 28),
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _welcomeCopy(),
+                      const Spacer(),
+                      _welcomeActions(),
+                    ],
                   ),
                 ),
-              ),
-              Positioned(top: 14, left: 14, child: BloomBrandMark(size: 46)),
-              Positioned(
-                bottom: 14,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 7,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.cardSurface(
-                        brightness,
-                      ).withValues(alpha: 0.9),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      'CALM CARE · DAY & NIGHT',
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: AppColors.mutedText(brightness),
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.1,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
-        Text('BloomDue', style: theme.textTheme.displayLarge),
+              ],
+            ),
+          )
+        else ...[
+          _welcomeHero(fit: BoxFit.cover, aspectRatio: 1.45),
+          const SizedBox(height: 20),
+          _welcomeCopy(),
+          const Spacer(),
+          const SizedBox(height: 16),
+          _welcomeActions(),
+        ],
+      ],
+    );
+  }
+
+  Widget _welcomeCopy() {
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Enfold', style: theme.textTheme.displayLarge),
         const SizedBox(height: 8),
         Text(
           'Grow with confidence.',
@@ -241,8 +227,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             color: AppColors.mutedText(brightness),
           ),
         ),
-        const Spacer(),
-        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _welcomeActions() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
         FilledButton(
           key: const Key('onboarding_get_started'),
           onPressed: _busy
@@ -258,6 +250,90 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           child: const Text('Skip for now'),
         ),
       ],
+    );
+  }
+
+  Widget _welcomeHero({
+    required BoxFit fit,
+    double? aspectRatio,
+  }) {
+    final theme = Theme.of(context);
+    final brightness = theme.brightness;
+    final isDark = brightness == Brightness.dark;
+
+    Widget hero = Container(
+      key: const Key('onboarding_welcome_hero'),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? [AppColors.nightElevated, AppColors.nightCard]
+              : [AppColors.sageMist, AppColors.bloomMist],
+        ),
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(
+          color: isDark
+              ? AppColors.nightLine
+              : Colors.white.withValues(alpha: 0.9),
+        ),
+      ),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(31),
+              child: Image.asset(
+                BloomIllustrations.familyCare,
+                fit: fit,
+                alignment: const Alignment(0, 0.12),
+                color: isDark
+                    ? AppColors.nightCard.withValues(alpha: 0.72)
+                    : null,
+                colorBlendMode: isDark ? BlendMode.multiply : null,
+                excludeFromSemantics: true,
+              ),
+            ),
+          ),
+          const Positioned(top: 14, left: 14, child: BloomBrandMark(size: 46)),
+          Positioned(
+            bottom: 14,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 7,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.cardSurface(
+                    brightness,
+                  ).withValues(alpha: 0.9),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  'CALM CARE · DAY & NIGHT',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: AppColors.mutedText(brightness),
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.1,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (aspectRatio == null) return hero;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        final height = (width / aspectRatio).clamp(180.0, 300.0);
+        return SizedBox(width: width, height: height, child: hero);
+      },
     );
   }
 
@@ -341,7 +417,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             expecting
                 ? Icons.event_available_outlined
                 : Icons.waving_hand_outlined,
-            color: expecting ? AppColors.bloom : AppColors.sage,
+            color: expecting
+                ? AppColors.readableInk(AppColors.bloom, brightness)
+                : AppColors.accent(brightness),
             size: 30,
           ),
         ),
@@ -401,7 +479,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.lock_outline, size: 18, color: AppColors.sage),
+            Icon(
+              Icons.lock_outline,
+              size: 18,
+              color: AppColors.accent(brightness),
+            ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -527,7 +609,7 @@ class _OnboardingHeader extends StatelessWidget {
         children: [
           const BloomBrandMark(size: 34, showBackdrop: false),
           const SizedBox(width: 8),
-          Text('BloomDue', style: Theme.of(context).textTheme.titleMedium),
+          Text('Enfold', style: Theme.of(context).textTheme.titleMedium),
         ],
       );
     }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
+import '../../../core/datetime/clock_format.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../settings/providers/time_format_providers.dart';
 import '../../today/models/care_log_entry.dart';
 import '../../today/providers/today_log_provider.dart';
 import '../providers/logs_providers.dart';
@@ -15,11 +16,12 @@ class DeletedLogsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final deletedAsync = ref.watch(deletedLogsProvider);
+    final use24Hour = ref.watch(use24HourTimeProvider).valueOrNull ?? false;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return deletedAsync.when(
       loading: () => const SizedBox.shrink(),
-      error: (_, __) => const SizedBox.shrink(),
+      error: (_, _) => const SizedBox.shrink(),
       data: (entries) {
         if (entries.isEmpty) return const SizedBox.shrink();
 
@@ -33,7 +35,7 @@ class DeletedLogsSection extends ConsumerWidget {
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.2,
-                color: AppColors.sage,
+                color: AppColors.accent(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 8),
@@ -41,7 +43,7 @@ class DeletedLogsSection extends ConsumerWidget {
               'Restore within 30 days. After that, logs are permanently removed.',
               style: GoogleFonts.nunito(
                 fontSize: 14,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
                 height: 1.4,
               ),
             ),
@@ -50,6 +52,7 @@ class DeletedLogsSection extends ConsumerWidget {
               _DeletedLogTile(
                 entry: entry,
                 isDark: isDark,
+                use24Hour: use24Hour,
                 onRestore: () async {
                   await ref.read(careLogActionsProvider).restoreLog(entry.id);
                   if (!context.mounted) return;
@@ -117,12 +120,14 @@ class _DeletedLogTile extends StatelessWidget {
   const _DeletedLogTile({
     required this.entry,
     required this.isDark,
+    required this.use24Hour,
     required this.onRestore,
     required this.onDeleteForever,
   });
 
   final CareLogEntry entry;
   final bool isDark;
+  final bool use24Hour;
   final VoidCallback onRestore;
   final VoidCallback onDeleteForever;
 
@@ -131,7 +136,10 @@ class _DeletedLogTile extends StatelessWidget {
     final deletedAt = entry.deletedAt;
     if (deletedAt == null) return const SizedBox.shrink();
 
-    final timeFormat = DateFormat('MMM d · h:mm a');
+    final logged = ClockFormat.formatDateAndTime(
+      entry.loggedAt,
+      use24Hour: use24Hour,
+    );
     final daysLeft = recoveryDaysRemaining(deletedAt);
 
     return Padding(
@@ -147,15 +155,15 @@ class _DeletedLogTile extends StatelessWidget {
                 : AppColors.bark.withValues(alpha: 0.08),
           ),
         ),
-        leading: Icon(entry.type.icon, color: AppColors.barkSoft),
+        leading: Icon(entry.type.icon, color: AppColors.mutedText(Theme.of(context).brightness)),
         title: Text(
           entry.type.label,
           style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
         ),
         subtitle: Text(
-          '${timeFormat.format(entry.loggedAt)} · '
+          '$logged · '
           '$daysLeft day${daysLeft == 1 ? '' : 's'} left to restore',
-          style: GoogleFonts.nunito(color: AppColors.barkSoft, fontSize: 13),
+          style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness), fontSize: 13),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

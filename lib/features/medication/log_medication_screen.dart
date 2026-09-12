@@ -10,6 +10,7 @@ import '../today/models/care_log_details.dart';
 import '../today/models/log_type.dart';
 import '../today/providers/today_log_provider.dart';
 import 'data/medication_presets.dart';
+import 'providers/medication_routine_providers.dart';
 
 class LogMedicationScreen extends ConsumerStatefulWidget {
   const LogMedicationScreen({super.key, this.logId});
@@ -32,15 +33,32 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
   late DateTime _occurredAt;
   bool _busy = false;
   bool _loading = false;
+  bool _remindDaily = false;
 
   @override
   void initState() {
     super.initState();
     _occurredAt = DateTime.now();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _hydrateReminder());
     if (widget.logId != null) {
       _loading = true;
       WidgetsBinding.instance.addPostFrameCallback((_) => _loadEntry());
     }
+  }
+
+  Future<void> _hydrateReminder({String? name}) async {
+    final query = (name ?? _nameController.text).trim();
+    if (query.isEmpty) return;
+    final db = ref.read(databaseProvider);
+    final babyId = await db.careLogDao.ensureDefaultBaby();
+    final existing = await db.medicationRoutineDao.findByName(
+      babyId: babyId,
+      name: query,
+    );
+    if (!mounted) return;
+    setState(() {
+      _remindDaily = existing != null && existing.enabled;
+    });
   }
 
   Future<void> _loadEntry() async {
@@ -71,6 +89,7 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
       _occurredAt = row.occurredAt;
       _noteController.text = row.note;
     });
+    await _hydrateReminder(name: name);
   }
 
   @override
@@ -90,6 +109,7 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
         _doseController.text = preset.suggestedDose!;
       }
     });
+    _hydrateReminder(name: preset.name);
   }
 
   Future<void> _save() async {
@@ -131,6 +151,15 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
       );
     }
 
+    await ref.read(medicationRoutineActionsProvider).saveFromLog(
+          name: name,
+          dose: dose,
+          category: _category ?? 'vitamin',
+          hour: _occurredAt.hour,
+          minute: _occurredAt.minute,
+          remindDaily: _remindDaily,
+        );
+
     if (!mounted) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
@@ -169,7 +198,7 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
               'What did baby take?',
               style: GoogleFonts.nunito(
                 fontSize: 15,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 20),
@@ -193,7 +222,7 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.1,
-                color: AppColors.sage,
+                color: AppColors.accent(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 8),
@@ -212,7 +241,7 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
                       fontWeight: FontWeight.w700,
                       color: _selectedPreset == preset.name
                           ? AppColors.cream
-                          : AppColors.bark,
+                          : AppColors.mutedText(Theme.of(context).brightness),
                     ),
                   ),
               ],
@@ -226,7 +255,10 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
                 hintText: 'e.g. Vitamin D drops',
               ),
               textCapitalization: TextCapitalization.sentences,
-              onChanged: (_) => setState(() => _selectedPreset = null),
+              onChanged: (_) {
+                setState(() => _selectedPreset = null);
+                _hydrateReminder();
+              },
             ),
             const SizedBox(height: 16),
             TextField(
@@ -243,7 +275,25 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
               value: _occurredAt,
               onChanged: (value) => setState(() => _occurredAt = value),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
+            SwitchListTile(
+              key: const Key('medication_daily_reminder_toggle'),
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                'Remind me every day',
+                style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
+              ),
+              subtitle: Text(
+                'A gentle ping around this time. Off by default, never a streak.',
+                style: GoogleFonts.nunito(
+                  fontSize: 13,
+                  color: AppColors.mutedText(Theme.of(context).brightness),
+                ),
+              ),
+              value: _remindDaily,
+              onChanged: (value) => setState(() => _remindDaily = value),
+            ),
+            const SizedBox(height: 8),
             TextField(
               key: const Key('medication_note'),
               controller: _noteController,

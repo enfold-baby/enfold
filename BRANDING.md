@@ -1,19 +1,19 @@
-# BloomDue — Brand & Product Decisions
+# Enfold.baby — Brand & Product Decisions
 
-> Locked 2026-07-01 · Domain: [bloomdue.baby](https://bloomdue.baby)
+> Rebranded 2026-09 · Domain: [enfold.baby](https://enfold.baby)
 
 ## Identity
 
 | Field | Value |
 |---|---|
-| **Product name** | BloomDue |
-| **Domain** | bloomdue.baby |
+| **Product name** | Enfold |
+| **Domain** | enfold.baby |
 | **Tagline** | Grow with confidence. |
 | **Subtitle** | Calm baby care, from bump to toddler |
-| **Bundle ID** | `baby.bloomdue.app` |
-| **Dart package** | `bloomdue_baby` (folder name; can rename later) |
-| **Store listing** | BloomDue |
-| **MVP language** | English only (i18n scaffold later) |
+| **Bundle ID** | `baby.enfold.app` |
+| **Dart package** | `enfold` (folder name; internal) |
+| **Store listing** | Enfold |
+| **MVP language** | English now. Later: device RO → RO, else EN, Settings can force RO |
 | **Auth** | Anonymous first → optional account for sync |
 | **Test device** | Pixel 8 emulator (Android Studio) |
 
@@ -21,24 +21,31 @@
 
 | URL | Purpose | Status |
 |---|---|---|
-| `bloomdue.baby` | App marketing landing | Live — static nginx |
-| `due.bloomdue.baby` | Shareable due-date countdown | Live — **do not touch** |
+| `enfold.baby` | App marketing landing | Live — static nginx |
+| `due.enfold.baby` | Shareable due-date countdown | Live |
 
 ## Color palette
 
-Aligned with `due.bloomdue.baby` for family brand consistency.
+Aligned with `due.enfold.baby` for family brand consistency.
 
 | Token | Hex | Use |
 |---|---|---|
 | `cream` | `#FAF7F2` | Backgrounds |
 | `creamDeep` | `#F3EDE4` | Cards, elevated surfaces |
-| `bark` | `#3D3229` | Primary text |
-| `barkSoft` | `#6B5E54` | Secondary text |
-| `sage` | `#5C7F71` | Primary actions, trust |
-| `sageDeep` | `#4A675C` | Pressed / links |
+| `bark` | `#3D3229` | Primary text (light) |
+| `barkSoft` | `#6B5E54` | Secondary text (light only) |
+| `sage` | `#5C7F71` | Primary actions, trust (light) |
+| `sageDeep` | `#4A675C` | Pressed / links (light) |
 | `bloom` | `#C96B7E` | Accent, warmth, highlights |
 | `bloomDeep` | `#A85568` | Accent pressed |
 | `sleepBlue` | `#7A8FA8` | Sleep log category |
+| `night` | `#141A17` | Dark background |
+| `nightElevated` | `#1E2723` | Dark cards / nav |
+| `nightCard` | `#28322E` | Dark inset surfaces |
+| `nightMuted` | `#DCE6E1` | Secondary text (dark) |
+| `nightAccent` | `#9ECBB5` | Sage ink on dark (labels, icons) |
+
+Use `AppColors.mutedText(brightness)` and `AppColors.accent(brightness)` — never `barkSoft` or `sage` as dark-mode text. WCAG AA is 4.5:1 for body/secondary copy (parents log at 3am).
 
 ## Typography
 
@@ -62,10 +69,10 @@ Flutter: `google_fonts` package.
 
 | Layer | Choice | Notes |
 |---|---|---|
-| **API** | VPS FastAPI (`bloomdue-platform` on 135.125.226.37) | Already has `/v1/care-events`, auth, children |
+| **API** | VPS FastAPI (`135.125.226.37`) | `/v1/care-events`, auth, children |
 | **Database** | PostgreSQL on VPS | `care_events`, `children`, `families`, `users` |
-| **Email** | AWS SES · `noreply@bloomdue.baby` | Magic-link codes live on API now; SES sender swap planned |
-| **API base** | `https://api.bloomdue.baby` | Auth, children, care-events sync |
+| **Email** | SES live · Graph fallback | Codes send from `Enfold <noreply@enfold.baby>` via AWS SES (`eu-central-1`). Graph remains fallback. SMTP still 535s (`feature/todos/SES_MAIL.md`) |
+| **API base** | `https://api.enfold.baby` | Auth, children, care-events sync |
 | **Mobile** | Offline-first Drift SQLite | `pending_sync` flag until API push |
 
 App talks to **our VPS API**, not Supabase. Local Drift schema mirrors server `care_events.type` (`feeding`, `diaper`, `sleep`).
@@ -92,21 +99,31 @@ App talks to **our VPS API**, not Supabase. Local Drift schema mirrors server `c
 18. **Phase 17** — Soft delete / restore for care logs ✅
 19. **Phase 18** — Partner sharing + bidirectional sync ✅
 20. **Phase 19** — Last logged by + gentle partner nudge ✅
-21. **Phase 20** — FCM push scaffold (no Firebase project yet) 🟡
-22. **Phase 21** — Landing v3 + legal pages + join-beta form (SMTP) ✅
-23. **Phase 22** — Sync edit/delete, theme persist, sideload APK `0.1.0+9` ✅
+21. **Phase 20** — FCM partner push (Android + VPS sender live) ✅
+22. **Phase 21** — Landing v3 + legal pages + launch-notify form ✅
+23. **Phase 22** — Sync edit/delete, theme persist, Play upload keystore ✅
+24. **Phase 23** — Dark-mode secondary contrast (WCAG AA) ✅
+25. **Phase 24** — Sleep still-sleeping + Today banner ✅
+26. **Phase 25** — Support page `/support/` (share, plant-a-moon, credits) ✅
+27. **Phase 26** — Graph mail fallback; SES from `noreply@enfold.baby` live ✅
+28. **Phase 27** — Public site: launch-notify (Play soon, iOS shortly after) ✅
+29. **Phase 28** — 4-tab shell + docked Add FAB; Pregnancy off the tab bar ✅
+30. **Phase 29** — Growth measurement history trend charts ✅
+31. **Phase 30** — Care-log date picker bounds (3 years back … tomorrow) ✅
+32. **Phase 31** — 12-hour vs 24-hour clock in Settings (Drift v12) ✅
+33. **Phase 32** — Daily vitamin reminder (one time of day, no streak) ✅
 
 **Docs hub:** [`feature/README.md`](./feature/README.md)
 
-## Beta release (v0.1.x)
+## First public release (v1.0.0)
 
 | Field | Value |
 |---|---|
-| **Marketing version** | `0.1.0` (private beta — `0.x` shows beta badge in Settings) |
-| **Build number** | `9` — increment `+N` in `pubspec.yaml` before each store upload |
-| **Bundle ID** | `baby.bloomdue.app` |
-| **API** | `https://api.bloomdue.baby` |
-| **Legal** | https://bloomdue.baby/privacy/ · https://bloomdue.baby/terms/ |
+| **Marketing version** | `1.0.0` |
+| **Build number** | `20` — increment `+N` in `pubspec.yaml` before each store upload |
+| **Bundle ID** | `baby.enfold.app` |
+| **API** | `https://api.enfold.baby` |
+| **Legal** | https://enfold.baby/privacy/ · https://enfold.baby/terms/ |
 
 ### Build commands
 
@@ -120,12 +137,15 @@ flutter build ipa --release      # iOS TestFlight (macOS + signing)
 | Play AAB | `build/app/outputs/bundle/release/app-release.aab` |
 | Sideload APK | `build/app/outputs/flutter-apk/app-release.apk` |
 
-**Signing notes:** Android release currently uses debug keystore (fine for internal testing). Swap to release keystore before open beta. iOS requires Apple Developer signing for TestFlight.
+**Signing notes:** Android **upload** keystore is `android/upload-keystore.jks` + gitignored `android/key.properties`. Play App Signing holds the distribution key. iOS still needs Apple Developer / TestFlight.
+
+Sideload APKs: `~/Desktop/enfold-1.0.0-N.apk` (latest **+20**). In-app APK installer was removed for Play policy.
 
 ## Landing page
 
 Source: `landing/public/` in this repo.  
-Deployed to VPS `bloomdue-platform-landing` container.  
-Redeploy: `SSHPASS='…' ./landing/deploy.sh` (SSH as `u_bloomdue@135.125.226.37`).  
-Analytics: SimpleAnalytics (`scripts.simpleanalyticscdn.com/latest.js`) — no cookie banner.  
-Beta signup: `#join-beta` form → `POST https://api.bloomdue.baby/v1/beta-requests`.
+Deployed to the VPS landing container.  
+Redeploy: `SSHPASS='…' ./landing/deploy.sh` as `u_bloomdue@135.125.226.37`.  
+Analytics: SimpleAnalytics — no cookie banner.  
+Launch notify: `#notify` form (`#join-beta` still works) → `POST https://api.enfold.baby/v1/beta-requests`. Copy is **Google Play soon, iOS shortly after** — no store URLs, no sideload/download CTAs.  
+Help / support: [https://enfold.baby/support/](https://enfold.baby/support/) — share, plant a moon (Stripe pending), credits. No ads in the app.

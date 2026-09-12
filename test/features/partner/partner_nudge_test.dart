@@ -1,7 +1,7 @@
-import 'package:bloomdue_baby/features/partner/models/partner_nudge.dart';
-import 'package:bloomdue_baby/features/today/models/care_log_details.dart';
-import 'package:bloomdue_baby/features/today/models/care_log_entry.dart';
-import 'package:bloomdue_baby/features/today/models/log_type.dart';
+import 'package:enfold/features/partner/models/partner_nudge.dart';
+import 'package:enfold/features/today/models/care_log_details.dart';
+import 'package:enfold/features/today/models/care_log_entry.dart';
+import 'package:enfold/features/today/models/log_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 CareLogEntry _entry({

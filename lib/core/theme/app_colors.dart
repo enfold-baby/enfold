@@ -24,15 +24,28 @@ abstract final class AppColors {
   static const Color nightElevated = Color(0xFF1E2723);
   static const Color nightCard = Color(0xFF28322E);
   static const Color nightLine = Color(0xFF3F4F48);
-  static const Color nightMuted = Color(0xFFD0DAD4);
+  // Sage-cream secondary on night surfaces (WCAG AA 4.5:1 vs night + nightCard).
+  // Light barkSoft is ~2.1–2.8:1 on these — never use it as dark-mode ink.
+  static const Color nightMuted = Color(0xFFDCE6E1);
   static const Color nightAccent = Color(0xFF9ECBB5);
-  static const Color nightNavUnselected = Color(0xFF9AADA4);
+  static const Color nightNavUnselected = Color(0xFFB7C9C0);
   static const Color nightDisabledFill = Color(0xFF35403B);
   static const Color nightDisabledLabel = Color(0xFFB8C6BE);
 
   /// Secondary labels — readable on both light and dark backgrounds.
   static Color mutedText(Brightness brightness) =>
       brightness == Brightness.dark ? nightMuted : barkSoft;
+
+  /// Sage used as ink (section labels, small icons). Light sage fails on night cards.
+  static Color accent(Brightness brightness) =>
+      brightness == Brightness.dark ? nightAccent : sage;
+
+  /// Lift a light-mode brand color so 13px labels still meet WCAG AA at night.
+  static Color readableInk(Color color, Brightness brightness) {
+    if (brightness != Brightness.dark) return color;
+    if (color == sage || color == sageDeep) return nightAccent;
+    return Color.lerp(color, cream, 0.42)!;
+  }
 
   /// Inactive bottom-nav icons and labels in dark mode.
   static Color navUnselected(Brightness brightness) =>

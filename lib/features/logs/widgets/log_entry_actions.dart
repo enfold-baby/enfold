@@ -34,7 +34,7 @@ Future<void> showLogEntryActions(
             const SizedBox(height: 8),
             Text(
               entry.detailSummary() ?? 'Logged entry',
-              style: GoogleFonts.nunito(color: AppColors.barkSoft),
+              style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
             ),
             const SizedBox(height: 20),
             FilledButton.icon(
@@ -46,8 +46,6 @@ Future<void> showLogEntryActions(
               icon: const Icon(Icons.edit_outlined),
               label: const Text('Edit'),
               style: FilledButton.styleFrom(
-                backgroundColor: AppColors.sage,
-                foregroundColor: AppColors.cream,
                 minimumSize: const Size.fromHeight(48),
               ),
             ),

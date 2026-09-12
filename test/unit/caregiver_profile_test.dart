@@ -1,4 +1,4 @@
-import 'package:bloomdue_baby/features/settings/widgets/caregiver_profile_section.dart';
+import 'package:enfold/features/settings/widgets/caregiver_profile_section.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

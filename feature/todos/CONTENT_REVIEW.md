@@ -1,6 +1,6 @@
 # Todo — learn card physician review
 
-> **Priority:** P3 · **Status:** 25 cards written, formal review pending
+> **Priority:** P3 · **Status:** 25 cards written, formal review still pending (2026-09)
 
 ## Content inventory
 

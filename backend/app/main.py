@@ -17,7 +17,7 @@ from app.routers import (
 settings = get_settings()
 allowed_origins = set(settings.cors_origins)
 
-app = FastAPI(title="Bloomdue API", version="0.1.0")
+app = FastAPI(title="Enfold API", version="0.1.0")
 
 
 @app.middleware("http")
@@ -51,4 +51,4 @@ app.include_router(families.router)
 
 @app.get("/")
 async def root() -> dict:
-    return {"service": "bloomdue-api", "docs": "/docs"}
+    return {"service": "enfold-api", "docs": "/docs"}

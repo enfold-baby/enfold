@@ -88,16 +88,33 @@ class GrowthActions {
     );
 
     if (hasAchievement) {
-      await db.growthDao.clearMilestone(
-        babyId: babyId,
-        milestoneKey: definition.key,
-      );
+      await clearMilestone(definition);
     } else {
-      await db.growthDao.setMilestoneAchieved(
-        babyId: babyId,
-        milestoneKey: definition.key,
-        achievedAt: DateTime.now(),
-      );
+      await setMilestoneAchieved(definition, DateTime.now());
     }
+  }
+
+  Future<void> setMilestoneAchieved(
+    MilestoneDefinition definition,
+    DateTime achievedAt,
+  ) async {
+    final db = _ref.read(databaseProvider);
+    final babyId = await db.careLogDao.ensureDefaultBaby();
+    final now = DateTime.now();
+    final clamped = achievedAt.isAfter(now) ? now : achievedAt;
+    await db.growthDao.setMilestoneAchieved(
+      babyId: babyId,
+      milestoneKey: definition.key,
+      achievedAt: clamped,
+    );
+  }
+
+  Future<void> clearMilestone(MilestoneDefinition definition) async {
+    final db = _ref.read(databaseProvider);
+    final babyId = await db.careLogDao.ensureDefaultBaby();
+    await db.growthDao.clearMilestone(
+      babyId: babyId,
+      milestoneKey: definition.key,
+    );
   }
 }

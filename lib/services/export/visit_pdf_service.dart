@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+import '../../core/datetime/clock_format.dart';
 import '../../features/logs/providers/logs_providers.dart';
 import '../../features/today/models/care_log_details.dart';
 import '../../features/today/models/log_type.dart';
@@ -12,7 +13,7 @@ import '../database/app_database.dart';
 class VisitPdfService {
   const VisitPdfService();
 
-  static const brandName = 'BloomDue';
+  static const brandName = 'Enfold';
   static const tagline = 'Grow with confidence.';
 
   Future<Uint8List> buildSevenDaySummary({
@@ -21,10 +22,11 @@ class VisitPdfService {
     required DateTime generatedAt,
     int days = 7,
     bool useImperialUnits = false,
+    bool use24HourTime = false,
   }) async {
     final pdf = pw.Document();
     final dateFormat = DateFormat.yMMMd();
-    final timeFormat = DateFormat.jm();
+    final timeFormat = ClockFormat.time(use24Hour: use24HourTime);
     final rangeEnd = _dateOnly(generatedAt).add(const Duration(days: 1));
     final rangeStart = rangeEnd.subtract(Duration(days: days));
 

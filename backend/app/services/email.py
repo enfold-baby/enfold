@@ -1,4 +1,9 @@
+"""Email delivery. AWS SES first (same pattern as FormKiosk), then SMTP, then Graph."""
+
+from __future__ import annotations
+
 import asyncio
+import logging
 import smtplib
 import ssl
 from email.message import EmailMessage
@@ -8,10 +13,27 @@ import httpx
 
 from app.config import get_settings
 
+logger = logging.getLogger("enfold.email")
+
+_SITE = "https://enfold.baby/"
+_DEFAULT_FROM_EMAIL = "noreply@enfold.baby"
+_DEFAULT_FROM_NAME = "Enfold"
+_DEFAULT_CONTACT = "support@enfold.baby"
+
 
 class EmailSender:
     def __init__(self) -> None:
         self.settings = get_settings()
+
+    @property
+    def ses_configured(self) -> bool:
+        s = self.settings
+        return bool(
+            s.ses_region
+            and s.ses_access_key_id
+            and s.ses_secret_access_key
+            and self._from_email
+        )
 
     @property
     def smtp_configured(self) -> bool:
@@ -30,33 +52,40 @@ class EmailSender:
 
     @property
     def configured(self) -> bool:
-        return self.smtp_configured or self.graph_configured
+        return self.ses_configured or self.smtp_configured or self.graph_configured
+
+    @property
+    def _from_email(self) -> str:
+        return (self.settings.smtp_from_email or _DEFAULT_FROM_EMAIL).strip()
+
+    @property
+    def _from_name(self) -> str:
+        return (self.settings.smtp_from_name or _DEFAULT_FROM_NAME).strip()
 
     def _from_display(self) -> str:
-        s = self.settings
-        # Prefer Graph mailbox; fall back to SMTP from.
-        addr = (s.ms_graph_sender or s.smtp_from_email or "contact@globinary.io").strip()
-        name = (s.smtp_from_name or "BloomDue").strip()
-        return formataddr((name, addr))
+        return formataddr((self._from_name, self._from_email))
+
+    def _contact_inbox(self) -> str:
+        return (self.settings.contact_email or _DEFAULT_CONTACT).strip()
 
     def _team_inbox(self) -> str:
         s = self.settings
-        return (s.beta_request_to_email or "contact@globinary.io").strip()
+        return (s.beta_request_to_email or self._contact_inbox()).strip()
 
     async def send_magic_code(self, email: str, code: str) -> None:
-        subject = "Your BloomDue sign-in code"
+        subject = "Your Enfold sign-in code"
         body = (
-            f"Your BloomDue sign-in code is {code}.\n\n"
+            f"Your Enfold sign-in code is {code}.\n\n"
             f"It expires in {self.settings.magic_code_expire_minutes} minutes.\n\n"
             "If you didn't request this, you can ignore this email.\n\n"
-            "Questions? contact@globinary.io\n"
-            "https://bloomdue.baby/\n"
+            f"Questions? {self._contact_inbox()}\n"
+            f"{_SITE}\n"
         )
         await self._send(
             to=email,
             subject=subject,
             text=body,
-            reply_to="contact@globinary.io",
+            reply_to=self._contact_inbox(),
         )
 
     async def send_beta_request(
@@ -70,16 +99,16 @@ class EmailSender:
         display_name = name.strip() or "(not provided)"
         note = message.strip() or "(none)"
         platform_label = platform.strip() or "unspecified"
-        subject = f"Beta request · {display_name if name.strip() else applicant_email}"
+        subject = f"Enfold launch request · {display_name if name.strip() else applicant_email}"
         body = (
-            "New BloomDue private beta request\n"
+            "New Enfold launch-notify request\n"
             "================================\n\n"
             f"Name: {display_name}\n"
             f"Email: {applicant_email}\n"
             f"Platform: {platform_label}\n"
             f"Message:\n{note}\n\n"
             "Reply to this email to respond to the applicant.\n"
-            "— BloomDue (bloomdue.baby)\n"
+            f"— Enfold ({_SITE})\n"
         )
         await self._send(
             to=self._team_inbox(),
@@ -90,23 +119,40 @@ class EmailSender:
 
     async def send_beta_auto_reply(self, *, applicant_email: str, name: str) -> None:
         greeting = f"Hi {name.strip()}," if name.strip() else "Hi,"
-        subject = "We received your BloomDue beta request"
+        subject = "You’re on the Enfold launch list"
         body = (
             f"{greeting}\n\n"
-            "Thanks for asking to join the BloomDue private beta — we got your request.\n\n"
-            "We’ll review it and follow up at this email address when a spot is ready. "
-            "BloomDue is free during private beta: no ads, no guilt, no complicated setup.\n\n"
-            "If you didn’t request this, you can ignore this message.\n\n"
+            "Thanks for asking about Enfold — we received your request.\n\n"
+            "Enfold is heading to Google Play shortly, then the App Store right after. "
+            "No ads, no guilt, no complicated setup. We’ll email you at this address "
+            "when Android is live, and again when iOS follows.\n\n"
+            "If you didn't request this, you can ignore this message.\n\n"
             "Warmly,\n"
-            "The BloomDue team\n"
-            "contact@globinary.io\n"
-            "https://bloomdue.baby/\n"
+            "The Enfold team\n"
+            f"{self._contact_inbox()}\n"
+            f"{_SITE}\n"
         )
         await self._send(
             to=applicant_email,
             subject=subject,
             text=body,
-            reply_to="contact@globinary.io",
+            reply_to=self._contact_inbox(),
+        )
+
+    async def send_ops_test(self, to: str) -> str:
+        """One-shot deliverability check. Returns the provider message id when SES is used."""
+        subject = "Enfold mail test"
+        body = (
+            "This is a test from Enfold.\n\n"
+            f"From: {self._from_display()}\n"
+            f"Site: {_SITE}\n"
+            "If you received this, AWS SES is sending as noreply@enfold.baby.\n"
+        )
+        return await self._send(
+            to=to,
+            subject=subject,
+            text=body,
+            reply_to=self._contact_inbox(),
         )
 
     async def _send(
@@ -116,30 +162,93 @@ class EmailSender:
         subject: str,
         text: str,
         reply_to: str | None = None,
-    ) -> None:
-        # Prefer Microsoft Graph (same credentials as globinary.io) when configured.
-        # SMTP (PrivateEmail hello@) is legacy and often broken.
+    ) -> str:
+        errors: list[str] = []
+
+        if self.ses_configured:
+            try:
+                return await asyncio.to_thread(
+                    self._send_ses,
+                    to=to,
+                    subject=subject,
+                    text=text,
+                    reply_to=reply_to,
+                )
+            except Exception as exc:  # noqa: BLE001 — fall through to the next provider
+                errors.append(f"ses: {exc}")
+                logger.warning("EMAIL SES failed to=%s error=%s", to, exc)
+
+        # Graph before SMTP: SMTP on this box currently 535s, and Graph is the
+        # working Microsoft 365 path for noreply/contact mail.
         if self.graph_configured:
-            await self._send_graph(
-                to=to,
-                subject=subject,
-                text=text,
-                reply_to=reply_to,
-            )
-            return
+            try:
+                await self._send_graph(
+                    to=to,
+                    subject=subject,
+                    text=text,
+                    reply_to=reply_to,
+                )
+                return "graph"
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"graph: {exc}")
+                logger.warning("EMAIL Graph failed to=%s error=%s", to, exc)
+
         if self.smtp_configured:
-            await asyncio.to_thread(
-                self._send_smtp,
-                to=to,
-                subject=subject,
-                text=text,
-                reply_to=reply_to,
-            )
-            return
+            try:
+                await asyncio.to_thread(
+                    self._send_smtp,
+                    to=to,
+                    subject=subject,
+                    text=text,
+                    reply_to=reply_to,
+                )
+                return "smtp"
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"smtp: {exc}")
+                logger.warning("EMAIL SMTP failed to=%s error=%s", to, exc)
+
         if self.settings.dev_magic_code_log:
-            print(f"Bloomdue email (dev log) to={to} subject={subject!r}\n{text}")
-            return
-        raise RuntimeError("Email delivery is not configured")
+            logger.info("EMAIL (dev log) to=%s subject=%r\n%s", to, subject, text)
+            print(f"Enfold email (dev log) to={to} subject={subject!r}\n{text}")
+            return "dev-log"
+        detail = "; ".join(errors) if errors else "no provider configured"
+        raise RuntimeError(f"Email delivery failed ({detail})")
+
+    def _send_ses(
+        self,
+        *,
+        to: str,
+        subject: str,
+        text: str,
+        reply_to: str | None,
+    ) -> str:
+        import boto3
+
+        s = self.settings
+        kwargs: dict = {"region_name": s.ses_region}
+        if s.ses_access_key_id:
+            kwargs["aws_access_key_id"] = s.ses_access_key_id
+            kwargs["aws_secret_access_key"] = s.ses_secret_access_key
+        client = boto3.client("ses", **kwargs)
+        payload: dict = {
+            "Source": self._from_display(),
+            "Destination": {"ToAddresses": [to]},
+            "Message": {
+                "Subject": {"Data": subject, "Charset": "UTF-8"},
+                "Body": {"Text": {"Data": text, "Charset": "UTF-8"}},
+            },
+        }
+        if reply_to:
+            payload["ReplyToAddresses"] = [reply_to]
+        res = client.send_email(**payload)
+        message_id = str(res.get("MessageId") or "")
+        logger.info(
+            "EMAIL sent via SES to=%s subject=%r message_id=%s",
+            to,
+            subject,
+            message_id,
+        )
+        return message_id
 
     def _send_smtp(
         self,
@@ -189,10 +298,9 @@ class EmailSender:
             "subject": subject,
             "body": {"contentType": "Text", "content": text},
             "toRecipients": [{"emailAddress": {"address": to}}],
-            # Friendly From name when the mailbox display name differs.
             "from": {
                 "emailAddress": {
-                    "name": self.settings.smtp_from_name or "BloomDue",
+                    "name": self._from_name,
                     "address": sender,
                 }
             },
@@ -200,7 +308,6 @@ class EmailSender:
         if reply_to:
             message["replyTo"] = [{"emailAddress": {"address": reply_to}}]
 
-        # Do not clutter the sender mailbox Sent folder (team inbox / Graph user).
         payload = {"message": message, "saveToSentItems": "false"}
         async with httpx.AsyncClient(timeout=20) as client:
             response = await client.post(

@@ -1,15 +1,11 @@
 /// Abstraction over FCM token retrieval.
-///
-/// Swap [noOpFcmTokenSource] for a Firebase-backed implementation once the
-/// Firebase project and platform config files exist. See
-/// `feature/todos/FCM_PARTNER_PUSH.md`.
 abstract class FcmTokenSource {
   const FcmTokenSource();
 
   Future<String?> getToken();
 }
 
-/// Safe default until Firebase Messaging is configured.
+/// Used in tests, and as a fallback if Firebase native config is missing.
 class NoOpFcmTokenSource extends FcmTokenSource {
   const NoOpFcmTokenSource();
 

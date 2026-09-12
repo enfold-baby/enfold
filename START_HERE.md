@@ -1,32 +1,23 @@
-# BloomDue Baby — Project Kickoff
+# Enfold.baby — Project Kickoff
 
 > **Read this first** when starting a fresh conversation in this repo.  
-> **Domain:** [bloomdue.baby](https://bloomdue.baby)  
-> **Folder:** `/Users/globinary/apps/globinary-games-grok/bloomdue_baby`  
+> **Domain:** [enfold.baby](https://enfold.baby)  
+> **Folder:** this repo (`bloomdue_baby` on disk; product name **Enfold**)  
 > **Stack:** Flutter + Dart · Android + iOS · free globally  
-> **Current:** `0.1.0+4` · Drift schema v8 · 84 tests · VPS API live
+> **Current:** `1.0.0+20` · Drift schema v13 · 4-tab shell + Add FAB · VPS API live · FCM + SES mail live
 
 **Resuming work?** → [`feature/SESSION.md`](./feature/SESSION.md) · **What's next?** → [`feature/todos/README.md`](./feature/todos/README.md) · **Keep docs fresh:** [`feature/MAINTAIN.md`](./feature/MAINTAIN.md)
 
 ---
 
-## Name decision: keep BloomDue ✅
+## Name: Enfold.baby
 
-**Recommendation: do NOT rename.** `BloomDue` / `bloomdue.baby` works well.
+**Display name:** **Enfold**  
+**Site:** [enfold.baby](https://enfold.baby)  
+**Bundle ID:** `baby.enfold.app` (keep until a new Play listing is created)  
+**Tagline:** *Grow with confidence.* / *From bump to toddler.*
 
-| Factor | Verdict |
-|---|---|
-| **Meaning** | *Bloom* = growth, baby developing · *Due* = pregnancy due date |
-| **Domain** | `.baby` TLD is perfect and rare — huge brand win |
-| **Memorable** | Short, warm, not clinical-cold |
-| **Pronunciation** | Clear in English; works internationally |
-| **App store** | `BloomDue Baby` or just `BloomDue` as display name |
-| **Bundle ID** | `baby.bloomdue.app` (reverse domain of bloomdue.baby) |
-
-**Display name:** **BloomDue**  
-**Tagline ideas:** *Grow with confidence.* / *From bump to toddler.* / *Know what's normal.*
-
-Only reconsider if trademark conflict appears during store submission.
+`due.enfold.baby` is a separate countdown site — do not rename or redeploy it from this repo.
 
 ---
 
@@ -75,7 +66,7 @@ A **free** Flutter app for parents — pregnancy through ~3 years — that helps
 | **CDC Milestones** | Free evidence milestones | No daily logging | Milestone source | — |
 | **MyPreemie** | NICU-specific | Narrow, dated | Preemie content shape | — |
 
-**Market gap BloomDue fills:**  
+**Market gap Enfold fills:**  
 *Free + beautiful + doctor-backed reassurance + full journey (pregnancy → toddler) + neonat-informed.*
 
 ---
@@ -84,7 +75,7 @@ A **free** Flutter app for parents — pregnancy through ~3 years — that helps
 
 Research shows baby trackers can **increase postpartum anxiety** when they push obsessive logging (Parents.com, JMIR studies, parent forums).
 
-BloomDue must be **calm technology:**
+Enfold must be **calm technology:**
 
 1. **Simple by default** — 3 core logs visible; depth is optional
 2. **No guilt** — missed logs get zero shame messages
@@ -176,22 +167,23 @@ Content is the product — not an afterthought.
 | Layer | Choice |
 |---|---|
 | **Framework** | Flutter 3.x · Dart 3.x |
+| **Shell** | Today / Logs / Learn / Settings + docked Add FAB |
 | **State** | Riverpod |
-| **Local DB** | Drift (SQLite) — offline-first, schema v8 |
-| **Backend** | VPS FastAPI + PostgreSQL (`api.bloomdue.baby`) |
-| **Auth** | Magic-code email → JWT |
-| **Sync** | Push pending creates + pull 2-day lookback |
+| **Local DB** | Drift (SQLite) — offline-first, schema v13 |
+| **Backend** | VPS FastAPI + PostgreSQL (`api.enfold.baby`) |
+| **Auth** | Magic-code email → JWT (SES live from `noreply@enfold.baby`; Graph fallback) |
+| **Sync** | Push pending create/edit/delete + pull + periodic while open |
 | **Content** | Bundled JSON (`content/cards/`, 25 cards) |
 | **PDF export** | `pdf` + `printing` |
-| **Push** | FCM scaffold prepared — see `feature/todos/FCM_PARTNER_PUSH.md` |
-| **i18n** | English only (v0.2 Romanian planned) |
+| **Push** | FCM live for Android — see `feature/todos/FCM_PARTNER_PUSH.md` |
+| **i18n** | English now. RO later: device RO → RO, else EN, Settings override — `feature/todos/I18N_RO.md` |
 
 Full inventory → [`feature/features/STATUS.md`](./feature/features/STATUS.md)
 
 ### Suggested project structure
 
 ```
-bloomdue_baby/
+enfold/
 ├── lib/
 │   ├── main.dart
 │   ├── app.dart
@@ -219,7 +211,7 @@ bloomdue_baby/
 |---|---|
 | `flutter_riverpod` | State management |
 | `drift` + `sqlite3_flutter_libs` | Offline DB |
-| `supabase_flutter` | Auth + sync |
+| `http` | VPS API client |
 | `go_router` | Navigation |
 | `intl` | Dates, formatting |
 | `pdf` / `printing` | Visit export |
@@ -239,7 +231,7 @@ bloomdue_baby/
 | Geo-aware emergency numbers (v0.2+) | One global "call 911" only |
 
 **Footer disclaimer (draft):**  
-*BloomDue provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately.*
+*Enfold provides general educational information reviewed by qualified physicians. It does not replace professional medical advice, diagnosis, or treatment. If you think your child has a medical emergency, call your local emergency number immediately.*
 
 ---
 
@@ -263,7 +255,7 @@ bloomdue_baby/
 Future options (only if needed for sustainability):
 - Institutional partnerships (hospitals distribute app)
 - Grants / NGO funding
-- Optional "support development" tip jar
+- Optional “plant a moon” tip on the **website** (`/support/`) via Stripe — never ads in the app
 - **Never:** ads, selling baby data, paywalling safety content
 
 ---
@@ -273,10 +265,10 @@ Future options (only if needed for sustainability):
 | Version | Focus |
 |---|---|
 | **0.1** | Core app — **mostly shipped** (see `feature/features/STATUS.md`) |
-| **0.2** | Growth charts, Romanian i18n, sync polish |
+| **0.2** | Growth history charts (shipped), Romanian i18n, sync polish |
 | **0.3** | NICU/preemie module, fever log |
 | **0.4** | Toddler phase, potty, behavior |
-| **1.0** | Play Store + App Store + bloomdue.baby web landing |
+| **1.0** | Play Store + App Store public listing (`enfold.baby` landing already live) |
 
 Detailed roadmap → [`feature/roadmaps/VERSION.md`](./feature/roadmaps/VERSION.md)
 
@@ -284,8 +276,8 @@ Detailed roadmap → [`feature/roadmaps/VERSION.md`](./feature/roadmaps/VERSION.
 
 ## Open questions for founders (answer in fresh chat)
 
-1. **Display name:** BloomDue or BloomDue Baby?
-2. **MVP languages:** English only first, or English + Romanian?
+1. **Display name:** Enfold (locked)
+2. **MVP languages:** English now; Romanian later per `feature/todos/I18N_RO.md` (locked plan, not built)
 3. **Auth:** Require account day 1, or anonymous → optional account?
 4. **First platform test device:** Android (S24) same as Please Don't?
 5. **Doctor content:** Who writes first 25 cards? Timeline?
@@ -293,10 +285,14 @@ Detailed roadmap → [`feature/roadmaps/VERSION.md`](./feature/roadmaps/VERSION.
 
 ---
 
-## First implementation steps (when coding starts)
+## First implementation steps (historical — the app exists)
 
-1. `flutter create` project in this folder (`bloomdue` package name)
-2. Bundle ID: `baby.bloomdue.app`
+The Flutter app, API, and landing are already in this repo. Resume from `feature/SESSION.md`. The list below is the original kickoff order, kept for context.
+
+## Original kickoff order
+
+1. `flutter create` project in this folder (`enfold` package name)
+2. Bundle ID: `baby.enfold.app`
 3. Theme + router shell
 4. Drift schema: `Baby`, `FeedLog`, `DiaperLog`, `SleepLog`
 5. One 3am log screen (prove UX)
@@ -311,7 +307,7 @@ Detailed roadmap → [`feature/roadmaps/VERSION.md`](./feature/roadmaps/VERSION.
 | Project | Path | Domain |
 |---|---|---|
 | Please Don't (game) | `../please_dont` | globinary.games |
-| BloomDue Baby | this folder | bloomdue.baby |
+| Enfold.baby | this folder | enfold.baby |
 
 Separate repos within `globinary-games-grok` workspace — no code sharing required initially.
 
@@ -320,8 +316,8 @@ Separate repos within `globinary-games-grok` workspace — no code sharing requi
 ## Fresh conversation prompt (copy-paste)
 
 ```
-I'm building BloomDue Baby — read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md.
-Domain: bloomdue.baby. Pick up where we left off.
+I'm building Enfold.baby — read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md.
+Domain: enfold.baby. Pick up where we left off.
 Update feature/SESSION.md and related docs as we ship work (see feature/MAINTAIN.md).
 ```
 

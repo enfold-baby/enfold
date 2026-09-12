@@ -13,4 +13,4 @@ Keep baby health records organized for parents and easier to summarize during pe
 
 ## MVP Boundary
 
-The first implementation only reserves backend and navigation space for this area. Full record capture comes after daily logging and sync are stable.
+Growth measurements, history trend charts, milestones, and 7-day visit PDF are **shipped**. Vaccines, document attachments, WHO percentile curves, and a full record hub are still later.

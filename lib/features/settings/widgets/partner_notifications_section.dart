@@ -28,7 +28,7 @@ class PartnerNotificationsSection extends ConsumerWidget {
             style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
           ),
           subtitle: Text(
-            'Optional awareness — off by default, no guilt copy.',
+            'Optional awareness. Off by default, no guilt.',
             style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
           ),
         ),
@@ -67,8 +67,8 @@ class PartnerNotificationsSection extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
           child: Text(
-            'Activity pushes need Firebase on this device — we will register '
-            'automatically once FCM is configured.',
+            'Pushes arrive when your co-parent logs a feed, diaper, or sleep. '
+            'Enfold asks for notification permission on this device.',
             style: GoogleFonts.nunito(
               fontSize: 13,
               color: AppColors.mutedText(brightness),

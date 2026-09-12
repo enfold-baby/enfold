@@ -3,6 +3,7 @@ import 'package:drift_flutter/drift_flutter.dart';
 
 import 'care_log_dao.dart';
 import 'growth_dao.dart';
+import 'medication_routine_dao.dart';
 import 'pregnancy_dao.dart';
 import 'settings_dao.dart';
 import 'tables.dart';
@@ -18,8 +19,15 @@ part 'app_database.g.dart';
     AppSettings,
     GrowthMeasurements,
     MilestoneAchievements,
+    MedicationRoutines,
   ],
-  daos: [CareLogDao, GrowthDao, PregnancyDao, SettingsDao],
+  daos: [
+    CareLogDao,
+    GrowthDao,
+    PregnancyDao,
+    SettingsDao,
+    MedicationRoutineDao,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -27,7 +35,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 13;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -71,10 +79,19 @@ class AppDatabase extends _$AppDatabase {
           if (from < 10) {
             await m.addColumn(appSettings, appSettings.lastSignedInUserId);
           }
+          if (from < 11) {
+            await m.addColumn(appSettings, appSettings.careRemindersEnabled);
+          }
+          if (from < 12) {
+            await m.addColumn(appSettings, appSettings.use24HourTime);
+          }
+          if (from < 13) {
+            await m.createTable(medicationRoutines);
+          }
         },
       );
 
   static QueryExecutor _openConnection() {
-    return driftDatabase(name: 'bloomdue');
+    return driftDatabase(name: 'enfold');
   }
 }

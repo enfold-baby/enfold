@@ -26,7 +26,7 @@ PartnerNudge? detectGentleNudge({
       type: LogType.feed,
       hoursSince: feed == null ? feedHours : now.difference(feed.loggedAt).inHours,
       message: feed == null
-          ? 'No feed logged yet today — only if you want a gentle reminder.'
+          ? 'No feed logged yet today. Only if you want a gentle reminder.'
           : 'It has been a while since the last feed was logged.',
     );
   }
@@ -38,7 +38,7 @@ PartnerNudge? detectGentleNudge({
       hoursSince:
           diaper == null ? diaperHours : now.difference(diaper.loggedAt).inHours,
       message: diaper == null
-          ? 'No diaper logged yet today — only if you want a gentle reminder.'
+          ? 'No diaper logged yet today. Only if you want a gentle reminder.'
           : 'It has been a while since the last diaper was logged.',
     );
   }
@@ -50,7 +50,7 @@ PartnerNudge? detectGentleNudge({
       hoursSince:
           sleep == null ? sleepHours : now.difference(sleep.loggedAt).inHours,
       message: sleep == null
-          ? 'No sleep logged yet today — only if you want a gentle reminder.'
+          ? 'No sleep logged yet today. Only if you want a gentle reminder.'
           : 'It has been a while since sleep was logged.',
     );
   }

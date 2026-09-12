@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../services/database/app_database.dart';
 import '../../../services/database/database_provider.dart';
+import '../../baby/providers/baby_profile_providers.dart';
 
 final pregnancyProfileProvider = StreamProvider<PregnancyProfile>((ref) async* {
   final db = ref.read(databaseProvider);
@@ -18,6 +19,14 @@ final pregnancyAppointmentsProvider =
 
 final pregnancyActionsProvider = Provider<PregnancyActions>((ref) {
   return PregnancyActions(ref);
+});
+
+/// True while a due date is set and no birth date yet — pregnancy tools
+/// belong on Today, not as a permanent tab after baby arrives.
+final isExpectingProvider = Provider<bool>((ref) {
+  final dueDate = ref.watch(pregnancyProfileProvider).valueOrNull?.dueDate;
+  final birthDate = ref.watch(activeBabyProvider).valueOrNull?.birthDate;
+  return dueDate != null && birthDate == null;
 });
 
 class PregnancyActions {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/theme/app_colors.dart';
 
-/// Shared warm surface for BloomDue cards and interactive panels.
+/// Shared warm surface for Enfold cards and interactive panels.
 class BloomSurface extends StatelessWidget {
   const BloomSurface({
     super.key,

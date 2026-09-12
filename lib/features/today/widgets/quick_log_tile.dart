@@ -48,7 +48,11 @@ class QuickLogTile extends StatelessWidget {
                         : _softColor(type),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Icon(type.icon, color: color, size: 24),
+                  child: Icon(
+                    type.icon,
+                    color: AppColors.readableInk(color, brightness),
+                    size: 24,
+                  ),
                 ),
                 const Spacer(),
                 Icon(

@@ -1,4 +1,4 @@
-# Bloomdue production stack for the VPS running Nginx Proxy Manager.
+# Enfold production stack for the VPS running Nginx Proxy Manager.
 # Use: docker compose -f docker-compose.prod.yml up -d --build
 services:
   postgres:
@@ -53,6 +53,8 @@ services:
     environment:
       - TZ=Europe/Bucharest
     env_file: .env
+    volumes:
+      - ./backend/secrets:/app/secrets:ro
     expose:
       - "8000"
     depends_on:

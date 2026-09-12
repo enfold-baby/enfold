@@ -1,6 +1,6 @@
-# Bloomdue
+# Enfold
 
-Bloomdue is a free, no-ads parent app for tracking baby care after birth, with pregnancy tracking planned later.
+Enfold is a free, no-ads parent app for tracking baby care after birth, with pregnancy tracking planned later.
 
 ## Structure
 
@@ -24,10 +24,9 @@ Run the backend stack:
 docker compose up --build
 ```
 
-Run Flutter checks:
+Run Flutter checks from the repo root (`lib/` lives here, not under `mobile/`):
 
 ```sh
-cd mobile
 flutter analyze
 flutter test
 ```
@@ -35,10 +34,13 @@ flutter test
 Regenerate Drift code after database changes:
 
 ```sh
-cd mobile
 dart run build_runner build
 ```
 
-## Current Scope
+## Layout (this repo)
 
-The implemented foundation includes email magic-code auth scaffolding, family/child records, care-event APIs, local offline care logging in Flutter, and Firebase/Microsoft Graph service boundaries. Firebase and Microsoft Graph credentials still need to be provided before production notification/email delivery is complete.
+Flutter app lives at the repo root (`lib/`, `android/`, `ios/`), not under `mobile/`. Backend is `backend/`. Landing is `landing/`.
+
+## Current Scope (2026-09)
+
+**1.0.0+20**. 4-tab shell + Add FAB, magic-code auth (SES from `noreply@enfold.baby`; Graph fallback), family/child records, care-event APIs with edit/delete sync, FCM partner push on Android, landing + `/support/`. Product name **Enfold**. VPS linux user, compose container names, and Postgres role stay **bloomdue**.

@@ -38,7 +38,7 @@ class MilestoneTile extends StatelessWidget {
         achieved && status.achievedAt != null
             ? 'Celebrated ${dateFormat.format(status.achievedAt!)} · ${status.definition.ageHint}'
             : status.definition.ageHint,
-        style: GoogleFonts.nunito(fontSize: 13, color: AppColors.barkSoft),
+        style: GoogleFonts.nunito(fontSize: 13, color: AppColors.mutedText(Theme.of(context).brightness)),
       ),
     );
   }

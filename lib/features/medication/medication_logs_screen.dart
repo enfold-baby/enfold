@@ -10,6 +10,7 @@ import '../logs/widgets/paginated_log_list.dart';
 import '../logs/widgets/type_filter_chips.dart';
 import 'data/medication_presets.dart';
 import 'providers/medication_providers.dart';
+import 'widgets/medication_routines_section.dart';
 import '../../widgets/sync_refresh.dart';
 
 class MedicationLogsScreen extends ConsumerWidget {
@@ -44,6 +45,7 @@ class MedicationLogsScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
+            const MedicationRoutinesSection(),
             LogPeriodBar(periodProvider: medicationLogPeriodProvider),
             const SizedBox(height: 20),
             DetailFilterChips<String>(

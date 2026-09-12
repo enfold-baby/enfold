@@ -51,7 +51,7 @@ lines.extend(
         "SMTP_USER=contact@globinary.io",
         f"SMTP_PASSWORD={escaped_pw}",
         "SMTP_FROM_EMAIL=contact@globinary.io",
-        "SMTP_FROM_NAME=BloomDue",
+        "SMTP_FROM_NAME=Enfold",
         "SMTP_USE_SSL=false",
         "DEV_MAGIC_CODE_LOG=false",
     ]

@@ -1,6 +1,6 @@
-import 'package:bloomdue_baby/features/logs/log_retention.dart';
-import 'package:bloomdue_baby/features/today/models/log_type.dart';
-import 'package:bloomdue_baby/services/database/app_database.dart';
+import 'package:enfold/features/logs/log_retention.dart';
+import 'package:enfold/features/today/models/log_type.dart';
+import 'package:enfold/services/database/app_database.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';

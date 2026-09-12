@@ -100,6 +100,30 @@ class AppSettings extends Table {
       text().withDefault(const Constant('system'))();
   /// Last account that successfully signed in on this install (for switch isolation).
   TextColumn get lastSignedInUserId => text().nullable()();
+  /// Local evening ping if nothing was logged today. Off by default.
+  BoolColumn get careRemindersEnabled =>
+      boolean().withDefault(const Constant(false))();
+  /// 24-hour clock in logs, pickers, and the visit PDF. Off = 12-hour AM/PM.
+  BoolColumn get use24HourTime =>
+      boolean().withDefault(const Constant(false))();
+
+  @override
+  Set<Column<Object>> get primaryKey => {id};
+}
+
+/// Local daily vitamin/med reminder (not a repeating log row).
+class MedicationRoutines extends Table {
+  TextColumn get id => text()();
+  TextColumn get babyId => text()();
+  TextColumn get name => text()();
+  TextColumn get dose => text().withDefault(const Constant(''))();
+  TextColumn get category => text().withDefault(const Constant('vitamin'))();
+  IntColumn get hour => integer()();
+  IntColumn get minute => integer()();
+  BoolColumn get enabled => boolean().withDefault(const Constant(true))();
+  DateTimeColumn get snoozeUntil => dateTime().nullable()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
 
   @override
   Set<Column<Object>> get primaryKey => {id};

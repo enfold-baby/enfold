@@ -104,6 +104,37 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
     );
   }
 
+  Future<bool> careRemindersEnabled() async {
+    final settings = await ensureSettings();
+    return settings.careRemindersEnabled;
+  }
+
+  Future<void> setCareRemindersEnabled(bool value) async {
+    await ensureSettings();
+    await (update(appSettings)..where((s) => s.id.equals(_singletonId))).write(
+      AppSettingsCompanion(careRemindersEnabled: Value(value)),
+    );
+  }
+
+  Stream<bool> watchCareRemindersEnabled() async* {
+    await ensureSettings();
+    yield* (select(appSettings)..where((s) => s.id.equals(_singletonId)))
+        .watch()
+        .map((rows) => rows.isEmpty ? false : rows.first.careRemindersEnabled);
+  }
+
+  Future<bool> use24HourTime() async {
+    final settings = await ensureSettings();
+    return settings.use24HourTime;
+  }
+
+  Future<void> setUse24HourTime(bool value) async {
+    await ensureSettings();
+    await (update(appSettings)..where((s) => s.id.equals(_singletonId))).write(
+      AppSettingsCompanion(use24HourTime: Value(value)),
+    );
+  }
+
   static ThemeMode _parseThemeMode(String raw) => switch (raw) {
         'light' => ThemeMode.light,
         'dark' => ThemeMode.dark,

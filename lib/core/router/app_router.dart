@@ -49,6 +49,8 @@ abstract final class AppRoutes {
   static const settings = '/settings';
   static const growth = '/growth';
   static const growthAdd = '/growth/add';
+  static const logsGrowth = '/logs/growth';
+  static const logsGrowthAdd = '/logs/growth/add';
 
   static String learnCard(String id) => '$learn/$id';
   static String learnTriage(String id) => '$learn/$id/triage';
@@ -73,6 +75,11 @@ abstract final class AppRoutes {
 
   static String logEdit(LogType type, String logId) =>
       '${logList(type)}/$logId';
+
+  static String growthAddFrom(String location) {
+    if (location.startsWith(logsGrowth)) return logsGrowthAdd;
+    return growthAdd;
+  }
 }
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -232,6 +239,17 @@ GoRouter createAppRouter(Ref ref) {
                       ),
                     ],
                   ),
+                  GoRoute(
+                    path: 'growth',
+                    builder: (context, state) => const GrowthScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'add',
+                        builder: (context, state) =>
+                            const AddGrowthMeasurementScreen(),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
@@ -263,20 +281,17 @@ GoRouter createAppRouter(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.pregnancy,
-                builder: (context, state) => const PregnancyScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
                 path: AppRoutes.settings,
                 builder: (context, state) => const SettingsScreen(),
               ),
             ],
           ),
         ],
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: AppRoutes.pregnancy,
+        builder: (context, state) => const PregnancyScreen(),
       ),
     ],
   );

@@ -198,7 +198,7 @@ class _CaregiverProfileSectionState
                 style: GoogleFonts.nunito(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.sageDeep,
+                  color: AppColors.accent(brightness),
                 ),
               ),
               const SizedBox(height: 12),

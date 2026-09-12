@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
-import '../today/models/care_log_entry.dart';
 import '../today/models/log_type.dart';
 import '../today/providers/today_log_provider.dart';
 import 'models/hub_type_filter.dart';
@@ -15,6 +13,7 @@ import 'widgets/deleted_logs_section.dart';
 import 'widgets/log_period_bar.dart';
 import 'widgets/log_type_card.dart';
 import 'widgets/paginated_log_list.dart';
+import 'widgets/active_sleep_banner.dart';
 import 'widgets/type_filter_chips.dart';
 import '../../widgets/sync_refresh.dart';
 
@@ -51,7 +50,6 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
     final openSleep = ref.watch(openSleepProvider).valueOrNull;
     final typeFilter = ref.watch(hubLogTypeFilterProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final timeFormat = DateFormat.jm();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Logs')),
@@ -76,7 +74,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
               style: GoogleFonts.nunito(
                 fontSize: 15,
                 height: 1.45,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 24),
@@ -93,13 +91,32 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
                       onTap: () => context.push(AppRoutes.logList(type)),
                     ),
                   ),
+                SizedBox(
+                  width: (MediaQuery.sizeOf(context).width - 52) / 2,
+                  child: _HubLinkCard(
+                    key: const Key('logs_hub_growth'),
+                    label: 'Growth',
+                    icon: Icons.monitor_weight_outlined,
+                    color: AppColors.sage,
+                    onTap: () => context.push(AppRoutes.logsGrowth),
+                  ),
+                ),
+                SizedBox(
+                  width: (MediaQuery.sizeOf(context).width - 52) / 2,
+                  child: _HubLinkCard(
+                    key: const Key('logs_hub_milestones'),
+                    label: 'Milestones',
+                    icon: Icons.emoji_events_outlined,
+                    color: AppColors.bloom,
+                    onTap: () => context.push(AppRoutes.logsGrowth),
+                  ),
+                ),
               ],
             ),
             if (openSleep != null) ...[
               const SizedBox(height: 20),
-              _ActiveSleepBanner(
+              ActiveSleepBanner(
                 entry: openSleep,
-                timeFormat: timeFormat,
                 onWakeUp: () async {
                   await ref
                       .read(careLogActionsProvider)
@@ -111,6 +128,9 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
                       const SnackBar(content: Text('Wake-up logged')),
                     );
                 },
+                onAdjustStart: () => context.push(
+                  AppRoutes.logEdit(LogType.sleep, openSleep.id),
+                ),
               ),
             ],
             const SizedBox(height: 28),
@@ -120,7 +140,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.2,
-                color: AppColors.sage,
+                color: AppColors.accent(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 10),
@@ -143,7 +163,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 1.2,
-                color: AppColors.sage,
+                color: AppColors.accent(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 12),
@@ -163,52 +183,59 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
   }
 }
 
-class _ActiveSleepBanner extends StatelessWidget {
-  const _ActiveSleepBanner({
-    required this.entry,
-    required this.timeFormat,
-    required this.onWakeUp,
+class _HubLinkCard extends StatelessWidget {
+  const _HubLinkCard({
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.onTap,
   });
 
-  final CareLogEntry entry;
-  final DateFormat timeFormat;
-  final VoidCallback onWakeUp;
+  final String label;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final start = entry.details.sleepStart ?? entry.loggedAt;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      key: const Key('active_sleep_banner'),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.sleepBlue.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.sleepBlue.withValues(alpha: 0.35)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.bedtime, color: AppColors.sleepBlue),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Sleeping since ${timeFormat.format(start)}',
-              style: GoogleFonts.nunito(
-                fontWeight: FontWeight.w800,
-                color: AppColors.sleepBlue,
+    return Material(
+      color: isDark ? AppColors.nightElevated : Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isDark
+                  ? AppColors.nightLine
+                  : AppColors.bark.withValues(alpha: 0.08),
+            ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                child: Icon(icon, color: AppColors.cream, size: 26),
               ),
-            ),
+              const SizedBox(height: 10),
+              Text(
+                label,
+                style: GoogleFonts.nunito(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                ),
+              ),
+            ],
           ),
-          FilledButton(
-            key: const Key('wake_up_button'),
-            onPressed: onWakeUp,
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.sleepBlue,
-              foregroundColor: AppColors.cream,
-            ),
-            child: const Text('Wake up'),
-          ),
-        ],
+        ),
       ),
     );
   }

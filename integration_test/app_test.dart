@@ -1,4 +1,4 @@
-import 'package:bloomdue_baby/main.dart' as app;
+import 'package:enfold/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -30,7 +30,7 @@ Future<void> _pickBirthDateJune4(WidgetTester tester) async {
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  group('BloomDue e2e', () {
+  group('Enfold e2e', () {
     testWidgets('onboarding baby born shows Today log buttons', (tester) async {
       app.main();
       await tester.pumpAndSettle(const Duration(seconds: 3));

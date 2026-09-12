@@ -13,7 +13,7 @@ SELECT table_name, column_name
 FROM information_schema.columns
 WHERE table_schema = 'public' AND table_name <> 'alembic_version'
 ORDER BY 1, 2;
-" > /tmp/bloomdue_db_cols.txt
+" > /tmp/enfold_db_cols.txt
 
 python3 - <<'PY'
 from pathlib import Path
@@ -42,7 +42,7 @@ expected = {
 }
 
 actual: dict[str, set[str]] = {}
-for line in Path("/tmp/bloomdue_db_cols.txt").read_text().splitlines():
+for line in Path("/tmp/enfold_db_cols.txt").read_text().splitlines():
     line = line.strip()
     if not line or "|" not in line:
         continue

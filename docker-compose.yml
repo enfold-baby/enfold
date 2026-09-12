@@ -1,4 +1,4 @@
-# Bloomdue development stack. Use: docker compose up --build
+# Enfold development stack. Use: docker compose up --build
 services:
   postgres:
     image: postgres:16-alpine

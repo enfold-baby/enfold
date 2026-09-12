@@ -5,4 +5,4 @@ router = APIRouter(tags=["health"])
 
 @router.get("/health")
 async def health() -> dict:
-    return {"status": "ok", "service": "bloomdue-api"}
+    return {"status": "ok", "service": "enfold-api"}

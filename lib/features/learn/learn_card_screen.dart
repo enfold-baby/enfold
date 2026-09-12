@@ -32,7 +32,7 @@ class LearnCardScreen extends ConsumerWidget {
         error: (error, _) => Center(
           child: Text(
             'Card not found.',
-            style: GoogleFonts.nunito(color: AppColors.barkSoft),
+            style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
           ),
         ),
         data: (card) => ListView(
@@ -52,7 +52,7 @@ class LearnCardScreen extends ConsumerWidget {
               style: GoogleFonts.nunito(
                 fontSize: 15,
                 height: 1.45,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
               ),
             ),
             if (card.triage != null) ...[
@@ -97,7 +97,7 @@ class LearnCardScreen extends ConsumerWidget {
               style: GoogleFonts.nunito(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: AppColors.barkSoft,
+                color: AppColors.mutedText(Theme.of(context).brightness),
               ),
             ),
             const SizedBox(height: 16),

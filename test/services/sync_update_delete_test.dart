@@ -1,15 +1,15 @@
-import 'package:bloomdue_baby/services/api/api_exception.dart';
-import 'package:bloomdue_baby/services/api/bloomdue_api_client.dart';
-import 'package:bloomdue_baby/services/api/family_models.dart';
-import 'package:bloomdue_baby/services/auth/auth_session.dart';
-import 'package:bloomdue_baby/services/database/app_database.dart';
-import 'package:bloomdue_baby/services/sync/sync_service.dart';
+import 'package:enfold/services/api/api_exception.dart';
+import 'package:enfold/services/api/enfold_api_client.dart';
+import 'package:enfold/services/api/family_models.dart';
+import 'package:enfold/services/auth/auth_session.dart';
+import 'package:enfold/services/database/app_database.dart';
+import 'package:enfold/services/sync/sync_service.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 
-class SyncTrackingApi extends BloomdueApiClient {
+class SyncTrackingApi extends EnfoldApiClient {
   SyncTrackingApi() : super(httpClient: http.Client());
 
   final String childId = 'server-child-1';
@@ -19,7 +19,9 @@ class SyncTrackingApi extends BloomdueApiClient {
   int deleteCalls = 0;
 
   @override
-  Future<List<ChildProfile>> listChildren(String token) async => [];
+  Future<List<ChildProfile>> listChildren(String token) async => [
+        ChildProfile(id: childId, name: 'Baby'),
+      ];
 
   @override
   Future<ChildProfile> createChild({

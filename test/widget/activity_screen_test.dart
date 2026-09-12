@@ -1,7 +1,7 @@
-import 'package:bloomdue_baby/features/pumping/log_pumping_screen.dart';
-import 'package:bloomdue_baby/features/pumping/pumping_logs_screen.dart';
-import 'package:bloomdue_baby/features/tummy_time/log_tummy_time_screen.dart';
-import 'package:bloomdue_baby/features/tummy_time/tummy_time_logs_screen.dart';
+import 'package:enfold/features/pumping/log_pumping_screen.dart';
+import 'package:enfold/features/pumping/pumping_logs_screen.dart';
+import 'package:enfold/features/tummy_time/log_tummy_time_screen.dart';
+import 'package:enfold/features/tummy_time/tummy_time_logs_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -64,6 +64,31 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Pumping logged'), findsOneWidget);
+  });
+
+  testWidgets('pumping form requires an amount', (tester) async {
+    final container = createTestContainer();
+    addTearDown(container.dispose);
+    addTearDown(tester.view.resetPhysicalSize);
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1.0;
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(home: LogPumpingScreen()),
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 300));
+
+    await tester.ensureVisible(find.byKey(const Key('save_pumping_log')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('save_pumping_log')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('Add how much you pumped.'), findsOneWidget);
+    expect(find.text('Pumping logged'), findsNothing);
   });
 
   testWidgets('tummy form saves five minute session', (tester) async {

@@ -7,7 +7,7 @@ cd "$ROOT"
 
 export PATH="${HOME}/Library/Android/sdk/platform-tools:${HOME}/development/flutter/bin:${PATH}"
 DEVICE="${DEVICE:-emulator-5554}"
-OUT_DIR="${OUT_DIR:-$HOME/Downloads/bloomdue-x-screenshots}"
+OUT_DIR="${OUT_DIR:-$HOME/Downloads/enfold-x-screenshots}"
 LOCAL_DIR="$ROOT/screenshots/x_post"
 LOG="$ROOT/screenshots/drive_capture.log"
 
@@ -16,7 +16,7 @@ mkdir -p "$OUT_DIR" "$LOCAL_DIR"
 
 echo "==> Device: $DEVICE"
 adb -s "$DEVICE" wait-for-device
-adb -s "$DEVICE" shell pm clear baby.bloomdue.app >/dev/null 2>&1 || true
+adb -s "$DEVICE" shell pm clear baby.enfold.app >/dev/null 2>&1 || true
 
 echo "==> Starting flutter drive (demo seed + holds)"
 flutter drive \
@@ -76,7 +76,7 @@ trap - EXIT
 echo ""
 echo "==> Screenshots in $OUT_DIR"
 ls -lah "$OUT_DIR"
-count=$(find "$OUT_DIR" -name 'bloomdue_*.png' | wc -l | tr -d ' ')
+count=$(find "$OUT_DIR" -name 'enfold_*.png' | wc -l | tr -d ' ')
 echo "Count: $count"
 if [[ "$count" -lt 1 ]]; then
   echo "No screenshots captured. Last log lines:"

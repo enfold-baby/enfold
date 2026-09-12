@@ -13,14 +13,20 @@ import '../../widgets/sync_refresh.dart';
 import '../../widgets/bloom_illustrations.dart';
 import '../../widgets/bloom_section_header.dart';
 import '../../widgets/bloom_surface.dart';
+import '../logs/providers/logs_providers.dart';
+import '../logs/widgets/active_sleep_banner.dart';
 import '../growth/providers/growth_providers.dart';
+import '../pregnancy/pregnancy_week_calculator.dart';
+import '../pregnancy/providers/pregnancy_providers.dart';
 import '../logs/widgets/log_entry_actions.dart';
 import '../logs/widgets/log_entry_tile.dart';
 import '../medication/providers/medication_providers.dart';
+import '../medication/providers/medication_routine_providers.dart';
 import '../medication/widgets/medication_entry_card.dart';
 import '../partner/providers/partner_providers.dart';
 import '../partner/widgets/gentle_nudge_banner.dart';
 import '../pumping/providers/pumping_providers.dart';
+import '../settings/providers/time_format_providers.dart';
 import '../settings/providers/units_providers.dart';
 import '../settings/widgets/export_section.dart';
 import '../tummy_time/providers/tummy_time_providers.dart';
@@ -85,6 +91,10 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
         .length;
     final medicationLogs =
         ref.watch(todayMedicationLogsProvider).valueOrNull ?? const [];
+    final medicationRoutines =
+        ref.watch(medicationRoutinesProvider).valueOrNull ?? const [];
+    final use24Hour =
+        ref.watch(use24HourTimeProvider).valueOrNull ?? false;
     final tummyLogs = ref.watch(todayTummyLogsProvider).valueOrNull ?? const [];
     final pumpingLogs =
         ref.watch(todayPumpingLogsProvider).valueOrNull ?? const [];
@@ -93,6 +103,9 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
         partnerNudge != null && partnerNudge.type != _dismissedNudgeType;
     final showAttribution = isSignedIn;
     final now = DateTime.now();
+    final expecting = ref.watch(isExpectingProvider);
+    final pregnancy = ref.watch(pregnancyProfileProvider).valueOrNull;
+    final openSleep = ref.watch(openSleepProvider).valueOrNull;
 
     return Scaffold(
       appBar: AppBar(
@@ -101,15 +114,15 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
           children: [
             const BloomBrandMark(size: 30, showBackdrop: false),
             const SizedBox(width: 8),
-            Text('BloomDue', style: Theme.of(context).textTheme.titleLarge),
+            Text('Enfold', style: Theme.of(context).textTheme.titleLarge),
           ],
         ),
         actions: [
           IconButton.filledTonal(
             key: const Key('export_pdf_app_bar'),
-            tooltip: 'Export 7-day PDF',
+            tooltip: 'Share 7-day visit PDF',
             onPressed: () => _exportPdf(context, ref),
-            icon: const Icon(Icons.ios_share_outlined),
+            icon: const Icon(Icons.picture_as_pdf_outlined),
           ),
           const SizedBox(width: 12),
         ],
@@ -125,6 +138,26 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                 greeting: TodayScreen.greetingForHour(now.hour),
                 syncCopy: isSignedIn ? _partnerSyncCopy(lastSync) : null,
               ),
+              if (openSleep != null) ...[
+                const SizedBox(height: 16),
+                ActiveSleepBanner(
+                  entry: openSleep,
+                  onWakeUp: () async {
+                    await ref
+                        .read(careLogActionsProvider)
+                        .wakeFromSleep(openSleep.id);
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        const SnackBar(content: Text('Wake-up logged')),
+                      );
+                  },
+                  onAdjustStart: () => context.push(
+                    AppRoutes.logEdit(LogType.sleep, openSleep.id),
+                  ),
+                ),
+              ],
               const SizedBox(height: 26),
               const BloomSectionHeader(
                 title: 'Quick actions',
@@ -132,6 +165,13 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               ),
               const SizedBox(height: 12),
               _quickActionGrid(),
+              if (expecting && pregnancy?.dueDate != null) ...[
+                const SizedBox(height: 18),
+                _PregnancyShortcutCard(
+                  dueDate: pregnancy!.dueDate!,
+                  onTap: () => context.push(AppRoutes.pregnancy),
+                ),
+              ],
               const SizedBox(height: 28),
               logsAsync.when(
                 loading: () => const SizedBox(
@@ -139,8 +179,17 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                   child: Center(child: CircularProgressIndicator()),
                 ),
                 error: (_, _) => const SizedBox.shrink(),
-                data: (logs) =>
-                    TodaySummaryCards(summary: TodaySummary.fromEntries(logs)),
+                data: (logs) {
+                  final entries = [
+                    ...logs,
+                    if (openSleep != null &&
+                        !logs.any((entry) => entry.id == openSleep.id))
+                      openSleep,
+                  ];
+                  return TodaySummaryCards(
+                    summary: TodaySummary.fromEntries(entries),
+                  );
+                },
               ),
               if (showPartnerNudge) ...[
                 const SizedBox(height: 18),
@@ -180,8 +229,21 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               const SizedBox(height: 14),
               MedicationEntryCard(
                 todayLogs: medicationLogs,
+                routines: medicationRoutines,
+                use24Hour: use24Hour,
                 onTap: () => context.push(AppRoutes.logMedication),
                 onAdd: () => context.push(AppRoutes.logMedicationAdd),
+                onGive: (routine) async {
+                  await ref
+                      .read(medicationRoutineActionsProvider)
+                      .giveNow(routine);
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(content: Text('${routine.name} logged')),
+                    );
+                },
               ),
               const SizedBox(height: 14),
               ActivityEntryCard(
@@ -320,18 +382,22 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
   }
 
   Future<void> _exportPdf(BuildContext context, WidgetRef ref) async {
+    final confirmed = await confirmVisitPdfExport(context);
+    if (!confirmed || !context.mounted) return;
     try {
       final db = ref.read(databaseProvider);
       final babyId = await db.careLogDao.ensureDefaultBaby();
       final baby = await db.careLogDao.getBaby(babyId);
       final events = await db.careLogDao.getLogsForLastDays(babyId, 7);
       final useImperial = await ref.read(useImperialUnitsProvider.future);
+      final use24Hour = await ref.read(use24HourTimeProvider.future);
       final pdfService = ref.read(visitPdfServiceProvider);
       final bytes = await pdfService.buildSevenDaySummary(
         babyName: baby?.name ?? 'Baby',
         events: events,
         generatedAt: DateTime.now(),
         useImperialUnits: useImperial,
+        use24HourTime: use24Hour,
       );
       if (!context.mounted) return;
       await shareVisitPdf(bytes);
@@ -427,9 +493,9 @@ class _TodayHero extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.sync_rounded,
-                          color: AppColors.sage,
+                          color: AppColors.accent(brightness),
                           size: 15,
                         ),
                         const SizedBox(width: 6),
@@ -461,10 +527,6 @@ class _TodayHero extends StatelessWidget {
                 BloomIllustrations.familyCare,
                 fit: BoxFit.cover,
                 alignment: Alignment.center,
-                color: isDark
-                    ? AppColors.nightCard.withValues(alpha: 0.72)
-                    : null,
-                colorBlendMode: isDark ? BlendMode.multiply : null,
                 excludeFromSemantics: true,
               ),
             ),
@@ -504,7 +566,7 @@ class _RecentPlaceholder extends StatelessWidget {
               color: AppColors.sage.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(icon, color: AppColors.sage),
+            child: Icon(icon, color: AppColors.accent(brightness)),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -523,6 +585,58 @@ class _RecentPlaceholder extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _PregnancyShortcutCard extends StatelessWidget {
+  const _PregnancyShortcutCard({required this.dueDate, required this.onTap});
+
+  final DateTime dueDate;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final week = pregnancyWeekFromDueDate(dueDate, DateTime.now());
+    final subtitle = week == null
+        ? 'Kicks, appointments, and due date'
+        : 'Week $week · kicks and appointments';
+
+    return Material(
+      key: const Key('today_pregnancy_card'),
+      color: AppColors.bloom.withValues(alpha: 0.12),
+      borderRadius: BorderRadius.circular(20),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              const Icon(Icons.favorite, color: AppColors.bloom),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Pregnancy',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.mutedText(Theme.of(context).brightness),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right),
+            ],
+          ),
+        ),
       ),
     );
   }

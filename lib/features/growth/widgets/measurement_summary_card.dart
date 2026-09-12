@@ -27,7 +27,7 @@ class MeasurementSummaryCard extends StatelessWidget {
         decoration: _boxDecoration(isDark),
         child: Text(
           'No measurements yet. Tap + to log weight, length, or head size.',
-          style: GoogleFonts.nunito(color: AppColors.barkSoft, height: 1.45),
+          style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness), height: 1.45),
         ),
       );
     }
@@ -46,7 +46,9 @@ class MeasurementSummaryCard extends StatelessWidget {
             style: GoogleFonts.nunito(
               fontSize: 13,
               fontWeight: FontWeight.w800,
-              color: AppColors.sage,
+              color: AppColors.accent(
+                isDark ? Brightness.dark : Brightness.light,
+              ),
             ),
           ),
           const SizedBox(height: 12),
@@ -112,7 +114,7 @@ class _Metric extends StatelessWidget {
       children: [
         Text(
           label,
-          style: GoogleFonts.nunito(fontSize: 12, color: AppColors.barkSoft),
+          style: GoogleFonts.nunito(fontSize: 12, color: AppColors.mutedText(Theme.of(context).brightness)),
         ),
         const SizedBox(height: 4),
         Text(

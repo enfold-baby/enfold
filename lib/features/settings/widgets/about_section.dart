@@ -39,30 +39,22 @@ class AboutSection extends ConsumerWidget {
               info.versionLabel,
               style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
             ),
-            if (info.isBeta) ...[
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.bloom.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  key: const Key('about_beta_badge'),
-                  'Private beta',
-                  style: GoogleFonts.nunito(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.bloomDeep,
-                  ),
-                ),
-              ),
-            ],
             const SizedBox(height: 8),
             Text(
-              'Grow with confidence. · bloomdue.baby',
+              'Grow with confidence. · Enfold.baby',
               style: GoogleFonts.nunito(
                 fontSize: 14,
+                color: AppColors.mutedText(brightness),
+                height: 1.45,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Enfold provides general educational information. It does not replace '
+              'professional medical advice, diagnosis, or treatment. In an emergency, '
+              'call your local emergency number.',
+              style: GoogleFonts.nunito(
+                fontSize: 13,
                 color: AppColors.mutedText(brightness),
                 height: 1.45,
               ),

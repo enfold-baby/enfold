@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
-import '../today/models/care_log_entry.dart';
+import '../today/models/log_type.dart';
 import '../today/providers/today_log_provider.dart';
 import 'providers/logs_providers.dart';
 import 'widgets/log_period_bar.dart';
 import 'widgets/paginated_log_list.dart';
+import 'widgets/active_sleep_banner.dart';
 import 'widgets/type_filter_chips.dart';
 import '../../widgets/sync_refresh.dart';
 
@@ -21,7 +21,6 @@ class SleepLogsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final logsAsync = ref.watch(sleepLogsProvider);
     final openSleep = ref.watch(openSleepProvider).valueOrNull;
-    final timeFormat = DateFormat.jm();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Sleep logs')),
@@ -50,9 +49,8 @@ class SleepLogsScreen extends ConsumerWidget {
             LogPeriodBar(periodProvider: sleepLogPeriodProvider),
             if (openSleep != null) ...[
               const SizedBox(height: 16),
-              _ActiveSleepBanner(
+              ActiveSleepBanner(
                 entry: openSleep,
-                timeFormat: timeFormat,
                 onWakeUp: () async {
                   await ref
                       .read(careLogActionsProvider)
@@ -64,6 +62,9 @@ class SleepLogsScreen extends ConsumerWidget {
                       const SnackBar(content: Text('Wake-up logged')),
                     );
                 },
+                onAdjustStart: () => context.push(
+                  AppRoutes.logEdit(LogType.sleep, openSleep.id),
+                ),
               ),
             ],
             const SizedBox(height: 20),
@@ -86,55 +87,6 @@ class SleepLogsScreen extends ConsumerWidget {
           ],
         ),
         ),
-      ),
-    );
-  }
-}
-
-class _ActiveSleepBanner extends StatelessWidget {
-  const _ActiveSleepBanner({
-    required this.entry,
-    required this.timeFormat,
-    required this.onWakeUp,
-  });
-
-  final CareLogEntry entry;
-  final DateFormat timeFormat;
-  final VoidCallback onWakeUp;
-
-  @override
-  Widget build(BuildContext context) {
-    final start = entry.details.sleepStart ?? entry.loggedAt;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.sleepBlue.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.sleepBlue.withValues(alpha: 0.35)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.bedtime, color: AppColors.sleepBlue),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Sleeping since ${timeFormat.format(start)}',
-              style: GoogleFonts.nunito(
-                fontWeight: FontWeight.w800,
-                color: AppColors.sleepBlue,
-              ),
-            ),
-          ),
-          FilledButton(
-            onPressed: onWakeUp,
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.sleepBlue,
-              foregroundColor: AppColors.cream,
-            ),
-            child: const Text('Wake up'),
-          ),
-        ],
       ),
     );
   }

@@ -105,7 +105,7 @@ async def create_care_event(
             family_id=family_id,
             actor_user_id=user.id,
             title=f"{author_name} logged {label.lower()}",
-            body="Open BloomDue to see the latest update.",
+            body="Open Enfold to see the latest update.",
         )
 
     return event

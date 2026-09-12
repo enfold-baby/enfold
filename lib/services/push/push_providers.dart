@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -7,10 +8,11 @@ import '../auth/auth_providers.dart';
 import '../auth/auth_session.dart';
 import '../database/database_provider.dart';
 import 'fcm_token_source.dart';
+import 'firebase_fcm_token_source.dart';
 import 'push_service.dart';
 
 final fcmTokenSourceProvider = Provider<FcmTokenSource>((ref) {
-  return const NoOpFcmTokenSource();
+  return const FirebaseFcmTokenSource();
 });
 
 final pushServiceProvider = Provider<PushService>((ref) {
@@ -28,6 +30,18 @@ final pushBootstrapProvider = Provider<void>((ref) {
     if (previous?.valueOrNull?.token == session.token) return;
     ref.read(pushActionsProvider).syncPartnerPushIfEnabled(session: session);
   });
+
+  final source = ref.read(fcmTokenSourceProvider);
+  if (source is FirebaseFcmTokenSource) {
+    final sub = source.tokenRefreshes().listen((_) {
+      final session = ref.read(authSessionProvider).valueOrNull;
+      if (session == null) return;
+      unawaited(
+        ref.read(pushActionsProvider).syncPartnerPushIfEnabled(session: session),
+      );
+    });
+    ref.onDispose(sub.cancel);
+  }
 });
 
 class PushActions {
@@ -47,6 +61,14 @@ class PushActions {
           session: session,
           fcmToken: token,
           platform: _platformLabel(),
+        );
+  }
+
+  Future<void> unregisterPartnerPush({required AuthSession session}) async {
+    final token = await _ref.read(fcmTokenSourceProvider).getToken();
+    await _ref.read(pushServiceProvider).unregisterIfPossible(
+          session: session,
+          fcmToken: token,
         );
   }
 }

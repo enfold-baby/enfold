@@ -29,7 +29,7 @@ class MedicalDisclaimer extends StatelessWidget {
         style: GoogleFonts.nunito(
           fontSize: 12,
           height: 1.5,
-          color: AppColors.barkSoft,
+          color: AppColors.mutedText(Theme.of(context).brightness),
         ),
       ),
     );

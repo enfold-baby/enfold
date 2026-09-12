@@ -3,8 +3,8 @@
 
 import 'dart:convert';
 
-import 'package:bloomdue_baby/main.dart' as app;
-import 'package:bloomdue_baby/services/database/database_provider.dart';
+import 'package:enfold/main.dart' as app;
+import 'package:enfold/services/database/database_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -248,31 +248,31 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 2));
     }
 
-    await _holdForShot('bloomdue_01_today');
+    await _holdForShot('enfold_01_today');
 
     if (find.text('Logs').evaluate().isNotEmpty) {
       await tester.tap(find.text('Logs').last);
       await tester.pumpAndSettle(const Duration(seconds: 2));
     }
-    await _holdForShot('bloomdue_02_logs');
+    await _holdForShot('enfold_02_logs');
 
     if (find.text('Learn').evaluate().isNotEmpty) {
       await tester.tap(find.text('Learn').last);
       await tester.pumpAndSettle(const Duration(seconds: 2));
     }
-    await _holdForShot('bloomdue_03_learn');
+    await _holdForShot('enfold_03_learn');
 
     if (find.text('Settings').evaluate().isNotEmpty) {
       await tester.tap(find.text('Settings').last);
       await tester.pumpAndSettle(const Duration(seconds: 2));
     }
-    await _holdForShot('bloomdue_04_settings');
+    await _holdForShot('enfold_04_settings');
 
     if (find.text('Today').evaluate().isNotEmpty) {
       await tester.tap(find.text('Today').last);
       await tester.pumpAndSettle(const Duration(seconds: 2));
     }
-    await _holdForShot('bloomdue_05_today_again');
+    await _holdForShot('enfold_05_today_again');
 
     // ignore: avoid_print
     print('###SHOT_DONE###');

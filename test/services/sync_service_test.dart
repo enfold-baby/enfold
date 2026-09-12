@@ -1,16 +1,16 @@
-import 'package:bloomdue_baby/services/api/api_exception.dart';
-import 'package:bloomdue_baby/services/api/bloomdue_api_client.dart';
-import 'package:bloomdue_baby/services/api/family_models.dart';
-import 'package:bloomdue_baby/services/auth/auth_session.dart';
-import 'package:bloomdue_baby/services/database/app_database.dart';
-import 'package:bloomdue_baby/services/sync/sync_service.dart';
+import 'package:enfold/services/api/api_exception.dart';
+import 'package:enfold/services/api/enfold_api_client.dart';
+import 'package:enfold/services/api/family_models.dart';
+import 'package:enfold/services/auth/auth_session.dart';
+import 'package:enfold/services/database/app_database.dart';
+import 'package:enfold/services/sync/sync_service.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 
-class FakeBloomdueApi extends BloomdueApiClient {
-  FakeBloomdueApi() : super(httpClient: http.Client());
+class FakeEnfoldApi extends EnfoldApiClient {
+  FakeEnfoldApi() : super(httpClient: http.Client());
 
   final String childId = 'server-child-1';
   int createCalls = 0;
@@ -69,12 +69,12 @@ class FakeBloomdueApi extends BloomdueApiClient {
 
 void main() {
   late AppDatabase db;
-  late FakeBloomdueApi api;
+  late FakeEnfoldApi api;
   late SyncService sync;
 
   setUp(() {
     db = AppDatabase.forTesting(NativeDatabase.memory());
-    api = FakeBloomdueApi();
+    api = FakeEnfoldApi();
     sync = SyncService(api: api, db: db);
   });
 

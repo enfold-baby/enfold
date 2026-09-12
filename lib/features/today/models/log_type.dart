@@ -31,7 +31,7 @@ enum LogType {
   final String confirmation;
   final IconData icon;
 
-  /// Matches VPS `care_events.type` — see bloomdue-platform backend.
+  /// Matches VPS `care_events.type`.
   final String apiType;
 
   static LogType? fromApiType(String apiType) {

@@ -53,13 +53,16 @@ class PartnerNotificationActions {
         .settingsDao
         .setPartnerActivityPushEnabled(value);
     _ref.invalidate(partnerActivityPushProvider);
+    final session = _ref.read(authSessionProvider).valueOrNull;
+    if (session == null) return;
     if (value) {
-      final session = _ref.read(authSessionProvider).valueOrNull;
-      if (session != null) {
-        await _ref
-            .read(pushActionsProvider)
-            .syncPartnerPushIfEnabled(session: session);
-      }
+      await _ref
+          .read(pushActionsProvider)
+          .syncPartnerPushIfEnabled(session: session);
+    } else {
+      await _ref
+          .read(pushActionsProvider)
+          .unregisterPartnerPush(session: session);
     }
   }
 

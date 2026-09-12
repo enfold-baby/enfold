@@ -39,19 +39,19 @@ class EmailSender:
             await self._send_magic_code_graph(email, code)
             return
         if self.settings.dev_magic_code_log:
-            print(f"Bloomdue magic code for {email}: {code}")
+            print(f"Enfold magic code for {email}: {code}")
 
     def _send_magic_code_smtp(self, email: str, code: str) -> None:
         s = self.settings
         msg = EmailMessage()
-        msg["Subject"] = "Your BloomDue sign-in code"
+        msg["Subject"] = "Your Enfold sign-in code"
         msg["From"] = f"{s.smtp_from_name} <{s.smtp_from_email}>"
         msg["To"] = email
         msg.set_content(
-            f"Your BloomDue sign-in code is {code}.\n\n"
+            f"Your Enfold sign-in code is {code}.\n\n"
             f"It expires in {s.magic_code_expire_minutes} minutes.\n\n"
             "If you didn't request this, you can ignore this email.\n\n"
-            "Questions? contact@globinary.io"
+            "Questions? support@enfold.baby"
         )
 
         context = ssl.create_default_context()
@@ -78,11 +78,11 @@ class EmailSender:
         )
         payload = {
             "message": {
-                "subject": "Your BloomDue sign-in code",
+                "subject": "Your Enfold sign-in code",
                 "body": {
                     "contentType": "Text",
                     "content": (
-                        f"Your BloomDue sign-in code is {code}. "
+                        f"Your Enfold sign-in code is {code}. "
                         f"It expires in {self.settings.magic_code_expire_minutes} minutes."
                     ),
                 },

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../settings/providers/time_format_providers.dart';
 import '../../today/models/care_log_entry.dart';
 import '../../today/models/log_type.dart';
 
-class LogEntryTile extends StatelessWidget {
+class LogEntryTile extends ConsumerWidget {
   const LogEntryTile({
     super.key,
     required this.entry,
@@ -25,10 +26,10 @@ class LogEntryTile extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final timeFormat = DateFormat('MMM d · h:mm a');
-    final time = timeFormat.format(entry.loggedAt);
+    final use24Hour = ref.watch(use24HourTimeProvider).valueOrNull ?? false;
+    final time = entry.listTimeLabel(use24Hour: use24Hour);
     final sync = !entry.pendingSync
         ? 'synced'
         : isSignedIn
@@ -76,7 +77,7 @@ class LogEntryTile extends StatelessWidget {
       ),
       subtitle: Text(
         subtitle,
-        style: GoogleFonts.nunito(color: AppColors.barkSoft),
+        style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
       ),
     );
   }

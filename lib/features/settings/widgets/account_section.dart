@@ -37,6 +37,9 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
       if (error.statusCode == 422) {
         return 'Enter a valid email address.';
       }
+      if (error.statusCode == 503) {
+        return 'Could not send code. The mail service is busy. Try again in a moment.';
+      }
       return 'Could not send code (${error.message}).';
     }
     return 'Could not send code. Check your connection and try again.';
@@ -213,6 +216,63 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
     }
   }
 
+  Future<void> _deleteAccount() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        key: const Key('delete_account_dialog'),
+        title: Text(
+          'Delete your account?',
+          style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
+        ),
+        content: Text(
+          'This permanently deletes your Enfold account and signs you out. '
+          'If you are the only parent in the family, care logs stored on our '
+          'servers for that family are deleted too. This cannot be undone.',
+          style: GoogleFonts.nunito(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            key: const Key('delete_account_confirm'),
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.bloomDeep,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Delete account'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    setState(() {
+      _busy = true;
+      _status = null;
+    });
+    try {
+      await ref.read(authSessionProvider.notifier).deleteAccount();
+      await ref.read(accountSwitchServiceProvider).clearLocalCareData();
+      await ref.read(accountSwitchServiceProvider).setLastSignedInUserId(null);
+      if (!mounted) return;
+      setState(() {
+        _codeSent = false;
+        _devCode = null;
+        _codeController.clear();
+        _status = 'Your account has been deleted.';
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _status = 'Could not delete the account. Try again.');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
@@ -272,7 +332,7 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
                       'Dev code: $_devCode',
                       style: GoogleFonts.nunito(
                         fontSize: 13,
-                        color: AppColors.sageDeep,
+                        color: AppColors.accent(brightness),
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -324,6 +384,18 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
                           });
                         },
                   child: const Text('Sync now'),
+                ),
+                const SizedBox(height: 16),
+                TextButton(
+                  key: const Key('auth_delete_account'),
+                  onPressed: _busy ? null : _deleteAccount,
+                  child: Text(
+                    'Delete my account',
+                    style: GoogleFonts.nunito(
+                      color: AppColors.bloomDeep,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
               ],
               if (_status != null) ...[

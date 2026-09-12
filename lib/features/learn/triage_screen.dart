@@ -66,7 +66,7 @@ class _TriageScreenState extends ConsumerState<TriageScreen> {
         error: (error, _) => Center(
           child: Text(
             'Triage not available.',
-            style: GoogleFonts.nunito(color: AppColors.barkSoft),
+            style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
           ),
         ),
         data: (card) {
@@ -75,7 +75,7 @@ class _TriageScreenState extends ConsumerState<TriageScreen> {
             return Center(
               child: Text(
                 'No triage for this topic.',
-                style: GoogleFonts.nunito(color: AppColors.barkSoft),
+                style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
               ),
             );
           }
@@ -141,7 +141,7 @@ class _TriageScreenState extends ConsumerState<TriageScreen> {
                 style: GoogleFonts.nunito(
                   fontSize: 14,
                   height: 1.45,
-                  color: AppColors.barkSoft,
+                  color: AppColors.mutedText(Theme.of(context).brightness),
                 ),
               ),
               const SizedBox(height: 24),

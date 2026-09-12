@@ -5,5 +5,5 @@ import 'app.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: BloomDueApp()));
+  runApp(const ProviderScope(child: EnfoldApp()));
 }

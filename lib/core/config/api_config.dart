@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 ///
 /// Override any time with `--dart-define=API_BASE_URL=https://…`.
 abstract final class ApiConfig {
-  static const String _prod = 'https://api.bloomdue.baby';
+  static const String _prod = 'https://api.enfold.baby';
   static const String _define = String.fromEnvironment('API_BASE_URL');
 
   static String get baseUrl {
@@ -25,5 +25,5 @@ abstract final class ApiConfig {
     return 'http://127.0.0.1:8282';
   }
 
-  static bool get isLocalDev => !kReleaseMode && !baseUrl.contains('bloomdue.baby');
+  static bool get isLocalDev => !kReleaseMode && !baseUrl.contains('enfold.baby');
 }

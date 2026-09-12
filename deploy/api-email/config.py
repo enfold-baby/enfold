@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     smtp_user: str = ""
     smtp_password: str = ""
     smtp_from_email: str = ""
-    smtp_from_name: str = "BloomDue"
+    smtp_from_name: str = "Enfold"
     smtp_use_ssl: bool = False
 
     ms_graph_tenant_id: str = ""
