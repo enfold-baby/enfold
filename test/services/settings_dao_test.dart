@@ -74,6 +74,15 @@ void main() {
       expect(await db.settingsDao.use24HourTime(), isTrue);
     });
 
+    test('time awake defaults on and persists', () async {
+      final db = _testDb();
+      addTearDown(db.close);
+
+      expect(await db.settingsDao.showAwakeTime(), isTrue);
+      await db.settingsDao.setShowAwakeTime(false);
+      expect(await db.settingsDao.showAwakeTime(), isFalse);
+    });
+
     test('lastSignedInUserId defaults null and persists', () async {
       final db = _testDb();
       addTearDown(db.close);

@@ -135,6 +135,25 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
     );
   }
 
+  Future<bool> showAwakeTime() async {
+    final settings = await ensureSettings();
+    return settings.showAwakeTime;
+  }
+
+  Future<void> setShowAwakeTime(bool value) async {
+    await ensureSettings();
+    await (update(appSettings)..where((s) => s.id.equals(_singletonId))).write(
+      AppSettingsCompanion(showAwakeTime: Value(value)),
+    );
+  }
+
+  Stream<bool> watchShowAwakeTime() async* {
+    await ensureSettings();
+    yield* (select(appSettings)..where((s) => s.id.equals(_singletonId)))
+        .watch()
+        .map((rows) => rows.isEmpty ? true : rows.first.showAwakeTime);
+  }
+
   static ThemeMode _parseThemeMode(String raw) => switch (raw) {
         'light' => ThemeMode.light,
         'dark' => ThemeMode.dark,

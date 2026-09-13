@@ -106,6 +106,9 @@ class AppSettings extends Table {
   /// 24-hour clock in logs, pickers, and the visit PDF. Off = 12-hour AM/PM.
   BoolColumn get use24HourTime =>
       boolean().withDefault(const Constant(false))();
+  /// Today screen line "Awake for 1h 20m" after the last logged sleep. On by default.
+  BoolColumn get showAwakeTime =>
+      boolean().withDefault(const Constant(true))();
 
   @override
   Set<Column<Object>> get primaryKey => {id};

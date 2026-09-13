@@ -7,6 +7,7 @@ import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
 import 'providers/theme_providers.dart';
 import 'widgets/about_section.dart';
+import 'widgets/awake_time_section.dart';
 import 'widgets/care_reminders_section.dart';
 import 'widgets/account_section.dart';
 import 'widgets/baby_profile_section.dart';
@@ -65,6 +66,8 @@ class SettingsScreen extends ConsumerWidget {
           const UnitsSection(),
           const Divider(height: 32),
           const TimeFormatSection(),
+          const Divider(height: 32),
+          const AwakeTimeSection(),
           const Divider(height: 32),
           ListTile(
             title: Text(

@@ -1974,6 +1974,21 @@ class $AppSettingsTable extends AppSettings
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _showAwakeTimeMeta = const VerificationMeta(
+    'showAwakeTime',
+  );
+  @override
+  late final GeneratedColumn<bool> showAwakeTime = GeneratedColumn<bool>(
+    'show_awake_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_awake_time" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1985,6 +2000,7 @@ class $AppSettingsTable extends AppSettings
     lastSignedInUserId,
     careRemindersEnabled,
     use24HourTime,
+    showAwakeTime,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2070,6 +2086,15 @@ class $AppSettingsTable extends AppSettings
         ),
       );
     }
+    if (data.containsKey('show_awake_time')) {
+      context.handle(
+        _showAwakeTimeMeta,
+        showAwakeTime.isAcceptableOrUnknown(
+          data['show_awake_time']!,
+          _showAwakeTimeMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2115,6 +2140,10 @@ class $AppSettingsTable extends AppSettings
         DriftSqlType.bool,
         data['${effectivePrefix}use24_hour_time'],
       )!,
+      showAwakeTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_awake_time'],
+      )!,
     );
   }
 
@@ -2140,6 +2169,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
 
   /// 24-hour clock in logs, pickers, and the visit PDF. Off = 12-hour AM/PM.
   final bool use24HourTime;
+
+  /// Today screen line "Awake for 1h 20m" after the last logged sleep. On by default.
+  final bool showAwakeTime;
   const AppSetting({
     required this.id,
     required this.onboardingCompleted,
@@ -2150,6 +2182,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     this.lastSignedInUserId,
     required this.careRemindersEnabled,
     required this.use24HourTime,
+    required this.showAwakeTime,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2169,6 +2202,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     }
     map['care_reminders_enabled'] = Variable<bool>(careRemindersEnabled);
     map['use24_hour_time'] = Variable<bool>(use24HourTime);
+    map['show_awake_time'] = Variable<bool>(showAwakeTime);
     return map;
   }
 
@@ -2185,6 +2219,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
           : Value(lastSignedInUserId),
       careRemindersEnabled: Value(careRemindersEnabled),
       use24HourTime: Value(use24HourTime),
+      showAwakeTime: Value(showAwakeTime),
     );
   }
 
@@ -2213,6 +2248,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
         json['careRemindersEnabled'],
       ),
       use24HourTime: serializer.fromJson<bool>(json['use24HourTime']),
+      showAwakeTime: serializer.fromJson<bool>(json['showAwakeTime']),
     );
   }
   @override
@@ -2232,6 +2268,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       'lastSignedInUserId': serializer.toJson<String?>(lastSignedInUserId),
       'careRemindersEnabled': serializer.toJson<bool>(careRemindersEnabled),
       'use24HourTime': serializer.toJson<bool>(use24HourTime),
+      'showAwakeTime': serializer.toJson<bool>(showAwakeTime),
     };
   }
 
@@ -2245,6 +2282,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     Value<String?> lastSignedInUserId = const Value.absent(),
     bool? careRemindersEnabled,
     bool? use24HourTime,
+    bool? showAwakeTime,
   }) => AppSetting(
     id: id ?? this.id,
     onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
@@ -2259,6 +2297,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
         : this.lastSignedInUserId,
     careRemindersEnabled: careRemindersEnabled ?? this.careRemindersEnabled,
     use24HourTime: use24HourTime ?? this.use24HourTime,
+    showAwakeTime: showAwakeTime ?? this.showAwakeTime,
   );
   AppSetting copyWithCompanion(AppSettingsCompanion data) {
     return AppSetting(
@@ -2285,6 +2324,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       use24HourTime: data.use24HourTime.present
           ? data.use24HourTime.value
           : this.use24HourTime,
+      showAwakeTime: data.showAwakeTime.present
+          ? data.showAwakeTime.value
+          : this.showAwakeTime,
     );
   }
 
@@ -2299,7 +2341,8 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
           ..write('themeMode: $themeMode, ')
           ..write('lastSignedInUserId: $lastSignedInUserId, ')
           ..write('careRemindersEnabled: $careRemindersEnabled, ')
-          ..write('use24HourTime: $use24HourTime')
+          ..write('use24HourTime: $use24HourTime, ')
+          ..write('showAwakeTime: $showAwakeTime')
           ..write(')'))
         .toString();
   }
@@ -2315,6 +2358,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     lastSignedInUserId,
     careRemindersEnabled,
     use24HourTime,
+    showAwakeTime,
   );
   @override
   bool operator ==(Object other) =>
@@ -2328,7 +2372,8 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
           other.themeMode == this.themeMode &&
           other.lastSignedInUserId == this.lastSignedInUserId &&
           other.careRemindersEnabled == this.careRemindersEnabled &&
-          other.use24HourTime == this.use24HourTime);
+          other.use24HourTime == this.use24HourTime &&
+          other.showAwakeTime == this.showAwakeTime);
 }
 
 class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
@@ -2341,6 +2386,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
   final Value<String?> lastSignedInUserId;
   final Value<bool> careRemindersEnabled;
   final Value<bool> use24HourTime;
+  final Value<bool> showAwakeTime;
   const AppSettingsCompanion({
     this.id = const Value.absent(),
     this.onboardingCompleted = const Value.absent(),
@@ -2351,6 +2397,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     this.lastSignedInUserId = const Value.absent(),
     this.careRemindersEnabled = const Value.absent(),
     this.use24HourTime = const Value.absent(),
+    this.showAwakeTime = const Value.absent(),
   });
   AppSettingsCompanion.insert({
     this.id = const Value.absent(),
@@ -2362,6 +2409,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     this.lastSignedInUserId = const Value.absent(),
     this.careRemindersEnabled = const Value.absent(),
     this.use24HourTime = const Value.absent(),
+    this.showAwakeTime = const Value.absent(),
   });
   static Insertable<AppSetting> custom({
     Expression<int>? id,
@@ -2373,6 +2421,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     Expression<String>? lastSignedInUserId,
     Expression<bool>? careRemindersEnabled,
     Expression<bool>? use24HourTime,
+    Expression<bool>? showAwakeTime,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2389,6 +2438,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
       if (careRemindersEnabled != null)
         'care_reminders_enabled': careRemindersEnabled,
       if (use24HourTime != null) 'use24_hour_time': use24HourTime,
+      if (showAwakeTime != null) 'show_awake_time': showAwakeTime,
     });
   }
 
@@ -2402,6 +2452,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     Value<String?>? lastSignedInUserId,
     Value<bool>? careRemindersEnabled,
     Value<bool>? use24HourTime,
+    Value<bool>? showAwakeTime,
   }) {
     return AppSettingsCompanion(
       id: id ?? this.id,
@@ -2415,6 +2466,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
       lastSignedInUserId: lastSignedInUserId ?? this.lastSignedInUserId,
       careRemindersEnabled: careRemindersEnabled ?? this.careRemindersEnabled,
       use24HourTime: use24HourTime ?? this.use24HourTime,
+      showAwakeTime: showAwakeTime ?? this.showAwakeTime,
     );
   }
 
@@ -2456,6 +2508,9 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     if (use24HourTime.present) {
       map['use24_hour_time'] = Variable<bool>(use24HourTime.value);
     }
+    if (showAwakeTime.present) {
+      map['show_awake_time'] = Variable<bool>(showAwakeTime.value);
+    }
     return map;
   }
 
@@ -2470,7 +2525,8 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
           ..write('themeMode: $themeMode, ')
           ..write('lastSignedInUserId: $lastSignedInUserId, ')
           ..write('careRemindersEnabled: $careRemindersEnabled, ')
-          ..write('use24HourTime: $use24HourTime')
+          ..write('use24HourTime: $use24HourTime, ')
+          ..write('showAwakeTime: $showAwakeTime')
           ..write(')'))
         .toString();
   }
@@ -4985,6 +5041,7 @@ typedef $$AppSettingsTableCreateCompanionBuilder =
       Value<String?> lastSignedInUserId,
       Value<bool> careRemindersEnabled,
       Value<bool> use24HourTime,
+      Value<bool> showAwakeTime,
     });
 typedef $$AppSettingsTableUpdateCompanionBuilder =
     AppSettingsCompanion Function({
@@ -4997,6 +5054,7 @@ typedef $$AppSettingsTableUpdateCompanionBuilder =
       Value<String?> lastSignedInUserId,
       Value<bool> careRemindersEnabled,
       Value<bool> use24HourTime,
+      Value<bool> showAwakeTime,
     });
 
 class $$AppSettingsTableFilterComposer
@@ -5050,6 +5108,11 @@ class $$AppSettingsTableFilterComposer
 
   ColumnFilters<bool> get use24HourTime => $composableBuilder(
     column: $table.use24HourTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get showAwakeTime => $composableBuilder(
+    column: $table.showAwakeTime,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5107,6 +5170,11 @@ class $$AppSettingsTableOrderingComposer
     column: $table.use24HourTime,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get showAwakeTime => $composableBuilder(
+    column: $table.showAwakeTime,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AppSettingsTableAnnotationComposer
@@ -5158,6 +5226,11 @@ class $$AppSettingsTableAnnotationComposer
     column: $table.use24HourTime,
     builder: (column) => column,
   );
+
+  GeneratedColumn<bool> get showAwakeTime => $composableBuilder(
+    column: $table.showAwakeTime,
+    builder: (column) => column,
+  );
 }
 
 class $$AppSettingsTableTableManager
@@ -5200,6 +5273,7 @@ class $$AppSettingsTableTableManager
                 Value<String?> lastSignedInUserId = const Value.absent(),
                 Value<bool> careRemindersEnabled = const Value.absent(),
                 Value<bool> use24HourTime = const Value.absent(),
+                Value<bool> showAwakeTime = const Value.absent(),
               }) => AppSettingsCompanion(
                 id: id,
                 onboardingCompleted: onboardingCompleted,
@@ -5210,6 +5284,7 @@ class $$AppSettingsTableTableManager
                 lastSignedInUserId: lastSignedInUserId,
                 careRemindersEnabled: careRemindersEnabled,
                 use24HourTime: use24HourTime,
+                showAwakeTime: showAwakeTime,
               ),
           createCompanionCallback:
               ({
@@ -5222,6 +5297,7 @@ class $$AppSettingsTableTableManager
                 Value<String?> lastSignedInUserId = const Value.absent(),
                 Value<bool> careRemindersEnabled = const Value.absent(),
                 Value<bool> use24HourTime = const Value.absent(),
+                Value<bool> showAwakeTime = const Value.absent(),
               }) => AppSettingsCompanion.insert(
                 id: id,
                 onboardingCompleted: onboardingCompleted,
@@ -5232,6 +5308,7 @@ class $$AppSettingsTableTableManager
                 lastSignedInUserId: lastSignedInUserId,
                 careRemindersEnabled: careRemindersEnabled,
                 use24HourTime: use24HourTime,
+                showAwakeTime: showAwakeTime,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

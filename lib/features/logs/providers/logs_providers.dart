@@ -215,3 +215,22 @@ final openSleepProvider = StreamProvider<CareLogEntry?>((ref) {
   );
 });
 
+
+/// Sleeps from the last few days, for the awake-time line on Today.
+/// Reaches past midnight so a wake at 23:30 still counts at 00:15.
+final recentSleepsProvider = StreamProvider<List<CareLogEntry>>((ref) {
+  final db = ref.read(databaseProvider);
+  final end = calendarDayEnd(ref.watch(currentCalendarDayProvider));
+  final start = end.subtract(const Duration(days: 3));
+
+  return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
+    (babyId) => db.careLogDao
+        .watchLogsInRange(
+          babyId: babyId,
+          start: start,
+          end: end,
+          type: LogType.sleep.apiType,
+        )
+        .map(mapCareEvents),
+  );
+});

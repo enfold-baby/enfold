@@ -35,6 +35,7 @@ import 'models/log_type.dart';
 import 'models/today_summary.dart';
 import 'providers/today_log_provider.dart';
 import 'widgets/activity_entry_card.dart';
+import 'widgets/awake_time_banner.dart';
 import 'widgets/growth_entry_card.dart';
 import 'widgets/quick_log_tile.dart';
 import 'widgets/today_summary_cards.dart';
@@ -158,6 +159,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                   ),
                 ),
               ],
+              if (openSleep == null) const AwakeTimeBanner(),
               const SizedBox(height: 26),
               const BloomSectionHeader(
                 title: 'Quick actions',
