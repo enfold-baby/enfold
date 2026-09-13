@@ -2,7 +2,7 @@
 
 Enfold is a free, no-ads baby and pregnancy companion for parents. The first release starts after birth with practical daily tracking, then expands into medical records, guided doctor-reviewed education, and pregnancy workflows.
 
-**Now (2026-09-10):** `1.0.0+20` (Play live numbering). 4-tab shell + Add FAB, care logs (still-sleeping), daily vitamin reminder, growth history charts, Learn (25 cards, review pending), partner sync, FCM (Android), SES magic-codes from `noreply@enfold.baby`, landing + `/support/`. Play listing is the next ops step. 2026-09-10: `/delete-account/` page, footer imprint, real 404s and nightly DB backups (`ops/`) are live; analyzer excludes `build/`. 2026-09-12: fixed duplicate-baby race on first launch (typed name was lost), medication reminder Given/Later actions did nothing on Android (actions now open the app), lists auto-load pages on scroll, Learn copy no longer claims doctor review, em dashes removed from app and card copy, sideload updater deleted; version 1.0.0+21. Romanian is planned, not started — see `feature/todos/I18N_RO.md`. Detail: `feature/roadmaps/VERSION.md`.
+**Now (2026-09-13):** `1.0.0+22` submitted to Google Play on 2026-09-12 and in review (managed publishing off, goes live on approval). Site copy says "in review". Stripe: 4 live + 4 sandbox payment links collecting name, optional company, billing address and a tax ID custom field; supporters wall on `/support/` and `/galaxy/` fed by a signature-verified Stripe webhook (`ops/README.md`). Pickup file for launch work: `~/Desktop/LAUNCH-CHECKLIST.md`. Next: wait for the review, then the Play badge on the site and the launch posts (checklist section 8). Romanian is planned, not started (`feature/todos/I18N_RO.md`).
 
 ## Phase 0: Foundation
 

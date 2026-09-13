@@ -1,5 +1,10 @@
 # Enfold.baby — Project Kickoff
 
+> **Pickup 2026-09-13.** App submitted to Google Play (in review). Launch plan and per-item evidence live in
+> `~/Desktop/LAUNCH-CHECKLIST.md` (outside the repo). Prod deploy facts and the supporters wall are in
+> `ops/README.md`. Reviewer account credentials: `~/Documents/enfold/play-reviewer-account.md`.
+
+
 > **Read this first** when starting a fresh conversation in this repo.  
 > **Domain:** [enfold.baby](https://enfold.baby)  
 > **Folder:** this repo (`bloomdue_baby` on disk; product name **Enfold**)  
