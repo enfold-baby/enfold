@@ -124,7 +124,9 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
         return;
       }
 
-      var fullHistory = false;
+      // First sign-in on this install (e.g. a reinstall): restore the whole
+      // history, not just the recent sync window.
+      var fullHistory = await switchService.lastSignedInUserId() == null;
       if (await switchService.isAccountSwitch(session.user.id)) {
         if (!mounted) return;
         final choice = await _promptAccountSwitch();
