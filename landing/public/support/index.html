@@ -341,6 +341,12 @@
         var heroNote = document.getElementById("help-sky-note");
         var euro = function (cents) { return "€" + Math.round(cents / 100).toLocaleString("en-GB"); };
         var tierLabel = { tea: "a warm bottle", nest: "an extra hour of sleep", moon: "a whole quiet night", wish: "a chosen amount" };
+        var tileLabel = { count: ["moon planted", "moons planted"], tea: ["warm bottle", "warm bottles"], nest: ["extra hour of sleep", "extra hours of sleep"], moon: ["whole quiet night", "whole quiet nights"] };
+        function setTile(key, n) {
+          var el = document.getElementById("wall-" + key);
+          el.textContent = n;
+          el.nextElementSibling.textContent = tileLabel[key][n === 1 ? 0 : 1];
+        }
         var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
         fetch(api, { headers: { Accept: "application/json" } })
           .then(function (r) { return r.json(); })
@@ -349,12 +355,12 @@
             heroNote.textContent = d.count
               ? d.count + (d.count === 1 ? " moon" : " moons") + " planted, " + euro(d.total_cents) + " given. Every named moon in this sky is a real supporter."
               : "No moons yet. The first one will hang at the centre of the galaxy.";
-            document.getElementById("wall-count").textContent = d.count;
+            setTile("count", d.count);
             document.getElementById("wall-total").textContent = euro(d.total_cents);
             // Stripe Climate gets 1% of every moon.
             document.getElementById("wall-climate").textContent = "€" + (d.total_cents / 10000).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             ["tea", "nest", "moon"].forEach(function (k) {
-              document.getElementById("wall-" + k).textContent = d.tiers[k] || 0;
+              setTile(k, d.tiers[k] || 0);
             });
             var list = document.getElementById("wall-moons");
             var empty = document.getElementById("wall-empty");
