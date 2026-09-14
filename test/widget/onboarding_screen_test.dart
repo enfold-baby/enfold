@@ -118,4 +118,43 @@ void main() {
     expect(find.text('Get started'), findsOneWidget);
     expect(find.text('Skip for now'), findsOneWidget);
   });
+
+  for (final phone in const [
+    (name: 'iPhone', size: Size(390, 844)),
+    (name: 'small iPhone SE', size: Size(320, 568)),
+  ]) {
+    testWidgets('welcome step lays out on a portrait ${phone.name}', (
+      tester,
+    ) async {
+      final db = createTestDatabase();
+      final container = ProviderContainer(
+        overrides: [databaseProvider.overrideWithValue(db)],
+      );
+      addTearDown(container.dispose);
+      addTearDown(db.close);
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      tester.view.physicalSize = phone.size * 3;
+      tester.view.devicePixelRatio = 3.0;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp.router(routerConfig: _testRouter()),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // A LayoutBuilder under IntrinsicHeight throws here on every frame.
+      expect(tester.takeException(), isNull);
+      final hero = tester.renderObject<RenderBox>(
+        find.byKey(const Key('onboarding_welcome_hero')),
+      );
+      expect(hero.size.height, inInclusiveRange(180, 300));
+      await tester.ensureVisible(find.byKey(const Key('onboarding_skip')));
+      await tester.pumpAndSettle();
+      expect(find.text('Get started'), findsOneWidget);
+      expect(find.text('Skip for now'), findsOneWidget);
+    });
+  }
 }

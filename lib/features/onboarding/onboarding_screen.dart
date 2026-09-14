@@ -328,12 +328,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     );
 
     if (aspectRatio == null) return hero;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        final height = (width / aspectRatio).clamp(180.0, 300.0);
-        return SizedBox(width: width, height: height, child: hero);
-      },
+    // Not a LayoutBuilder: this sits under IntrinsicHeight, which cannot
+    // measure one (a debug assertion every frame, and a short measure in
+    // release that can clip the welcome step on small phones).
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 180, maxHeight: 300),
+      child: AspectRatio(aspectRatio: aspectRatio, child: hero),
     );
   }
 
