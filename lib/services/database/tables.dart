@@ -69,6 +69,11 @@ class GrowthMeasurements extends Table {
   RealColumn get headCm => real().nullable()();
   TextColumn get note => text().withDefault(const Constant(''))();
   DateTimeColumn get createdAt => dateTime()();
+  /// True until the family server has this row (rows from before sync start true).
+  BoolColumn get pendingSync =>
+      boolean().withDefault(const Constant(true))();
+  /// Deleted on this phone; kept until the delete reaches the server.
+  DateTimeColumn get deletedAt => dateTime().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {id};
@@ -80,6 +85,10 @@ class MilestoneAchievements extends Table {
   TextColumn get milestoneKey => text()();
   DateTimeColumn get achievedAt => dateTime()();
   TextColumn get note => text().withDefault(const Constant(''))();
+  BoolColumn get pendingSync =>
+      boolean().withDefault(const Constant(true))();
+  /// Cleared on this phone; kept until the clear reaches the server.
+  DateTimeColumn get deletedAt => dateTime().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {babyId, milestoneKey};

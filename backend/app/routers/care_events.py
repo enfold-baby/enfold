@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
@@ -59,17 +60,24 @@ async def _get_event_for_family(
 @router.get("", response_model=list[CareEventResponse])
 async def list_care_events(
     child_id: uuid.UUID,
+    since: datetime | None = None,
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> list[CareEvent]:
     family_id = await require_family_id(user, db)
     await _assert_child_access(db, child_id, family_id)
-    rows = await db.execute(
+    query = (
         select(CareEvent)
         .where(CareEvent.child_id == child_id, CareEvent.family_id == family_id)
         .order_by(CareEvent.occurred_at.desc())
-        .limit(200)
     )
+    # Clients that send `since` reconcile deletions over that window, so they
+    # need every row in it. Older app builds send nothing and keep the cap.
+    if since is None:
+        query = query.limit(200)
+    else:
+        query = query.where(CareEvent.occurred_at >= since)
+    rows = await db.execute(query)
     return list(rows.scalars().all())
 
 

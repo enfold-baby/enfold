@@ -44,6 +44,7 @@ class FakePullApi extends EnfoldApiClient {
   Future<List<RemoteCareEvent>> listCareEvents({
     required String token,
     required String childId,
+    DateTime? since,
   }) async {
     return [remoteEvent, ...extraEvents];
   }
@@ -268,6 +269,7 @@ class _StaleThenGoodPullApi extends EnfoldApiClient {
   Future<List<RemoteCareEvent>> listCareEvents({
     required String token,
     required String childId,
+    DateTime? since,
   }) async {
     if (childId == staleId) {
       throw ApiException('Child not found', statusCode: 404);
@@ -300,6 +302,7 @@ class _MultiChildPullApi extends EnfoldApiClient {
   Future<List<RemoteCareEvent>> listCareEvents({
     required String token,
     required String childId,
+    DateTime? since,
   }) async {
     if (childId == 'child-a') {
       return [

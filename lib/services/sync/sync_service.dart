@@ -36,6 +36,7 @@ class SyncService {
   final AppDatabase _db;
 
   static const pullLookbackDays = 2;
+  static final _fullHistorySince = DateTime.utc(2000);
 
   Future<SyncResult> syncAll({
     required AuthSession session,
@@ -48,20 +49,153 @@ class SyncService {
       session: session,
       fullHistory: fullHistory,
     );
-    if (!pullResult.ok) {
-      return SyncResult(
-        pushed: pushResult.pushed,
-        pulled: pullResult.pulled,
-        deleted: pushResult.deleted + pullResult.deleted,
-        error: pullResult.error,
-      );
-    }
+
+    // Growth runs on its own so a failure there never holds back care logs.
+    final growthResult = await syncGrowth(session: session);
 
     return SyncResult(
-      pushed: pushResult.pushed,
-      pulled: pullResult.pulled,
-      deleted: pushResult.deleted + pullResult.deleted,
+      pushed: pushResult.pushed + growthResult.pushed,
+      pulled: pullResult.pulled + growthResult.pulled,
+      deleted: pushResult.deleted + pullResult.deleted + growthResult.deleted,
+      error: pullResult.error ?? growthResult.error,
     );
+  }
+
+  /// Push local growth measurements and milestones, then take the family's
+  /// full list (it is small, so no lookback window).
+  Future<SyncResult> syncGrowth({required AuthSession session}) async {
+    try {
+      final baby = await (_db.select(_db.babies)..limit(1)).getSingleOrNull();
+      if (baby == null) return const SyncResult(pushed: 0);
+
+      final pendingMeasurements = await _db.growthDao.pendingMeasurements(baby.id);
+      final pendingMilestones = await _db.growthDao.pendingMilestones(baby.id);
+
+      var pushed = 0;
+      var deleted = 0;
+      if (pendingMeasurements.isNotEmpty || pendingMilestones.isNotEmpty) {
+        var childId = await _linkedServerChildId(
+          session: session,
+          baby: baby,
+          createIfMissing: true,
+        );
+        if (childId == null) {
+          return const SyncResult(pushed: 0, error: 'Could not link a baby profile');
+        }
+
+        // A stale child link after join/leave: re-link once and retry.
+        Future<void> withChild(Future<void> Function(String childId) send) async {
+          try {
+            await send(childId!);
+          } on ApiException catch (e) {
+            if (!_isChildNotFound(e)) rethrow;
+            childId = await _relinkServerChild(
+              session: session,
+              baby: baby,
+              createIfMissing: true,
+            );
+            if (childId == null) rethrow;
+            await send(childId!);
+          }
+        }
+
+        for (final row in pendingMeasurements) {
+          if (row.deletedAt != null) {
+            try {
+              await _api.deleteGrowthMeasurement(token: session.token, id: row.id);
+            } on ApiException catch (e) {
+              if (e.statusCode != 404) rethrow;
+            }
+            deleted++;
+          } else {
+            await withChild(
+              (id) => _api.putGrowthMeasurement(
+                token: session.token,
+                id: row.id,
+                childId: id,
+                measuredAt: row.measuredAt,
+                weightKg: row.weightKg,
+                lengthCm: row.lengthCm,
+                headCm: row.headCm,
+                note: row.note,
+              ),
+            );
+            pushed++;
+          }
+          await _db.growthDao.markMeasurementPushed(row);
+        }
+
+        final clearedMilestones =
+            pendingMilestones.where((row) => row.deletedAt != null).toList();
+        // A cleared key may sit under any of the family's server children.
+        final familyChildIds = clearedMilestones.isEmpty
+            ? const <String>[]
+            : (await _api.listChildren(session.token)).map((c) => c.id).toList();
+
+        for (final row in pendingMilestones) {
+          if (row.deletedAt != null) {
+            for (final id in familyChildIds) {
+              try {
+                await _api.deleteMilestone(
+                  token: session.token,
+                  childId: id,
+                  milestoneKey: row.milestoneKey,
+                );
+              } on ApiException catch (e) {
+                if (e.statusCode != 404) rethrow;
+              }
+            }
+            deleted++;
+          } else {
+            await withChild(
+              (id) => _api.putMilestone(
+                token: session.token,
+                childId: id,
+                milestoneKey: row.milestoneKey,
+                achievedAt: row.achievedAt,
+                note: row.note,
+              ),
+            );
+            pushed++;
+          }
+          await _db.growthDao.markMilestonePushed(row);
+        }
+      }
+
+      final children = await _api.listChildren(session.token);
+      if (children.isEmpty) {
+        return SyncResult(pushed: pushed, deleted: deleted);
+      }
+      final measurements = <RemoteGrowthMeasurement>[];
+      final milestones = <RemoteMilestone>[];
+      for (final child in children) {
+        try {
+          measurements.addAll(
+            await _api.listGrowthMeasurements(token: session.token, childId: child.id),
+          );
+          milestones.addAll(
+            await _api.listMilestones(token: session.token, childId: child.id),
+          );
+        } on ApiException catch (e) {
+          if (!_isChildNotFound(e)) rethrow;
+        }
+      }
+
+      final pulled = await _db.growthDao.mergeRemoteMeasurements(
+            babyId: baby.id,
+            remote: measurements,
+          ) +
+          await _db.growthDao.mergeRemoteMilestones(
+            babyId: baby.id,
+            remote: milestones,
+          );
+
+      return SyncResult(pushed: pushed, pulled: pulled, deleted: deleted);
+    } on ApiException catch (e) {
+      return SyncResult(pushed: 0, error: e.message);
+    } catch (e) {
+      return SyncResult(pushed: 0, error: e.toString());
+    }
   }
 
   Future<SyncResult> syncPending({required AuthSession session}) async {
@@ -229,6 +363,9 @@ class SyncService {
           final events = await _api.listCareEvents(
             token: session.token,
             childId: child.id,
+            // Deletions are reconciled over this window, so it must come back
+            // complete (the server caps requests without `since` at 200).
+            since: since ?? _fullHistorySince,
           );
           for (final event in events) {
             byId[event.id] = event;

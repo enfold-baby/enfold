@@ -80,6 +80,39 @@ class CareEventResponse(BaseModel):
     updated_at: datetime
 
 
+class GrowthMeasurementUpsert(BaseModel):
+    child_id: uuid.UUID
+    measured_at: datetime
+    weight_kg: float | None = Field(default=None, gt=0, le=100)
+    length_cm: float | None = Field(default=None, gt=0, le=250)
+    head_cm: float | None = Field(default=None, gt=0, le=100)
+    note: str = Field(default="", max_length=2000)
+
+
+class GrowthMeasurementResponse(BaseModel):
+    id: uuid.UUID
+    child_id: uuid.UUID
+    measured_at: datetime
+    weight_kg: float | None
+    length_cm: float | None
+    head_cm: float | None
+    note: str
+    updated_at: datetime
+
+
+class MilestoneUpsert(BaseModel):
+    achieved_at: datetime
+    note: str = Field(default="", max_length=2000)
+
+
+class MilestoneResponse(BaseModel):
+    child_id: uuid.UUID
+    milestone_key: str
+    achieved_at: datetime
+    note: str
+    updated_at: datetime
+
+
 class DeviceRegister(BaseModel):
     platform: str = Field(min_length=1, max_length=32)
     fcm_token: str = Field(min_length=1)

@@ -35,6 +35,7 @@ class FakeEnfoldApi extends EnfoldApiClient {
   Future<List<RemoteCareEvent>> listCareEvents({
     required String token,
     required String childId,
+    DateTime? since,
   }) async {
     return const [];
   }

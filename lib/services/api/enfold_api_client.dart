@@ -117,12 +117,18 @@ class EnfoldApiClient {
     return ChildProfile.fromJson(body);
   }
 
+  /// With [since] the server returns every event from then on; without it,
+  /// only the latest 200.
   Future<List<RemoteCareEvent>> listCareEvents({
     required String token,
     required String childId,
+    DateTime? since,
   }) async {
     final uri = Uri.parse('$_baseUrl/v1/care-events').replace(
-      queryParameters: {'child_id': childId},
+      queryParameters: {
+        'child_id': childId,
+        if (since != null) 'since': since.toUtc().toIso8601String(),
+      },
     );
     final response = await _http.get(uri, headers: _headers(token));
     final body = _decode(response);
@@ -130,6 +136,93 @@ class EnfoldApiClient {
       for (final item in body as List<dynamic>)
         RemoteCareEvent.fromJson(item as Map<String, dynamic>),
     ];
+  }
+
+  Future<List<RemoteGrowthMeasurement>> listGrowthMeasurements({
+    required String token,
+    required String childId,
+  }) async {
+    final uri = Uri.parse('$_baseUrl/v1/growth-measurements').replace(
+      queryParameters: {'child_id': childId},
+    );
+    final body = _decode(await _http.get(uri, headers: _headers(token)));
+    return [
+      for (final item in body as List<dynamic>)
+        RemoteGrowthMeasurement.fromJson(item as Map<String, dynamic>),
+    ];
+  }
+
+  Future<void> putGrowthMeasurement({
+    required String token,
+    required String id,
+    required String childId,
+    required DateTime measuredAt,
+    double? weightKg,
+    double? lengthCm,
+    double? headCm,
+    String note = '',
+  }) async {
+    await _put(
+      '/v1/growth-measurements/$id',
+      {
+        'child_id': childId,
+        'measured_at': measuredAt.toUtc().toIso8601String(),
+        'weight_kg': weightKg,
+        'length_cm': lengthCm,
+        'head_cm': headCm,
+        'note': note,
+      },
+      token: token,
+    );
+  }
+
+  Future<void> deleteGrowthMeasurement({
+    required String token,
+    required String id,
+  }) async {
+    await _delete('/v1/growth-measurements/$id', token: token);
+  }
+
+  Future<List<RemoteMilestone>> listMilestones({
+    required String token,
+    required String childId,
+  }) async {
+    final uri = Uri.parse('$_baseUrl/v1/milestones').replace(
+      queryParameters: {'child_id': childId},
+    );
+    final body = _decode(await _http.get(uri, headers: _headers(token)));
+    return [
+      for (final item in body as List<dynamic>)
+        RemoteMilestone.fromJson(item as Map<String, dynamic>),
+    ];
+  }
+
+  Future<void> putMilestone({
+    required String token,
+    required String childId,
+    required String milestoneKey,
+    required DateTime achievedAt,
+    String note = '',
+  }) async {
+    await _put(
+      '/v1/milestones/$childId/${Uri.encodeComponent(milestoneKey)}',
+      {
+        'achieved_at': achievedAt.toUtc().toIso8601String(),
+        'note': note,
+      },
+      token: token,
+    );
+  }
+
+  Future<void> deleteMilestone({
+    required String token,
+    required String childId,
+    required String milestoneKey,
+  }) async {
+    await _delete(
+      '/v1/milestones/$childId/${Uri.encodeComponent(milestoneKey)}',
+      token: token,
+    );
   }
 
   Future<FamilyInfo> getFamily(String token) async {
@@ -279,6 +372,19 @@ class EnfoldApiClient {
     final body = _decode(response);
     if (body is Map<String, dynamic>) return body;
     return <String, dynamic>{};
+  }
+
+  Future<void> _put(
+    String path,
+    Map<String, dynamic> payload, {
+    String? token,
+  }) async {
+    final response = await _http.put(
+      Uri.parse('$_baseUrl$path'),
+      headers: _headers(token),
+      body: jsonEncode(payload),
+    );
+    _decode(response);
   }
 
   Future<void> _delete(String path, {String? token}) async {

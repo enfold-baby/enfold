@@ -11,6 +11,7 @@ from app.routers import (
     children,
     devices,
     families,
+    growth,
     health,
     support,
 )
@@ -48,6 +49,7 @@ app.include_router(children.router)
 app.include_router(care_events.router)
 app.include_router(devices.router)
 app.include_router(families.router)
+app.include_router(growth.router)
 app.include_router(support.router)
 
 

@@ -35,7 +35,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 14;
+  int get schemaVersion => 15;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -90,6 +90,19 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 14) {
             await m.addColumn(appSettings, appSettings.showAwakeTime);
+          }
+          if (from < 15) {
+            // Existing growth rows default to pending, so they upload once.
+            await m.addColumn(growthMeasurements, growthMeasurements.pendingSync);
+            await m.addColumn(growthMeasurements, growthMeasurements.deletedAt);
+            await m.addColumn(
+              milestoneAchievements,
+              milestoneAchievements.pendingSync,
+            );
+            await m.addColumn(
+              milestoneAchievements,
+              milestoneAchievements.deletedAt,
+            );
           }
         },
       );

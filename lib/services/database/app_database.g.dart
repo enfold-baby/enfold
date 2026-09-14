@@ -2619,6 +2619,32 @@ class $GrowthMeasurementsTable extends GrowthMeasurements
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _pendingSyncMeta = const VerificationMeta(
+    'pendingSync',
+  );
+  @override
+  late final GeneratedColumn<bool> pendingSync = GeneratedColumn<bool>(
+    'pending_sync',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("pending_sync" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2629,6 +2655,8 @@ class $GrowthMeasurementsTable extends GrowthMeasurements
     headCm,
     note,
     createdAt,
+    pendingSync,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2695,6 +2723,21 @@ class $GrowthMeasurementsTable extends GrowthMeasurements
     } else if (isInserting) {
       context.missing(_createdAtMeta);
     }
+    if (data.containsKey('pending_sync')) {
+      context.handle(
+        _pendingSyncMeta,
+        pendingSync.isAcceptableOrUnknown(
+          data['pending_sync']!,
+          _pendingSyncMeta,
+        ),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -2736,6 +2779,14 @@ class $GrowthMeasurementsTable extends GrowthMeasurements
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
       )!,
+      pendingSync: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}pending_sync'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -2755,6 +2806,12 @@ class GrowthMeasurement extends DataClass
   final double? headCm;
   final String note;
   final DateTime createdAt;
+
+  /// True until the family server has this row (rows from before sync start true).
+  final bool pendingSync;
+
+  /// Deleted on this phone; kept until the delete reaches the server.
+  final DateTime? deletedAt;
   const GrowthMeasurement({
     required this.id,
     required this.babyId,
@@ -2764,6 +2821,8 @@ class GrowthMeasurement extends DataClass
     this.headCm,
     required this.note,
     required this.createdAt,
+    required this.pendingSync,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2782,6 +2841,10 @@ class GrowthMeasurement extends DataClass
     }
     map['note'] = Variable<String>(note);
     map['created_at'] = Variable<DateTime>(createdAt);
+    map['pending_sync'] = Variable<bool>(pendingSync);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -2801,6 +2864,10 @@ class GrowthMeasurement extends DataClass
           : Value(headCm),
       note: Value(note),
       createdAt: Value(createdAt),
+      pendingSync: Value(pendingSync),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -2818,6 +2885,8 @@ class GrowthMeasurement extends DataClass
       headCm: serializer.fromJson<double?>(json['headCm']),
       note: serializer.fromJson<String>(json['note']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      pendingSync: serializer.fromJson<bool>(json['pendingSync']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -2832,6 +2901,8 @@ class GrowthMeasurement extends DataClass
       'headCm': serializer.toJson<double?>(headCm),
       'note': serializer.toJson<String>(note),
       'createdAt': serializer.toJson<DateTime>(createdAt),
+      'pendingSync': serializer.toJson<bool>(pendingSync),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -2844,6 +2915,8 @@ class GrowthMeasurement extends DataClass
     Value<double?> headCm = const Value.absent(),
     String? note,
     DateTime? createdAt,
+    bool? pendingSync,
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => GrowthMeasurement(
     id: id ?? this.id,
     babyId: babyId ?? this.babyId,
@@ -2853,6 +2926,8 @@ class GrowthMeasurement extends DataClass
     headCm: headCm.present ? headCm.value : this.headCm,
     note: note ?? this.note,
     createdAt: createdAt ?? this.createdAt,
+    pendingSync: pendingSync ?? this.pendingSync,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   GrowthMeasurement copyWithCompanion(GrowthMeasurementsCompanion data) {
     return GrowthMeasurement(
@@ -2866,6 +2941,10 @@ class GrowthMeasurement extends DataClass
       headCm: data.headCm.present ? data.headCm.value : this.headCm,
       note: data.note.present ? data.note.value : this.note,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      pendingSync: data.pendingSync.present
+          ? data.pendingSync.value
+          : this.pendingSync,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -2879,7 +2958,9 @@ class GrowthMeasurement extends DataClass
           ..write('lengthCm: $lengthCm, ')
           ..write('headCm: $headCm, ')
           ..write('note: $note, ')
-          ..write('createdAt: $createdAt')
+          ..write('createdAt: $createdAt, ')
+          ..write('pendingSync: $pendingSync, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
@@ -2894,6 +2975,8 @@ class GrowthMeasurement extends DataClass
     headCm,
     note,
     createdAt,
+    pendingSync,
+    deletedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -2906,7 +2989,9 @@ class GrowthMeasurement extends DataClass
           other.lengthCm == this.lengthCm &&
           other.headCm == this.headCm &&
           other.note == this.note &&
-          other.createdAt == this.createdAt);
+          other.createdAt == this.createdAt &&
+          other.pendingSync == this.pendingSync &&
+          other.deletedAt == this.deletedAt);
 }
 
 class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
@@ -2918,6 +3003,8 @@ class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
   final Value<double?> headCm;
   final Value<String> note;
   final Value<DateTime> createdAt;
+  final Value<bool> pendingSync;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const GrowthMeasurementsCompanion({
     this.id = const Value.absent(),
@@ -2928,6 +3015,8 @@ class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
     this.headCm = const Value.absent(),
     this.note = const Value.absent(),
     this.createdAt = const Value.absent(),
+    this.pendingSync = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   GrowthMeasurementsCompanion.insert({
@@ -2939,6 +3028,8 @@ class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
     this.headCm = const Value.absent(),
     this.note = const Value.absent(),
     required DateTime createdAt,
+    this.pendingSync = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        babyId = Value(babyId),
@@ -2953,6 +3044,8 @@ class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
     Expression<double>? headCm,
     Expression<String>? note,
     Expression<DateTime>? createdAt,
+    Expression<bool>? pendingSync,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2964,6 +3057,8 @@ class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
       if (headCm != null) 'head_cm': headCm,
       if (note != null) 'note': note,
       if (createdAt != null) 'created_at': createdAt,
+      if (pendingSync != null) 'pending_sync': pendingSync,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2977,6 +3072,8 @@ class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
     Value<double?>? headCm,
     Value<String>? note,
     Value<DateTime>? createdAt,
+    Value<bool>? pendingSync,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return GrowthMeasurementsCompanion(
@@ -2988,6 +3085,8 @@ class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
       headCm: headCm ?? this.headCm,
       note: note ?? this.note,
       createdAt: createdAt ?? this.createdAt,
+      pendingSync: pendingSync ?? this.pendingSync,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3019,6 +3118,12 @@ class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
+    if (pendingSync.present) {
+      map['pending_sync'] = Variable<bool>(pendingSync.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3036,6 +3141,8 @@ class GrowthMeasurementsCompanion extends UpdateCompanion<GrowthMeasurement> {
           ..write('headCm: $headCm, ')
           ..write('note: $note, ')
           ..write('createdAt: $createdAt, ')
+          ..write('pendingSync: $pendingSync, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3089,12 +3196,40 @@ class $MilestoneAchievementsTable extends MilestoneAchievements
     requiredDuringInsert: false,
     defaultValue: const Constant(''),
   );
+  static const VerificationMeta _pendingSyncMeta = const VerificationMeta(
+    'pendingSync',
+  );
+  @override
+  late final GeneratedColumn<bool> pendingSync = GeneratedColumn<bool>(
+    'pending_sync',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("pending_sync" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     babyId,
     milestoneKey,
     achievedAt,
     note,
+    pendingSync,
+    deletedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3141,6 +3276,21 @@ class $MilestoneAchievementsTable extends MilestoneAchievements
         note.isAcceptableOrUnknown(data['note']!, _noteMeta),
       );
     }
+    if (data.containsKey('pending_sync')) {
+      context.handle(
+        _pendingSyncMeta,
+        pendingSync.isAcceptableOrUnknown(
+          data['pending_sync']!,
+          _pendingSyncMeta,
+        ),
+      );
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
     return context;
   }
 
@@ -3166,6 +3316,14 @@ class $MilestoneAchievementsTable extends MilestoneAchievements
         DriftSqlType.string,
         data['${effectivePrefix}note'],
       )!,
+      pendingSync: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}pending_sync'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
     );
   }
 
@@ -3181,11 +3339,17 @@ class MilestoneAchievement extends DataClass
   final String milestoneKey;
   final DateTime achievedAt;
   final String note;
+  final bool pendingSync;
+
+  /// Cleared on this phone; kept until the clear reaches the server.
+  final DateTime? deletedAt;
   const MilestoneAchievement({
     required this.babyId,
     required this.milestoneKey,
     required this.achievedAt,
     required this.note,
+    required this.pendingSync,
+    this.deletedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3194,6 +3358,10 @@ class MilestoneAchievement extends DataClass
     map['milestone_key'] = Variable<String>(milestoneKey);
     map['achieved_at'] = Variable<DateTime>(achievedAt);
     map['note'] = Variable<String>(note);
+    map['pending_sync'] = Variable<bool>(pendingSync);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
     return map;
   }
 
@@ -3203,6 +3371,10 @@ class MilestoneAchievement extends DataClass
       milestoneKey: Value(milestoneKey),
       achievedAt: Value(achievedAt),
       note: Value(note),
+      pendingSync: Value(pendingSync),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
     );
   }
 
@@ -3216,6 +3388,8 @@ class MilestoneAchievement extends DataClass
       milestoneKey: serializer.fromJson<String>(json['milestoneKey']),
       achievedAt: serializer.fromJson<DateTime>(json['achievedAt']),
       note: serializer.fromJson<String>(json['note']),
+      pendingSync: serializer.fromJson<bool>(json['pendingSync']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
   @override
@@ -3226,6 +3400,8 @@ class MilestoneAchievement extends DataClass
       'milestoneKey': serializer.toJson<String>(milestoneKey),
       'achievedAt': serializer.toJson<DateTime>(achievedAt),
       'note': serializer.toJson<String>(note),
+      'pendingSync': serializer.toJson<bool>(pendingSync),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
     };
   }
 
@@ -3234,11 +3410,15 @@ class MilestoneAchievement extends DataClass
     String? milestoneKey,
     DateTime? achievedAt,
     String? note,
+    bool? pendingSync,
+    Value<DateTime?> deletedAt = const Value.absent(),
   }) => MilestoneAchievement(
     babyId: babyId ?? this.babyId,
     milestoneKey: milestoneKey ?? this.milestoneKey,
     achievedAt: achievedAt ?? this.achievedAt,
     note: note ?? this.note,
+    pendingSync: pendingSync ?? this.pendingSync,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
   );
   MilestoneAchievement copyWithCompanion(MilestoneAchievementsCompanion data) {
     return MilestoneAchievement(
@@ -3250,6 +3430,10 @@ class MilestoneAchievement extends DataClass
           ? data.achievedAt.value
           : this.achievedAt,
       note: data.note.present ? data.note.value : this.note,
+      pendingSync: data.pendingSync.present
+          ? data.pendingSync.value
+          : this.pendingSync,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
     );
   }
 
@@ -3259,13 +3443,22 @@ class MilestoneAchievement extends DataClass
           ..write('babyId: $babyId, ')
           ..write('milestoneKey: $milestoneKey, ')
           ..write('achievedAt: $achievedAt, ')
-          ..write('note: $note')
+          ..write('note: $note, ')
+          ..write('pendingSync: $pendingSync, ')
+          ..write('deletedAt: $deletedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(babyId, milestoneKey, achievedAt, note);
+  int get hashCode => Object.hash(
+    babyId,
+    milestoneKey,
+    achievedAt,
+    note,
+    pendingSync,
+    deletedAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3273,7 +3466,9 @@ class MilestoneAchievement extends DataClass
           other.babyId == this.babyId &&
           other.milestoneKey == this.milestoneKey &&
           other.achievedAt == this.achievedAt &&
-          other.note == this.note);
+          other.note == this.note &&
+          other.pendingSync == this.pendingSync &&
+          other.deletedAt == this.deletedAt);
 }
 
 class MilestoneAchievementsCompanion
@@ -3282,12 +3477,16 @@ class MilestoneAchievementsCompanion
   final Value<String> milestoneKey;
   final Value<DateTime> achievedAt;
   final Value<String> note;
+  final Value<bool> pendingSync;
+  final Value<DateTime?> deletedAt;
   final Value<int> rowid;
   const MilestoneAchievementsCompanion({
     this.babyId = const Value.absent(),
     this.milestoneKey = const Value.absent(),
     this.achievedAt = const Value.absent(),
     this.note = const Value.absent(),
+    this.pendingSync = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MilestoneAchievementsCompanion.insert({
@@ -3295,6 +3494,8 @@ class MilestoneAchievementsCompanion
     required String milestoneKey,
     required DateTime achievedAt,
     this.note = const Value.absent(),
+    this.pendingSync = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : babyId = Value(babyId),
        milestoneKey = Value(milestoneKey),
@@ -3304,6 +3505,8 @@ class MilestoneAchievementsCompanion
     Expression<String>? milestoneKey,
     Expression<DateTime>? achievedAt,
     Expression<String>? note,
+    Expression<bool>? pendingSync,
+    Expression<DateTime>? deletedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3311,6 +3514,8 @@ class MilestoneAchievementsCompanion
       if (milestoneKey != null) 'milestone_key': milestoneKey,
       if (achievedAt != null) 'achieved_at': achievedAt,
       if (note != null) 'note': note,
+      if (pendingSync != null) 'pending_sync': pendingSync,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3320,6 +3525,8 @@ class MilestoneAchievementsCompanion
     Value<String>? milestoneKey,
     Value<DateTime>? achievedAt,
     Value<String>? note,
+    Value<bool>? pendingSync,
+    Value<DateTime?>? deletedAt,
     Value<int>? rowid,
   }) {
     return MilestoneAchievementsCompanion(
@@ -3327,6 +3534,8 @@ class MilestoneAchievementsCompanion
       milestoneKey: milestoneKey ?? this.milestoneKey,
       achievedAt: achievedAt ?? this.achievedAt,
       note: note ?? this.note,
+      pendingSync: pendingSync ?? this.pendingSync,
+      deletedAt: deletedAt ?? this.deletedAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3346,6 +3555,12 @@ class MilestoneAchievementsCompanion
     if (note.present) {
       map['note'] = Variable<String>(note.value);
     }
+    if (pendingSync.present) {
+      map['pending_sync'] = Variable<bool>(pendingSync.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3359,6 +3574,8 @@ class MilestoneAchievementsCompanion
           ..write('milestoneKey: $milestoneKey, ')
           ..write('achievedAt: $achievedAt, ')
           ..write('note: $note, ')
+          ..write('pendingSync: $pendingSync, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5345,6 +5562,8 @@ typedef $$GrowthMeasurementsTableCreateCompanionBuilder =
       Value<double?> headCm,
       Value<String> note,
       required DateTime createdAt,
+      Value<bool> pendingSync,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$GrowthMeasurementsTableUpdateCompanionBuilder =
@@ -5357,6 +5576,8 @@ typedef $$GrowthMeasurementsTableUpdateCompanionBuilder =
       Value<double?> headCm,
       Value<String> note,
       Value<DateTime> createdAt,
+      Value<bool> pendingSync,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -5406,6 +5627,16 @@ class $$GrowthMeasurementsTableFilterComposer
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get pendingSync => $composableBuilder(
+    column: $table.pendingSync,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5458,6 +5689,16 @@ class $$GrowthMeasurementsTableOrderingComposer
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get pendingSync => $composableBuilder(
+    column: $table.pendingSync,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$GrowthMeasurementsTableAnnotationComposer
@@ -5494,6 +5735,14 @@ class $$GrowthMeasurementsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get pendingSync => $composableBuilder(
+    column: $table.pendingSync,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 }
 
 class $$GrowthMeasurementsTableTableManager
@@ -5544,6 +5793,8 @@ class $$GrowthMeasurementsTableTableManager
                 Value<double?> headCm = const Value.absent(),
                 Value<String> note = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
+                Value<bool> pendingSync = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GrowthMeasurementsCompanion(
                 id: id,
@@ -5554,6 +5805,8 @@ class $$GrowthMeasurementsTableTableManager
                 headCm: headCm,
                 note: note,
                 createdAt: createdAt,
+                pendingSync: pendingSync,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -5566,6 +5819,8 @@ class $$GrowthMeasurementsTableTableManager
                 Value<double?> headCm = const Value.absent(),
                 Value<String> note = const Value.absent(),
                 required DateTime createdAt,
+                Value<bool> pendingSync = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => GrowthMeasurementsCompanion.insert(
                 id: id,
@@ -5576,6 +5831,8 @@ class $$GrowthMeasurementsTableTableManager
                 headCm: headCm,
                 note: note,
                 createdAt: createdAt,
+                pendingSync: pendingSync,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -5613,6 +5870,8 @@ typedef $$MilestoneAchievementsTableCreateCompanionBuilder =
       required String milestoneKey,
       required DateTime achievedAt,
       Value<String> note,
+      Value<bool> pendingSync,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 typedef $$MilestoneAchievementsTableUpdateCompanionBuilder =
@@ -5621,6 +5880,8 @@ typedef $$MilestoneAchievementsTableUpdateCompanionBuilder =
       Value<String> milestoneKey,
       Value<DateTime> achievedAt,
       Value<String> note,
+      Value<bool> pendingSync,
+      Value<DateTime?> deletedAt,
       Value<int> rowid,
     });
 
@@ -5650,6 +5911,16 @@ class $$MilestoneAchievementsTableFilterComposer
 
   ColumnFilters<String> get note => $composableBuilder(
     column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get pendingSync => $composableBuilder(
+    column: $table.pendingSync,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5682,6 +5953,16 @@ class $$MilestoneAchievementsTableOrderingComposer
     column: $table.note,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get pendingSync => $composableBuilder(
+    column: $table.pendingSync,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$MilestoneAchievementsTableAnnotationComposer
@@ -5708,6 +5989,14 @@ class $$MilestoneAchievementsTableAnnotationComposer
 
   GeneratedColumn<String> get note =>
       $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<bool> get pendingSync => $composableBuilder(
+    column: $table.pendingSync,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 }
 
 class $$MilestoneAchievementsTableTableManager
@@ -5760,12 +6049,16 @@ class $$MilestoneAchievementsTableTableManager
                 Value<String> milestoneKey = const Value.absent(),
                 Value<DateTime> achievedAt = const Value.absent(),
                 Value<String> note = const Value.absent(),
+                Value<bool> pendingSync = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MilestoneAchievementsCompanion(
                 babyId: babyId,
                 milestoneKey: milestoneKey,
                 achievedAt: achievedAt,
                 note: note,
+                pendingSync: pendingSync,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -5774,12 +6067,16 @@ class $$MilestoneAchievementsTableTableManager
                 required String milestoneKey,
                 required DateTime achievedAt,
                 Value<String> note = const Value.absent(),
+                Value<bool> pendingSync = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => MilestoneAchievementsCompanion.insert(
                 babyId: babyId,
                 milestoneKey: milestoneKey,
                 achievedAt: achievedAt,
                 note: note,
+                pendingSync: pendingSync,
+                deletedAt: deletedAt,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

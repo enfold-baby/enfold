@@ -99,3 +99,58 @@ class RemoteCareEvent {
     );
   }
 }
+
+class RemoteGrowthMeasurement {
+  const RemoteGrowthMeasurement({
+    required this.id,
+    required this.childId,
+    required this.measuredAt,
+    this.weightKg,
+    this.lengthCm,
+    this.headCm,
+    this.note = '',
+  });
+
+  final String id;
+  final String childId;
+  final DateTime measuredAt;
+  final double? weightKg;
+  final double? lengthCm;
+  final double? headCm;
+  final String note;
+
+  factory RemoteGrowthMeasurement.fromJson(Map<String, dynamic> json) {
+    return RemoteGrowthMeasurement(
+      id: json['id'] as String,
+      childId: json['child_id'] as String,
+      measuredAt: DateTime.parse(json['measured_at'] as String).toLocal(),
+      weightKg: (json['weight_kg'] as num?)?.toDouble(),
+      lengthCm: (json['length_cm'] as num?)?.toDouble(),
+      headCm: (json['head_cm'] as num?)?.toDouble(),
+      note: json['note'] as String? ?? '',
+    );
+  }
+}
+
+class RemoteMilestone {
+  const RemoteMilestone({
+    required this.childId,
+    required this.milestoneKey,
+    required this.achievedAt,
+    this.note = '',
+  });
+
+  final String childId;
+  final String milestoneKey;
+  final DateTime achievedAt;
+  final String note;
+
+  factory RemoteMilestone.fromJson(Map<String, dynamic> json) {
+    return RemoteMilestone(
+      childId: json['child_id'] as String,
+      milestoneKey: json['milestone_key'] as String,
+      achievedAt: DateTime.parse(json['achieved_at'] as String).toLocal(),
+      note: json['note'] as String? ?? '',
+    );
+  }
+}

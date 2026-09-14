@@ -36,6 +36,7 @@ class SyncTrackingApi extends EnfoldApiClient {
   Future<List<RemoteCareEvent>> listCareEvents({
     required String token,
     required String childId,
+    DateTime? since,
   }) async {
     return [
       for (final id in serverEvents)
