@@ -10,11 +10,23 @@ Copy one of these into a fresh chat:
 ## General resume (default)
 
 ```
-Read feature/SESSION.md, feature/PICKUP.md, and feature/todos/README.md.
-Enfold 1.0.0+20, Drift schema v13.
+Read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md and ~/Desktop/LAUNCH-CHECKLIST.md (pickup at the top).
+Enfold 1.0.1+25, Drift schema v14. Play: 1.0.0+22 in review, 1.0.1+24 on internal testing. App Store: 1.0.1 (24) in review.
 Debug API → http://10.0.2.2:8282 (Android emulator); release → https://api.enfold.baby.
-Local docker: docker compose up -d. Contact: support@enfold.baby.
-Keep markdown current as we ship. Commit local no coauthor; user pushes GitHub.
+Local docker: docker compose up -d. Contact: support@enfold.baby. Prod VPS is updated by copying files (ops/README.md).
+Keep markdown current as we ship. No em dashes. Logins, legal agreements, payments and public posts are Raul's keyboard.
+```
+
+---
+
+## Stripe supporters galaxy: sandbox end-to-end test
+
+```
+Enfold: test the Stripe supporters galaxy end to end in sandbox mode, then fix what breaks.
+Read first: ops/README.md (Supporters wall), ~/Desktop/LAUNCH-CHECKLIST.md pickup, landing/public/support/index.html, landing/public/galaxy/, backend/app/routers/support.py and the Stripe webhook route.
+Facts: Stripe account acct_1UDMHdE71DM0rnaD. ?stripe=test on https://enfold.baby/support/ or /galaxy/ switches to 4 sandbox Payment Links (donate.stripe.com/test_..., tiers tea, nest, moon, wish). Webhook checkout.session.completed -> POST https://api.enfold.baby/v1/stripe/webhook (sandbox secret STRIPE_WEBHOOK_SECRET_TEST in the VPS .env). Wall: GET https://api.enfold.baby/v1/support/wall?mode=test (1 test supporter so far: GLOBINARY, nest, 12 EUR, 2026-09-12). Icons: /v1/support/icon/<id>.
+Test: pay each tier with 4242 4242 4242 4242 (type keystrokes; card fields reject programmatic fill). Cover: show my moon Yes with a link, Yes without a link, No (must not appear on the wall), with company and tax ID. Then check the Stripe sandbox webhook deliveries are 2xx, the wall JSON count, total and tiers update, /support/?stripe=test and /galaxy/?stripe=test show the new moons (desktop and 390px, light and dark), ?mode=live stays empty, and the payment's Checkout summary shows name, company, address and tax ID.
+Rules: sandbox only, never live links or real cards. Stripe dashboard login is Raul's keyboard. No em dashes. The prod VPS is updated by copying files, not git pull (ops/README.md, landing/deploy.sh needs SSHPASS). Write findings back to the checklist and ops/README.md; commit and push fixes.
 ```
 
 ---

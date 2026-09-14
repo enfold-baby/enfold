@@ -1,15 +1,16 @@
 # Enfold.baby — Project Kickoff
 
-> **Pickup 2026-09-13.** App submitted to Google Play (in review). Launch plan and per-item evidence live in
-> `~/Desktop/LAUNCH-CHECKLIST.md` (outside the repo). Prod deploy facts and the supporters wall are in
-> `ops/README.md`. Reviewer account credentials: `~/Documents/enfold/play-reviewer-account.md`.
+> **Pickup 2026-09-14.** Google Play: 1.0.0+22 in review, 1.0.1+24 on internal testing. App Store: "Enfold: Baby Tracker" 1.0.1 (24)
+> waiting for review; TestFlight group "Raul's devices". Launch plan and evidence: `~/Desktop/LAUNCH-CHECKLIST.md` (outside the repo).
+> Prod deploy facts and the supporters wall: `ops/README.md`. Store listing: `assets/brand/store/app-store-listing.md`.
+> Reviewer account: `~/Documents/enfold/play-reviewer-account.md`. Next: Stripe galaxy sandbox test (`feature/PICKUP.md`).
 
 
 > **Read this first** when starting a fresh conversation in this repo.  
 > **Domain:** [enfold.baby](https://enfold.baby)  
 > **Folder:** this repo (`bloomdue_baby` on disk; product name **Enfold**)  
 > **Stack:** Flutter + Dart · Android + iOS · free globally  
-> **Current:** `1.0.0+20` · Drift schema v13 · 4-tab shell + Add FAB · VPS API live · FCM + SES mail live
+> **Current:** `1.0.1+25` · Drift schema v14 · 4-tab shell + Add FAB · VPS API live · FCM (Android + iOS APNs) + SES mail live
 
 **Resuming work?** → [`feature/SESSION.md`](./feature/SESSION.md) · **What's next?** → [`feature/todos/README.md`](./feature/todos/README.md) · **Keep docs fresh:** [`feature/MAINTAIN.md`](./feature/MAINTAIN.md)
 
