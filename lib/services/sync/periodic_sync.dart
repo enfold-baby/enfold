@@ -64,6 +64,11 @@ class PeriodicSyncController with WidgetsBindingObserver {
     _running = true;
     try {
       await _ref.read(syncActionsProvider).syncIfSignedIn();
+    } catch (error, stack) {
+      // Background sync stays quiet: a flaky network or a widget that went
+      // away mid-sync must not surface as an unhandled async error. The next
+      // tick or a pull-to-refresh retries.
+      debugPrint('Periodic sync failed: $error\n$stack');
     } finally {
       _running = false;
     }
