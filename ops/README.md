@@ -59,3 +59,6 @@ Found in the end-to-end sandbox test (2026-09-14):
   invoice PDF"). Stripe charges 0.4% per invoice, capped at 2 USD, in live. Turned on for the sandbox
   moon link only (`plink_1UEmrfE71DM0rnaDI7pZg9jj`) to produce an example for the accountant; live
   links unchanged. A Stripe invoice is not a Romanian e-Factura.
+  The sample PDF (XTDRXNKD-0001) shows gaps to fix before real use: it reads "due" and "Pay online"
+  although paid, the seller block lacks the company name, CUI and address (Stripe invoice template
+  settings), the buyer CUI custom field is not printed, and the account phone number is.
