@@ -73,7 +73,7 @@ No third-party content.
 ## App Review information
 Sign-in required: yes (only for sync and partner sharing; the rest works without an account).
 Account: the Play reviewer account in ~/Documents/enfold/play-reviewer-account.md (email plus fixed 6-digit code, no email is sent).
-Contact: Raul Glodean, support@enfold.baby
+Contact: Raul Glodean, +40740425629, support@enfold.baby (same phone as the FormKiosk review contact)
 
 Notes:
 Enfold works without an account. To see sync and partner sharing, open Settings, Account & sync, enter the reviewer email, tap Send code, then enter the 6-digit code from the sign-in fields above (no email is sent for this account). The account belongs to a family with a child named Mia, a second caregiver ("Dad (reviewer)") and sample logs from both, so the Today screen, Logs and partner attribution are populated. Push notifications are optional and only used for partner activity and gentle reminders. The app is free with no in-app purchases; a donation page exists only on the website and is not linked from the app. Account deletion: Settings, Account & sync, Delete my account.
