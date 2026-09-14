@@ -1,4 +1,4 @@
-# Pickup points — resume a session
+# Pickup points: resume a session
 
 **Every new session:** read [`SESSION.md`](./SESSION.md) first (latest handoff).  
 **Every end of session:** update markdown per [`MAINTAIN.md`](./MAINTAIN.md). Keep docs in lockstep as we ship.
@@ -92,7 +92,7 @@ Server already allows many children; the app still assumes one local baby.
 
 ```
 Read feature/todos/CONTENT_REVIEW.md.
-25 learn cards in content/cards/ — physician review still pending.
+25 learn cards in content/cards/: physician review still pending.
 ```
 
 ---
