@@ -27,6 +27,10 @@ def test_tiers_and_links() -> None:
     assert tier_for(1200, 1) == "nest"
     assert tier_for(3000, 1) == "moon"
     assert tier_for(700, 7) == "wish"
+    # A 5 EUR wish (quantity 5, no line items in the webhook) must stay a wish.
+    assert tier_for(500, 1, "plink_1UEmQZE71DM0rnaDhXL4R4MW") == "wish"
+    assert tier_for(500, 1, "plink_unknown") == "tea"
+    assert tier_for(500, 1, "plink_1UEms5E71DM0rnaDlUHfgIjf") == "wish"  # sandbox wish
     assert clean_link("enfold.baby") == "https://enfold.baby"
     assert clean_link("javascript:alert(1)") == ""
     assert clean_link("  ") == ""
@@ -59,3 +63,22 @@ def test_parse_checkout_session_reads_custom_fields() -> None:
     assert data["business_name"].startswith("GLOBINARY")
     assert data["address"]["city"] == "Baia Mare" and "line2" not in data["address"]
     assert data["livemode"] is False
+
+
+def test_icon_candidates_prefer_declared_icons() -> None:
+    from app.routers.support import icon_candidates
+
+    html = """<head>
+      <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+      <link rel="icon" href="/favicon.png?v=1" type="image/png" />
+      <link rel='shortcut icon' href='https://cdn.example.com/i.ico'>
+      <link rel="icon" href="http://insecure.example.com/x.png">
+      <link rel="stylesheet" href="/styles.css" />
+    </head>"""
+    assert icon_candidates(html, "https://enfold.baby/") == [
+        "https://enfold.baby/favicon.png?v=1",
+        "https://cdn.example.com/i.ico",
+        "https://enfold.baby/apple-touch-icon.png",
+        "https://enfold.baby/favicon.ico",
+    ]
+    assert icon_candidates("<html></html>", "https://globinary.io/en") == ["https://globinary.io/favicon.ico"]

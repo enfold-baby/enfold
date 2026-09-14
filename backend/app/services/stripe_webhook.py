@@ -11,6 +11,21 @@ TOLERANCE_SECONDS = 300
 
 TIER_BY_AMOUNT = {500: "tea", 1200: "nest", 3000: "moon"}
 
+# Checkout webhooks carry no line items, so the wish link (1 EUR x quantity) is
+# only recognisable by its Payment Link id. Amount is the fallback for unknown links.
+TIER_BY_PAYMENT_LINK = {
+    # live
+    "plink_1UEmN3E71DM0rnaD7gkYSGom": "tea",
+    "plink_1UEmOPE71DM0rnaDVWWjUsdC": "nest",
+    "plink_1UEmOkE71DM0rnaDgy4tcZpN": "moon",
+    "plink_1UEmQZE71DM0rnaDhXL4R4MW": "wish",
+    # sandbox (test mode)
+    "plink_1UEmqsE71DM0rnaD78jM3Ea3": "tea",
+    "plink_1UEmrHE71DM0rnaDKIyadCIS": "nest",
+    "plink_1UEmrfE71DM0rnaDI7pZg9jj": "moon",
+    "plink_1UEms5E71DM0rnaDlUHfgIjf": "wish",
+}
+
 
 def verify_signature(payload: bytes, header: str, secret: str, now: float | None = None) -> bool:
     """Stripe-Signature: t=<ts>,v1=<hex>[,v1=<hex>...]; HMAC-SHA256 of "<ts>.<payload>"."""
@@ -37,7 +52,9 @@ def verify_signature(payload: bytes, header: str, secret: str, now: float | None
     return any(hmac.compare_digest(expected, candidate) for candidate in v1)
 
 
-def tier_for(amount_cents: int, quantity: int) -> str:
+def tier_for(amount_cents: int, quantity: int, payment_link: str = "") -> str:
+    if payment_link in TIER_BY_PAYMENT_LINK:
+        return TIER_BY_PAYMENT_LINK[payment_link]
     if quantity > 1:
         return "wish"
     return TIER_BY_AMOUNT.get(amount_cents, "wish")
@@ -91,7 +108,7 @@ def parse_checkout_session(session: dict) -> dict:
         "livemode": bool(session.get("livemode", True)),
         "amount_cents": amount,
         "currency": str(session.get("currency") or "eur").lower(),
-        "tier": tier_for(amount, quantity),
+        "tier": tier_for(amount, quantity, str(session.get("payment_link") or "")),
         "email": str(details.get("email") or "")[:255],
         "full_name": str(details.get("name") or "")[:255],
         "business_name": str((session.get("business_name") or details.get("business_name") or ""))[:255],

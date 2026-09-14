@@ -100,7 +100,7 @@
         <div class="galaxy-card" id="galaxy-card" hidden></div>
         <div class="galaxy-hud">
           <span class="pill" id="galaxy-hint">Drag to travel · scroll to zoom · tap a moon</span>
-          <a class="pill" href="/support/#donate">Plant your own moon</a>
+          <a class="pill" id="galaxy-plant" href="/support/#support">Plant your own moon</a>
         </div>
       </div>
     </main>
@@ -109,6 +109,7 @@
       (function () {
         var testMode = /[?&]stripe=test(&|$)/.test(location.search);
         var api = "https://api.enfold.baby/v1/support/wall" + (testMode ? "?mode=test" : "");
+        if (testMode) { document.getElementById("galaxy-plant").href = "/support/?stripe=test#support"; }
         var canvas = document.getElementById("galaxy");
         var wrap = document.getElementById("galaxy-wrap");
         var card = document.getElementById("galaxy-card");
