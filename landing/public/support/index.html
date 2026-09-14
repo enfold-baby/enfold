@@ -149,7 +149,7 @@
             <div class="wall-stat"><strong id="wall-tea">0</strong><span>warm bottles</span></div>
             <div class="wall-stat"><strong id="wall-nest">0</strong><span>extra hours of sleep</span></div>
             <div class="wall-stat"><strong id="wall-moon">0</strong><span>whole quiet nights</span></div>
-            <div class="wall-stat"><strong id="wall-wish">0</strong><span>chosen amounts</span></div>
+            <div class="wall-stat"><strong id="wall-climate">€0.00</strong><span>to carbon removal (1%)</span></div>
           </div>
           <ul class="wall-moons" id="wall-moons" aria-label="Named supporters"></ul>
           <p class="help-status" id="wall-empty">
@@ -351,7 +351,9 @@
               : "No moons yet. The first one will hang at the centre of the galaxy.";
             document.getElementById("wall-count").textContent = d.count;
             document.getElementById("wall-total").textContent = euro(d.total_cents);
-            ["tea", "nest", "moon", "wish"].forEach(function (k) {
+            // Stripe Climate gets 1% of every moon.
+            document.getElementById("wall-climate").textContent = "€" + (d.total_cents / 10000).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            ["tea", "nest", "moon"].forEach(function (k) {
               document.getElementById("wall-" + k).textContent = d.tiers[k] || 0;
             });
             var list = document.getElementById("wall-moons");
