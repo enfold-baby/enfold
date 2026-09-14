@@ -69,3 +69,7 @@ Found in the end-to-end sandbox test (2026-09-14):
   double tap and `Home` fly back. Falling stars every 4 to 13 seconds, none with reduced motion.
   Local performance check: `http://127.0.0.1:8283/galaxy/?demo=500` (fake moons, localhost only);
   500 and 2000 moons held 60 fps in headless Chrome on 2026-09-14.
+  The engine lives in `landing/public/galaxy/galaxy.js` (`EnfoldGalaxy.mount`) and is shared: `/galaxy/`
+  mounts it interactive, and the `/support/` hero mounts it as a drifting preview of the first 40
+  moons (no dragging inside the page, paused while scrolled away, still with reduced motion). Bump the
+  `?v=` on both script tags when the engine changes.

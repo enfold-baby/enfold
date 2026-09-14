@@ -34,7 +34,7 @@
     <meta name="twitter:image" content="https://enfold.baby/og-image.jpg?v=20260902-brand" />
     <link rel="preload" href="/fonts/Nunito-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="/fonts/Fraunces-SemiBold.ttf" as="font" type="font/ttf" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=20260912-wall" />
+    <link rel="stylesheet" href="/styles.css?v=20260914-hero" />
   </head>
   <body class="help-page">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -55,11 +55,7 @@
 
     <main id="main">
       <section class="help-sky" id="help-sky" aria-labelledby="help-sky-title">
-        <div class="help-sky-stars" id="help-stars" aria-hidden="true"></div>
-        <button type="button" class="help-moon" id="help-moon" aria-describedby="help-sky-note">
-          <span class="help-moon-face" aria-hidden="true"></span>
-          <span class="help-moon-label">Tap the moon</span>
-        </button>
+        <canvas class="help-sky-galaxy" id="help-galaxy" aria-hidden="true"></canvas>
         <div class="help-sky-copy section-shell">
           <p class="eyebrow eyebrow-on-night"><span class="eyebrow-dot"></span>The village</p>
           <h1 id="help-sky-title">Keep the night-light on.</h1>
@@ -67,9 +63,11 @@
             Enfold is free, with no ads in the app. If a 3am feed felt a little less lonely,
             you can pass the glow to the next parent, or plant a moon so we can keep building.
           </p>
-          <p class="help-sky-note" id="help-sky-note">
-            Each tap leaves a star in this sky (on your device). <span id="help-star-count">0 night-lights in this browser.</span>
-          </p>
+          <div class="help-sky-actions">
+            <a class="button button-cream" id="help-galaxy-link" href="/galaxy/">Travel the galaxy</a>
+            <a class="button button-on-night" href="#support">Plant a moon</a>
+          </div>
+          <p class="help-sky-note" id="help-sky-note" aria-live="polite">Every moon in this sky is a real supporter.</p>
         </div>
       </section>
 
@@ -265,54 +263,8 @@
         };
         var STRIPE_LINKS = /[?&]stripe=test(&|$)/.test(location.search) ? TEST_LINKS : LIVE_LINKS;
 
-        var stars = document.getElementById("help-stars");
-        var countEl = document.getElementById("help-star-count");
-        var moon = document.getElementById("help-moon");
-        var sky = document.getElementById("help-sky");
         var statusShare = document.getElementById("help-share-status");
         var statusDonate = document.getElementById("help-donate-status");
-        var KEY = "enfoldNightLights";
-
-        function lights() {
-          try {
-            return parseInt(localStorage.getItem(KEY) || "0", 10) || 0;
-          } catch (e) {
-            return 0;
-          }
-        }
-
-        function setLights(n) {
-          try {
-            localStorage.setItem(KEY, String(n));
-          } catch (e) {}
-          countEl.textContent =
-            n === 1 ? "1 night-light in this browser." : n + " night-lights in this browser.";
-        }
-
-        function addStar(xPct, yPct, twinkle) {
-          var star = document.createElement("span");
-          star.className = "help-star" + (twinkle ? " help-star--new" : "");
-          star.style.left = xPct + "%";
-          star.style.top = yPct + "%";
-          stars.appendChild(star);
-        }
-
-        for (var i = 0; i < 36; i++) {
-          addStar(Math.random() * 96 + 2, Math.random() * 72 + 6, false);
-        }
-        setLights(lights());
-
-        function plantStar() {
-          addStar(8 + Math.random() * 84, 10 + Math.random() * 55, true);
-          setLights(lights() + 1);
-        }
-
-        moon.addEventListener("click", plantStar);
-        sky.addEventListener("click", function (event) {
-          if (event.target === moon || moon.contains(event.target)) return;
-          if (event.target.closest(".help-sky-copy")) return;
-          plantStar();
-        });
 
         function copyNote() {
           var done = function () {
@@ -368,17 +320,35 @@
         });
       })();
     </script>
+    <script src="/galaxy/galaxy.js?v=20260914-hero"></script>
     <script>
       (function () {
         var testMode = /[?&]stripe=test(&|$)/.test(location.search);
         var api = "https://api.enfold.baby/v1/support/wall" + (testMode ? "?mode=test" : "");
-        if (testMode) { document.getElementById("wall-galaxy-link").href = "/galaxy/?stripe=test"; }
+        if (testMode) {
+          document.getElementById("wall-galaxy-link").href = "/galaxy/?stripe=test";
+          document.getElementById("help-galaxy-link").href = "/galaxy/?stripe=test";
+        }
+        // The hero is a drifting window onto the real galaxy (no dragging inside the page).
+        var hero = window.EnfoldGalaxy ? window.EnfoldGalaxy.mount({
+          canvas: document.getElementById("help-galaxy"),
+          wrap: document.getElementById("help-sky"),
+          interactive: false,
+          previewFrame: function (w, h) {
+            return w < 720 ? { cx: w / 2, cy: h - 165, radius: 135 } : { cx: w * 0.74, cy: h * 0.48, radius: Math.min(w * 0.22, h * 0.4) };
+          }
+        }) : null;
+        var heroNote = document.getElementById("help-sky-note");
         var euro = function (cents) { return "€" + Math.round(cents / 100).toLocaleString("en-GB"); };
         var tierLabel = { tea: "a warm bottle", nest: "an extra hour of sleep", moon: "a whole quiet night", wish: "a chosen amount" };
         var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
         fetch(api, { headers: { Accept: "application/json" } })
           .then(function (r) { return r.json(); })
           .then(function (d) {
+            if (hero) hero.render(d.moons);
+            heroNote.textContent = d.count
+              ? d.count + (d.count === 1 ? " moon" : " moons") + " planted, " + euro(d.total_cents) + " given. Every named moon in this sky is a real supporter."
+              : "No moons yet. The first one will hang at the centre of the galaxy.";
             document.getElementById("wall-count").textContent = d.count;
             document.getElementById("wall-total").textContent = euro(d.total_cents);
             ["tea", "nest", "moon", "wish"].forEach(function (k) {
@@ -399,7 +369,10 @@
               return '<li class="wall-moon tier-' + esc(m.tier) + '"><span class="wall-moon-face" style="width:' + size + 'px;height:' + size + 'px">' + face + '</span><span class="wall-moon-name">' + name + '</span><span class="wall-moon-meta">' + euro(m.amount_cents) + " · " + tierLabel[m.tier] + '</span></li>';
             }).join("");
           })
-          .catch(function () { document.getElementById("wall-empty").textContent = "The moons are behind a cloud right now. Try again in a minute."; });
+          .catch(function () {
+            document.getElementById("wall-empty").textContent = "The moons are behind a cloud right now. Try again in a minute.";
+            heroNote.textContent = "The moons are behind a cloud right now.";
+          });
       })();
     </script>
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
