@@ -7,6 +7,7 @@ import '../api/enfold_api_client.dart';
 import '../api/family_models.dart';
 import '../auth/auth_session.dart';
 import '../database/app_database.dart';
+import '../database/care_log_dao.dart';
 
 class SyncResult {
   const SyncResult({
@@ -209,6 +210,10 @@ class SyncService {
         await (_db.update(_db.babies)..where((b) => b.id.equals(baby.id)))
             .write(BabiesCompanion(serverChildId: Value(primaryId)));
       }
+      await _adoptServerChildProfile(
+        baby: baby,
+        child: children.firstWhere((c) => c.id == primaryId),
+      );
 
       DateTime? since;
       if (!fullHistory) {
@@ -276,6 +281,28 @@ class SyncService {
       return preferredId;
     }
     return children.first.id;
+  }
+
+  /// A fresh install (or a reinstall) starts with a placeholder "Baby" and no
+  /// birth date. Fill those from the family's server child so the real name
+  /// shows up, without ever overwriting a name or date set on this phone.
+  Future<void> _adoptServerChildProfile({
+    required Baby baby,
+    required ChildProfile child,
+  }) async {
+    final serverName = child.name.trim();
+    final adoptName = baby.name == CareLogDao.defaultBabyName &&
+        serverName.isNotEmpty &&
+        serverName != baby.name;
+    final adoptBirthDate = baby.birthDate == null && child.birthDate != null;
+    if (!adoptName && !adoptBirthDate) return;
+    await (_db.update(_db.babies)..where((b) => b.id.equals(baby.id))).write(
+      BabiesCompanion(
+        name: adoptName ? Value(serverName) : const Value.absent(),
+        birthDate:
+            adoptBirthDate ? Value(child.birthDate) : const Value.absent(),
+      ),
+    );
   }
 
   /// After join: drop any solo-family child link and bind to the host primary.

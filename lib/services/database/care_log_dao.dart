@@ -26,6 +26,9 @@ class CareLogDao extends DatabaseAccessor<AppDatabase> with _$CareLogDaoMixin {
   /// serialising them, each saw an empty table and inserted its own "Baby",
   /// so the name typed in onboarding landed on a row other screens never
   /// read. Concurrent callers now share one future and the oldest row wins.
+  /// Name of the placeholder baby a fresh install starts with.
+  static const defaultBabyName = 'Baby';
+
   Future<String> ensureDefaultBaby() {
     final inFlight = _ensureDefaultBabyInFlight;
     if (inFlight != null) return inFlight;
@@ -47,7 +50,7 @@ class CareLogDao extends DatabaseAccessor<AppDatabase> with _$CareLogDaoMixin {
     await into(babies).insert(
       BabiesCompanion.insert(
         id: id,
-        name: 'Baby',
+        name: defaultBabyName,
         createdAt: DateTime.now(),
       ),
     );

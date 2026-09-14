@@ -27,17 +27,21 @@ class ChildProfile {
     required this.id,
     required this.name,
     this.familyId,
+    this.birthDate,
   });
 
   final String id;
   final String name;
   final String? familyId;
+  final DateTime? birthDate;
 
   factory ChildProfile.fromJson(Map<String, dynamic> json) {
+    final rawBirthDate = json['birth_date'] as String?;
     return ChildProfile(
       id: json['id'] as String,
       name: json['name'] as String,
       familyId: json['family_id'] as String?,
+      birthDate: rawBirthDate == null ? null : DateTime.tryParse(rawBirthDate),
     );
   }
 }

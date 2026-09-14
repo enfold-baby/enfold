@@ -3,6 +3,7 @@ import 'package:enfold/services/api/enfold_api_client.dart';
 import 'package:enfold/services/api/family_models.dart';
 import 'package:enfold/services/auth/auth_session.dart';
 import 'package:enfold/services/database/app_database.dart';
+import 'package:enfold/services/database/care_log_dao.dart';
 import 'package:enfold/services/sync/sync_service.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -13,6 +14,8 @@ class FakePullApi extends EnfoldApiClient {
   FakePullApi() : super(httpClient: http.Client());
 
   final String childId = 'server-child-1';
+  String childName = 'Baby';
+  DateTime? childBirthDate;
   final remoteEvent = RemoteCareEvent(
     id: 'partner-event-1',
     childId: 'server-child-1',
@@ -27,7 +30,14 @@ class FakePullApi extends EnfoldApiClient {
 
   @override
   Future<List<ChildProfile>> listChildren(String token) async {
-    return [ChildProfile(id: childId, name: 'Baby', familyId: 'fam-1')];
+    return [
+      ChildProfile(
+        id: childId,
+        name: childName,
+        familyId: 'fam-1',
+        birthDate: childBirthDate,
+      ),
+    ];
   }
 
   @override
@@ -190,6 +200,54 @@ void main() {
     expect(result.pulled, 2);
     final ids = (await db.select(db.careEvents).get()).map((e) => e.id).toSet();
     expect(ids, {'feed-a', 'sleep-b'});
+  });
+
+  test('pullRemote fills a placeholder baby from the server child', () async {
+    api.childName = 'Mia';
+    api.childBirthDate = DateTime(2026, 7, 14);
+    await db.into(db.babies).insert(
+          BabiesCompanion.insert(
+            id: 'local-baby',
+            name: CareLogDao.defaultBabyName,
+            createdAt: DateTime.now(),
+          ),
+        );
+
+    await sync.pullRemote(
+      session: const AuthSession(
+        token: 'token',
+        user: AuthUser(id: 'u1', email: 'a@b.com', displayName: ''),
+      ),
+    );
+
+    final baby = await db.select(db.babies).getSingle();
+    expect(baby.name, 'Mia');
+    expect(baby.birthDate, DateTime(2026, 7, 14));
+    expect(baby.serverChildId, 'server-child-1');
+  });
+
+  test('pullRemote keeps a name and birth date set on this phone', () async {
+    api.childName = 'Mia';
+    api.childBirthDate = DateTime(2026, 7, 14);
+    await db.into(db.babies).insert(
+          BabiesCompanion.insert(
+            id: 'local-baby',
+            name: 'Noah',
+            birthDate: Value(DateTime(2026, 8, 1)),
+            createdAt: DateTime.now(),
+          ),
+        );
+
+    await sync.pullRemote(
+      session: const AuthSession(
+        token: 'token',
+        user: AuthUser(id: 'u1', email: 'a@b.com', displayName: ''),
+      ),
+    );
+
+    final baby = await db.select(db.babies).getSingle();
+    expect(baby.name, 'Noah');
+    expect(baby.birthDate, DateTime(2026, 8, 1));
   });
 }
 
