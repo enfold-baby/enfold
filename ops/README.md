@@ -62,3 +62,10 @@ Found in the end-to-end sandbox test (2026-09-14):
   The sample PDF (XTDRXNKD-0001) shows gaps to fix before real use: it reads "due" and "Pay online"
   although paid, the seller block lacks the company name, CUI and address (Stripe invoice template
   settings), the buyer CUI custom field is not printed, and the account phone number is.
+- **Galaxy (`landing/public/galaxy/`).** Stars come from seeded 1024-unit tiles in three depths, so the
+  sky never ends and looks the same every visit. Moons sit on a golden-angle spiral in planting order
+  (`planted_at` from the wall API): a moon never moves, new ones land outside, and the elastic edge
+  grows with the outermost moon. Pinch or scroll zooms around the fingers or cursor; "First moon",
+  double tap and `Home` fly back. Falling stars every 4 to 13 seconds, none with reduced motion.
+  Local performance check: `http://127.0.0.1:8283/galaxy/?demo=500` (fake moons, localhost only);
+  500 and 2000 moons held 60 fps in headless Chrome on 2026-09-14.

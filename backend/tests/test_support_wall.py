@@ -82,3 +82,19 @@ def test_icon_candidates_prefer_declared_icons() -> None:
         "https://enfold.baby/favicon.ico",
     ]
     assert icon_candidates("<html></html>", "https://globinary.io/en") == ["https://globinary.io/favicon.ico"]
+
+
+def test_moon_json_carries_planting_time() -> None:
+    from datetime import datetime, timezone
+    from types import SimpleNamespace
+
+    from app.routers.support import _moon_json
+
+    row = SimpleNamespace(
+        id="abc", business_name="", full_name="Ana Pop", link="", amount_cents=500, currency="eur",
+        tier="tea", icon=None, created_at=datetime(2026, 9, 14, 10, 41, 9, tzinfo=timezone.utc),
+    )
+    moon = _moon_json(row)
+    assert moon["planted_at"] == "2026-09-14T10:41:09+00:00"
+    assert moon["since"] == "2026-09-14"
+    assert moon["name"] == "Ana Pop" and moon["link"] is None and moon["has_icon"] is False

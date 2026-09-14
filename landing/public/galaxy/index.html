@@ -52,20 +52,32 @@
       .galaxy-page { background: #14192b; color: #f3ede4; }
       .galaxy-page .site-header { background: transparent; }
       .galaxy-page .brand-name, .galaxy-page .header-nav a { color: #f3ede4; }
-      .galaxy-wrap { position: relative; height: calc(100vh - 88px); min-height: 520px; overflow: hidden; touch-action: none; cursor: grab; }
+      .galaxy-wrap { position: relative; height: calc(100vh - 88px); height: calc(100dvh - 88px); min-height: 520px; overflow: hidden; touch-action: none; cursor: grab; outline: none; }
+      .galaxy-wrap:focus-visible { box-shadow: inset 0 0 0 3px rgba(159, 191, 174, 0.85); }
       .galaxy-wrap.dragging { cursor: grabbing; }
       #galaxy { display: block; width: 100%; height: 100%; }
-      .galaxy-hud { position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; font-family: "Nunito", system-ui, sans-serif; font-size: 0.9rem; color: #e4eee8; pointer-events: none; }
+      .galaxy-hud { position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: flex-end; justify-content: space-between; font-family: "Nunito", system-ui, sans-serif; font-size: 0.9rem; color: #e4eee8; pointer-events: none; }
+      .galaxy-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
       .galaxy-hud a, .galaxy-hud button { pointer-events: auto; }
-      .galaxy-hud .pill { background: rgba(20, 25, 43, 0.75); border: 1px solid rgba(228, 238, 232, 0.25); border-radius: 999px; padding: 8px 14px; }
-      .galaxy-hud a.pill { color: #e4eee8; text-decoration: none; }
-      .galaxy-card { position: absolute; max-width: 280px; background: #faf7f2; color: #3d3229; border-radius: 16px; padding: 12px 14px; box-shadow: 0 18px 40px -20px rgba(0,0,0,0.8); font-family: "Nunito", system-ui, sans-serif; font-size: 0.92rem; pointer-events: auto; }
+      .galaxy-hud .pill { background: rgba(20, 25, 43, 0.75); border: 1px solid rgba(228, 238, 232, 0.25); border-radius: 999px; padding: 8px 14px; color: #e4eee8; font: inherit; line-height: 1.3; text-decoration: none; }
+      .galaxy-hud button.pill { cursor: pointer; }
+      .galaxy-hud a.pill:hover, .galaxy-hud button.pill:hover { border-color: rgba(228, 238, 232, 0.6); }
+      .galaxy-hud .pill:focus-visible { outline: 2px solid #9fbfae; outline-offset: 2px; }
+      .galaxy-hint .hint-short { display: none; }
+      .galaxy-card { position: absolute; width: max-content; max-width: min(280px, calc(100% - 16px)); background: #faf7f2; color: #3d3229; border-radius: 16px; padding: 12px 14px; box-shadow: 0 18px 40px -20px rgba(0,0,0,0.8); font-family: "Nunito", system-ui, sans-serif; font-size: 0.92rem; pointer-events: auto; }
       .galaxy-card strong { display: block; font-size: 1rem; }
       .galaxy-card a { color: #4a675c; font-weight: 800; }
       .galaxy-card[hidden] { display: none; }
       .galaxy-title { position: absolute; left: 16px; top: 12px; right: 16px; pointer-events: none; }
-      .galaxy-title h1 { font-family: "Fraunces", Georgia, serif; font-size: 1.5rem; margin: 0; color: #faf7f2; }
-      .galaxy-title p { margin: 4px 0 0; color: #cdd7d1; font-family: "Nunito", system-ui, sans-serif; font-size: 0.9rem; }
+      .galaxy-title h1 { font-family: "Fraunces", Georgia, serif; font-size: 1.5rem; margin: 0; color: #faf7f2; text-shadow: 0 1px 10px rgba(8, 10, 22, 0.9); }
+      .galaxy-title p { margin: 4px 0 0; color: #cdd7d1; font-family: "Nunito", system-ui, sans-serif; font-size: 0.9rem; text-shadow: 0 1px 8px rgba(8, 10, 22, 0.95); }
+      .galaxy-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      @media (max-width: 560px) {
+        .galaxy-hud { font-size: 0.82rem; gap: 8px; }
+        .galaxy-hud .pill { padding: 7px 11px; }
+        .galaxy-hint .hint-long { display: none; }
+        .galaxy-hint .hint-short { display: inline; }
+      }
     </style>
   </head>
   <body class="legal-page galaxy-page">
@@ -91,139 +103,501 @@
     </header>
 
     <main id="main">
-      <div class="galaxy-wrap" id="galaxy-wrap">
-        <canvas id="galaxy" aria-label="Galaxy of supporter moons"></canvas>
+      <div class="galaxy-wrap" id="galaxy-wrap" tabindex="0" aria-describedby="galaxy-keys">
+        <canvas id="galaxy" role="img" aria-label="Galaxy of supporter moons"></canvas>
         <div class="galaxy-title">
           <h1>Galaxy of moons</h1>
           <p id="galaxy-sub">Loading the sky…</p>
         </div>
         <div class="galaxy-card" id="galaxy-card" hidden></div>
         <div class="galaxy-hud">
-          <span class="pill" id="galaxy-hint">Drag to travel · scroll to zoom · tap a moon</span>
-          <a class="pill" id="galaxy-plant" href="/support/#support">Plant your own moon</a>
+          <span class="pill galaxy-hint" id="galaxy-hint"><span class="hint-long">Drag to travel · pinch or scroll to zoom · tap a moon</span><span class="hint-short">Drag · pinch · tap a moon</span></span>
+          <div class="galaxy-actions">
+            <button type="button" class="pill" id="galaxy-home" aria-label="Back to the first moon">First moon</button>
+            <a class="pill" id="galaxy-list" href="/support/#wall">List view</a>
+            <a class="pill" id="galaxy-plant" href="/support/#support">Plant your own moon</a>
+          </div>
         </div>
+        <p class="galaxy-sr" id="galaxy-keys">Arrow keys travel, plus and minus zoom, Home returns to the first moon, Escape closes a moon card. Double tap the sky to return to the first moon.</p>
+        <ul class="galaxy-sr" id="galaxy-sr-list" aria-label="Supporters in the galaxy"></ul>
       </div>
     </main>
 
     <script>
       (function () {
-        var testMode = /[?&]stripe=test(&|$)/.test(location.search);
+        var params = new URLSearchParams(location.search);
+        var testMode = params.get("stripe") === "test";
+        var local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+        // ?demo=500 fills the sky with fake moons for performance checks; local only.
+        var demo = local ? Math.min(5000, parseInt(params.get("demo") || "0", 10) || 0) : 0;
         var api = "https://api.enfold.baby/v1/support/wall" + (testMode ? "?mode=test" : "");
-        if (testMode) { document.getElementById("galaxy-plant").href = "/support/?stripe=test#support"; }
+        var ICON_URL = "https://api.enfold.baby/v1/support/icon/";
+        if (testMode) {
+          document.getElementById("galaxy-plant").href = "/support/?stripe=test#support";
+          document.getElementById("galaxy-list").href = "/support/?stripe=test#wall";
+        }
+        var reduceMotion = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
         var canvas = document.getElementById("galaxy");
         var wrap = document.getElementById("galaxy-wrap");
         var card = document.getElementById("galaxy-card");
         var sub = document.getElementById("galaxy-sub");
+        var srList = document.getElementById("galaxy-sr-list");
+        var titleEl = document.querySelector(".galaxy-title");
+        var hudEl = document.querySelector(".galaxy-hud");
         var ctx = canvas.getContext("2d");
         var dpr = Math.min(window.devicePixelRatio || 1, 2);
         var W = 0, H = 0;
         var cam = { x: 0, y: 0, z: 1 };
+        var vel = { x: 0, y: 0 };
+        var MAX_ZOOM = 3;
+        var minZoom = 0.25;
+        var bound = 700; // how far (world units) the view centre may wander before easing back
         var moons = [];
-        var stars = [];
-        var icons = {};
+        var selected = null;
+        var flight = null;
         var euro = function (c) { return "€" + Math.round(c / 100).toLocaleString("en-GB"); };
         var tierLabel = { tea: "a warm bottle", nest: "an extra hour of sleep", moon: "a whole quiet night", wish: "a chosen amount" };
         var tint = { tea: "#e9d9a8", nest: "#9fbfae", moon: "#d98ea0", wish: "#c9d3f0" };
+        function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+        function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+        function rng(seed) {
+          return function () {
+            seed = (seed + 0x6d2b79f5) | 0;
+            var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+        function hashString(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h = Math.imul(h ^ s.charCodeAt(i), 16777619); } return h >>> 0; }
 
-        function resize() {
-          W = wrap.clientWidth; H = wrap.clientHeight;
-          canvas.width = W * dpr; canvas.height = H * dpr;
-          canvas.style.width = W + "px"; canvas.style.height = H + "px";
-          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        }
-        function seedStars() {
-          stars = [];
-          for (var i = 0; i < 1400; i++) {
-            stars.push({ x: (Math.random() - 0.5) * 9000, y: (Math.random() - 0.5) * 9000, r: Math.random() * 1.6 + 0.6, a: Math.random() * 0.5 + 0.5, tw: Math.random() * 6.28 });
+        // Endless sky: stars live in 1024-unit tiles generated from a fixed seed per tile,
+        // so the sky never runs out and looks the same on every visit. Three depths give parallax.
+        var TILE = 1024;
+        var LAYERS = [
+          { depth: 0.35, count: 46, rMin: 0.45, rMax: 0.9, aMin: 0.25, aMax: 0.55 },
+          { depth: 0.65, count: 22, rMin: 0.6, rMax: 1.3, aMin: 0.4, aMax: 0.75 },
+          { depth: 1, count: 10, rMin: 0.9, rMax: 1.9, aMin: 0.6, aMax: 1 }
+        ];
+        var tiles = new Map();
+        function tileStars(li, tx, ty) {
+          var key = li + ":" + tx + ":" + ty;
+          var list = tiles.get(key);
+          if (list) return list;
+          var L = LAYERS[li];
+          var rand = rng(Math.imul(tx, 73856093) ^ Math.imul(ty, 19349663) ^ Math.imul(li + 1, 83492791));
+          list = [];
+          for (var i = 0; i < L.count; i++) {
+            list.push({ x: (tx + rand()) * TILE, y: (ty + rand()) * TILE, r: L.rMin + rand() * (L.rMax - L.rMin), a: L.aMin + rand() * (L.aMax - L.aMin), tw: rand() * 6.283, warm: rand() < 0.12 });
           }
+          if (tiles.size > 1500) tiles.clear();
+          tiles.set(key, list);
+          return list;
         }
-        // Golden-angle spiral: biggest supporters nearest the centre.
-        function layout(list) {
-          var max = list.length ? list[0].amount_cents : 1;
-          return list.map(function (m, i) {
-            var t = i * 2.39996;
-            var d = i === 0 ? 0 : 150 + 110 * Math.sqrt(i) * 1.5;
-            var r = 22 + 40 * Math.sqrt(m.amount_cents / max);
-            return { m: m, x: Math.cos(t) * d, y: Math.sin(t) * d, r: r, phase: Math.random() * 6.28 };
-          });
-        }
-        function draw(ts) {
-          ctx.clearRect(0, 0, W, H);
-          var g = ctx.createRadialGradient(W / 2, H / 2, 40, W / 2, H / 2, Math.max(W, H));
-          g.addColorStop(0, "#1b2340"); g.addColorStop(1, "#0e1220");
-          ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-          ctx.save();
-          ctx.translate(W / 2 + cam.x, H / 2 + cam.y); ctx.scale(cam.z, cam.z);
-          for (var i = 0; i < stars.length; i++) {
-            var s = stars[i];
-            ctx.globalAlpha = s.a * (0.7 + 0.3 * Math.sin(ts / 900 + s.tw));
-            ctx.fillStyle = "#faf7f2"; ctx.beginPath(); ctx.arc(s.x, s.y, s.r / cam.z, 0, 6.28); ctx.fill();
+        function drawStars(ts) {
+          for (var li = 0; li < LAYERS.length; li++) {
+            var L = LAYERS[li];
+            var zp = 1 + (cam.z - 1) * L.depth;
+            var ox = W / 2 + cam.x * L.depth, oy = H / 2 + cam.y * L.depth;
+            var x0 = Math.floor(-ox / zp / TILE), x1 = Math.floor((W - ox) / zp / TILE);
+            var y0 = Math.floor(-oy / zp / TILE), y1 = Math.floor((H - oy) / zp / TILE);
+            if ((x1 - x0 + 1) * (y1 - y0 + 1) > 1200) continue;
+            // When zoomed far out, thin the stars so the screen density stays calm.
+            var n = Math.max(1, Math.round(L.count * Math.min(1, (zp / 0.5) * (zp / 0.5))));
+            var size = Math.min(1.4, Math.sqrt(zp));
+            for (var tx = x0; tx <= x1; tx++) {
+              for (var ty = y0; ty <= y1; ty++) {
+                var list = tileStars(li, tx, ty);
+                for (var i = 0; i < n; i++) {
+                  var s = list[i];
+                  var sx = ox + s.x * zp, sy = oy + s.y * zp;
+                  if (sx < -4 || sy < -4 || sx > W + 4 || sy > H + 4) continue;
+                  ctx.globalAlpha = s.a * (reduceMotion ? 1 : 0.7 + 0.3 * Math.sin(ts / 900 + s.tw));
+                  ctx.fillStyle = s.warm ? "#f6e3c4" : "#faf7f2";
+                  ctx.beginPath(); ctx.arc(sx, sy, Math.max(0.35, s.r * size), 0, 6.283); ctx.fill();
+                }
+              }
+            }
           }
           ctx.globalAlpha = 1;
-          for (var j = 0; j < moons.length; j++) {
-            var o = moons[j]; var bob = Math.sin(ts / 1400 + o.phase) * 3;
-            var y = o.y + bob;
-            ctx.shadowColor = tint[o.m.tier] || "#e9d9a8"; ctx.shadowBlur = 30;
-            var rg = ctx.createRadialGradient(o.x - o.r * 0.35, y - o.r * 0.35, o.r * 0.1, o.x, y, o.r);
-            rg.addColorStop(0, "#fffdf6"); rg.addColorStop(0.6, tint[o.m.tier] || "#e9d9a8"); rg.addColorStop(1, "#8b7a4f");
-            ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(o.x, y, o.r, 0, 6.28); ctx.fill();
-            ctx.shadowBlur = 0;
-            var ic = icons[o.m.id];
-            if (ic && ic.ok) {
-              ctx.save(); ctx.beginPath(); ctx.arc(o.x, y, o.r * 0.55, 0, 6.28); ctx.clip();
-              ctx.drawImage(ic.img, o.x - o.r * 0.55, y - o.r * 0.55, o.r * 1.1, o.r * 1.1); ctx.restore();
-            } else {
-              ctx.fillStyle = "#3d3229"; ctx.font = "800 " + Math.max(10, o.r * 0.6) + "px Nunito, system-ui, sans-serif";
-              ctx.textAlign = "center"; ctx.textBaseline = "middle";
-              var ini = o.m.name.trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join("").toUpperCase();
-              ctx.fillText(ini, o.x, y + 1);
-            }
-            ctx.fillStyle = "#f3ede4"; ctx.font = "700 " + Math.max(11, 13 / Math.sqrt(cam.z)) + "px Nunito, system-ui, sans-serif";
-            ctx.textAlign = "center"; ctx.textBaseline = "top";
-            ctx.fillText(o.m.name.length > 22 ? o.m.name.slice(0, 21) + "…" : o.m.name, o.x, y + o.r + 8);
+        }
+        function drawBackground() {
+          var g = ctx.createLinearGradient(0, 0, 0, H);
+          g.addColorStop(0, "#171d35"); g.addColorStop(1, "#0e1220");
+          ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+          // A soft glow that belongs to the sky around the first moon, so it travels with you.
+          var cx = W / 2 + cam.x, cy = H / 2 + cam.y;
+          var rad = Math.max(260, bound * 0.9 * cam.z);
+          var glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
+          glow.addColorStop(0, "rgba(96, 110, 180, 0.18)");
+          glow.addColorStop(0.5, "rgba(74, 86, 146, 0.07)");
+          glow.addColorStop(1, "rgba(74, 86, 146, 0)");
+          ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+        }
+
+        // Falling stars: rare, quick, never with reduced motion.
+        var meteors = [];
+        var nextMeteor = performance.now() + 2500 + Math.random() * 3500;
+        function spawnMeteor(now) {
+          var fromLeft = Math.random() < 0.5;
+          var angle = (18 + Math.random() * 26) * Math.PI / 180;
+          var bright = Math.random() < 0.15;
+          meteors.push({
+            x: W * (fromLeft ? Math.random() * 0.6 : 0.4 + Math.random() * 0.6),
+            y: H * Math.random() * 0.45,
+            dx: (fromLeft ? 1 : -1) * Math.cos(angle), dy: Math.sin(angle),
+            speed: bright ? 700 : 1000 + Math.random() * 500,
+            len: bright ? 260 : 120 + Math.random() * 110,
+            life: bright ? 1300 : 650 + Math.random() * 350,
+            width: bright ? 2.2 : 1.4,
+            born: now
+          });
+          nextMeteor = now + 4000 + Math.random() * 9000;
+        }
+        function drawMeteors(now) {
+          if (reduceMotion) return;
+          if (now >= nextMeteor) spawnMeteor(now);
+          for (var i = meteors.length - 1; i >= 0; i--) {
+            var m = meteors[i];
+            var age = now - m.born;
+            if (age > m.life) { meteors.splice(i, 1); continue; }
+            var p = age / m.life;
+            var fade = p < 0.15 ? p / 0.15 : 1 - (p - 0.15) / 0.85;
+            var dist = m.speed * age / 1000;
+            var hx = m.x + m.dx * dist, hy = m.y + m.dy * dist;
+            var tail = Math.min(m.len, dist);
+            var tx = hx - m.dx * tail, ty = hy - m.dy * tail;
+            var g = ctx.createLinearGradient(tx, ty, hx, hy);
+            g.addColorStop(0, "rgba(250, 247, 242, 0)");
+            g.addColorStop(1, "rgba(250, 247, 242, " + (0.9 * fade).toFixed(3) + ")");
+            ctx.strokeStyle = g; ctx.lineWidth = m.width; ctx.lineCap = "round";
+            ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(hx, hy); ctx.stroke();
+            ctx.globalAlpha = fade; ctx.fillStyle = "#fffdf6";
+            ctx.beginPath(); ctx.arc(hx, hy, m.width * 0.9, 0, 6.283); ctx.fill();
+            ctx.globalAlpha = 1;
           }
-          ctx.restore();
-          requestAnimationFrame(draw);
         }
-        function worldFromEvent(e) {
-          var rect = canvas.getBoundingClientRect();
-          var px = (e.clientX - rect.left) - W / 2 - cam.x; var py = (e.clientY - rect.top) - H / 2 - cam.y;
-          return { x: px / cam.z, y: py / cam.z };
+        document.addEventListener("visibilitychange", function () {
+          if (!document.hidden) { meteors = []; nextMeteor = performance.now() + 2000 + Math.random() * 4000; }
+        });
+
+        // Moons: placed in planting order on a golden-angle spiral, so a moon never moves
+        // once planted; new moons land on the outside and the sky grows with them.
+        function plantedKey(m) { return m.planted_at || (m.since ? m.since + "T23:59:59" : "9999"); }
+        function initials(name) { return name.trim().split(/\s+/).slice(0, 2).map(function (w) { return w[0]; }).join("").toUpperCase(); }
+        function layout(list) {
+          var sorted = list.slice().sort(function (a, b) {
+            var ka = plantedKey(a), kb = plantedKey(b);
+            if (ka !== kb) return ka < kb ? -1 : 1;
+            return a.id < b.id ? -1 : 1;
+          });
+          var max = 1;
+          for (var k = 0; k < sorted.length; k++) max = Math.max(max, sorted[k].amount_cents);
+          var far = 0;
+          var out = sorted.map(function (m, i) {
+            var t = i * 2.39996;
+            var d = i === 0 ? 0 : 150 + 165 * Math.sqrt(i);
+            var r = 22 + 40 * Math.sqrt(m.amount_cents / max);
+            far = Math.max(far, d + r);
+            return { m: m, x: Math.cos(t) * d, y: Math.sin(t) * d, r: r, phase: (hashString(String(m.id)) % 628) / 100, sprite: null, icon: null, iconState: m.has_icon ? "idle" : "none", sx: 0, sy: 0, visible: false };
+          });
+          bound = far + 420;
+          return out;
         }
-        function hit(p) {
-          for (var i = moons.length - 1; i >= 0; i--) { var o = moons[i]; var dx = p.x - o.x, dy = p.y - o.y; if (dx * dx + dy * dy <= o.r * o.r) return o; }
-          return null;
+        var GLOW = 34;
+        // Sprites are rebuilt sharper as you zoom in (never above 1024px).
+        function spriteScaleFor(o) { return Math.min(dpr * Math.max(1, cam.z) * 1.25, 1024 / Math.ceil((o.r + GLOW) * 2)); }
+        function makeSprite(o) {
+          var size = Math.ceil((o.r + GLOW) * 2);
+          var scale = spriteScaleFor(o);
+          var c = document.createElement("canvas");
+          c.width = c.height = Math.ceil(size * scale);
+          var g = c.getContext("2d");
+          g.scale(scale, scale);
+          var mid = size / 2, col = tint[o.m.tier] || "#e9d9a8";
+          g.shadowColor = col; g.shadowBlur = 30 * scale; // shadow blur ignores the transform
+          var rg = g.createRadialGradient(mid - o.r * 0.35, mid - o.r * 0.35, o.r * 0.1, mid, mid, o.r);
+          rg.addColorStop(0, "#fffdf6"); rg.addColorStop(0.6, col); rg.addColorStop(1, "#8b7a4f");
+          g.fillStyle = rg; g.beginPath(); g.arc(mid, mid, o.r, 0, 6.283); g.fill();
+          g.shadowBlur = 0;
+          if (o.icon) {
+            g.save(); g.beginPath(); g.arc(mid, mid, o.r * 0.55, 0, 6.283); g.clip();
+            g.drawImage(o.icon, mid - o.r * 0.55, mid - o.r * 0.55, o.r * 1.1, o.r * 1.1);
+            g.restore();
+          } else {
+            g.fillStyle = "#3d3229"; g.font = "800 " + Math.max(10, o.r * 0.6) + "px Nunito, system-ui, sans-serif";
+            g.textAlign = "center"; g.textBaseline = "middle";
+            g.fillText(initials(o.m.name), mid, mid + 1);
+          }
+          o.sprite = c;
+          o.spriteScale = scale;
         }
-        function showCard(o, e) {
+        function loadIcon(o) {
+          o.iconState = "loading";
+          var img = new Image();
+          img.onload = function () { o.icon = img; o.iconState = "ok"; o.sprite = null; };
+          img.onerror = function () { o.iconState = "failed"; };
+          img.src = ICON_URL + encodeURIComponent(o.m.id);
+        }
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(function () { moons.forEach(function (o) { o.sprite = null; }); });
+        }
+        function drawMoons(ts) {
+          var z = cam.z, ox = W / 2 + cam.x, oy = H / 2 + cam.y;
+          ctx.font = "700 13px Nunito, system-ui, sans-serif";
+          ctx.textAlign = "center"; ctx.textBaseline = "top";
+          for (var i = 0; i < moons.length; i++) {
+            var o = moons[i];
+            var bob = reduceMotion ? 0 : Math.sin(ts / 1400 + o.phase) * 3;
+            var half = (o.r + GLOW) * z;
+            o.sx = ox + o.x * z; o.sy = oy + (o.y + bob) * z;
+            o.visible = !(o.sx + half < 0 || o.sx - half > W || o.sy + half < 0 || o.sy - half > H + 24);
+            // Icons load only when a moon comes within a screen of the view.
+            if (o.iconState === "idle" && Math.abs(o.sx - W / 2) < W * 1.5 && Math.abs(o.sy - H / 2) < H * 1.5) loadIcon(o);
+            if (!o.visible) continue;
+            if (!o.sprite || spriteScaleFor(o) > o.spriteScale * 1.4) makeSprite(o);
+            ctx.drawImage(o.sprite, o.sx - half, o.sy - half, half * 2, half * 2);
+            if (o.r * z >= 12 || o === selected) {
+              var name = o.m.name.length > 22 ? o.m.name.slice(0, 21) + "…" : o.m.name;
+              ctx.fillStyle = "#f3ede4";
+              ctx.fillText(name, o.sx, o.sy + o.r * z + 8);
+            }
+          }
+        }
+
+        // Camera
+        function homeZoom() { return clamp(W < 600 ? 0.75 : 1, minZoom, MAX_ZOOM); }
+        function viewCentre() { return { x: -cam.x / cam.z, y: -cam.y / cam.z }; }
+        function zoomAt(px, py, z2) {
+          z2 = clamp(z2, minZoom, MAX_ZOOM);
+          var wx = (px - W / 2 - cam.x) / cam.z, wy = (py - H / 2 - cam.y) / cam.z;
+          cam.z = z2;
+          cam.x = px - W / 2 - wx * z2;
+          cam.y = py - H / 2 - wy * z2;
+        }
+        // Past the outermost moon, dragging meets growing resistance (at most 600 units of stretch).
+        function rubber(rawX, rawY) {
+          var cx = -rawX / cam.z, cy = -rawY / cam.z, d = Math.hypot(cx, cy);
+          if (d <= bound) return { x: rawX, y: rawY };
+          var soft = bound + 600 * (1 - 1 / ((d - bound) / 600 + 1));
+          var k = soft / d;
+          return { x: -cx * k * cam.z, y: -cy * k * cam.z };
+        }
+        function settle() {
+          var c = viewCentre(), d = Math.hypot(c.x, c.y);
+          if (d <= bound) return;
+          var k = bound / d;
+          cam.x += (-c.x * k * cam.z - cam.x) * 0.12;
+          cam.y += (-c.y * k * cam.z - cam.y) * 0.12;
+        }
+        function flyHome() {
+          vel.x = vel.y = 0;
+          closeCard();
+          flight = { from: { x: cam.x, y: cam.y, z: cam.z }, to: { x: 0, y: 0, z: homeZoom() }, start: performance.now(), dur: reduceMotion ? 1 : 700 };
+        }
+        function fitMinZoom() {
+          minZoom = clamp(Math.min(W, H) / (2 * bound) * 0.9, 0.05, 0.25);
+          if (cam.z < minZoom) cam.z = minZoom;
+        }
+        function resize() {
+          W = wrap.clientWidth; H = wrap.clientHeight;
+          canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+          canvas.style.width = W + "px"; canvas.style.height = H + "px";
+          fitMinZoom();
+        }
+
+        // Moon cards
+        function showCard(o) {
+          selected = o;
           var m = o.m;
           card.innerHTML = "<strong>" + esc(m.name) + "</strong>" + euro(m.amount_cents) + " · " + tierLabel[m.tier] + (m.since ? "<br><small>since " + esc(m.since) + "</small>" : "") + (m.link ? '<br><a href="' + esc(m.link) + '" rel="nofollow noopener" target="_blank">Visit ↗</a>' : "");
-          var rect = canvas.getBoundingClientRect();
-          card.style.left = Math.min(e.clientX - rect.left + 12, W - 290) + "px";
-          card.style.top = Math.min(e.clientY - rect.top + 12, H - 120) + "px";
           card.hidden = false;
+          positionCard();
         }
-        function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+        function closeCard() { selected = null; card.hidden = true; }
+        function positionCard() {
+          if (!selected || card.hidden) return;
+          if (!selected.visible) { closeCard(); return; }
+          var cw = card.offsetWidth, ch = card.offsetHeight, rr = selected.r * cam.z;
+          // Keep the card clear of the title, the bottom bar and the moon itself.
+          var top = titleEl.offsetTop + titleEl.offsetHeight + 8, bottom = hudEl.offsetTop - 8;
+          var x, y = selected.sy - ch / 2;
+          if (selected.sx + rr + 12 + cw <= W - 8) x = selected.sx + rr + 12;
+          else if (selected.sx - rr - 12 - cw >= 8) x = selected.sx - rr - 12 - cw;
+          else {
+            x = selected.sx - cw / 2;
+            y = selected.sy + rr + 30;
+            if (y + ch > bottom) y = selected.sy - rr - 12 - ch;
+          }
+          card.style.left = clamp(x, 8, Math.max(8, W - cw - 8)) + "px";
+          card.style.top = clamp(y, top, Math.max(top, bottom - ch)) + "px";
+        }
+        function hit(px, py) {
+          for (var i = moons.length - 1; i >= 0; i--) {
+            var o = moons[i];
+            if (!o.visible) continue;
+            var rr = Math.max(o.r * cam.z, 22), dx = px - o.sx, dy = py - o.sy;
+            if (dx * dx + dy * dy <= rr * rr) return o;
+          }
+          return null;
+        }
 
-        var drag = null, moved = false;
-        wrap.addEventListener("pointerdown", function (e) { drag = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y }; moved = false; wrap.classList.add("dragging"); wrap.setPointerCapture(e.pointerId); });
-        wrap.addEventListener("pointermove", function (e) { if (!drag) return; var dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.abs(dx) + Math.abs(dy) > 4) moved = true; cam.x = drag.cx + dx; cam.y = drag.cy + dy; });
-        wrap.addEventListener("pointerup", function (e) { wrap.classList.remove("dragging"); if (drag && !moved) { var o = hit(worldFromEvent(e)); if (o) showCard(o, e); else card.hidden = true; } drag = null; });
-        wrap.addEventListener("wheel", function (e) { e.preventDefault(); var f = e.deltaY < 0 ? 1.1 : 0.9; cam.z = Math.min(3, Math.max(0.25, cam.z * f)); }, { passive: false });
+        // Pointer: drag, flick, pinch, tap, double tap
+        var pointers = new Map();
+        var drag = null, pinch = null, moved = false, lastMove = null, lastTap = null;
+        function pinchState() {
+          var p = Array.from(pointers.values());
+          return { d: Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1, mx: (p[0].x + p[1].x) / 2, my: (p[0].y + p[1].y) / 2 };
+        }
+        function startDrag(x, y) {
+          drag = { x: x, y: y, cx: cam.x, cy: cam.y };
+          lastMove = { x: x, y: y, t: performance.now() };
+        }
+        wrap.addEventListener("pointerdown", function (e) {
+          if (e.target.closest(".galaxy-card, .galaxy-hud a, .galaxy-hud button")) return;
+          try { wrap.setPointerCapture(e.pointerId); } catch (err) { /* pointer already gone */ }
+          pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          flight = null; vel.x = vel.y = 0;
+          if (pointers.size === 1) { moved = false; startDrag(e.clientX, e.clientY); wrap.classList.add("dragging"); }
+          else if (pointers.size === 2) { pinch = pinchState(); drag = null; moved = true; }
+        });
+        wrap.addEventListener("pointermove", function (e) {
+          if (!pointers.has(e.pointerId)) return;
+          pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+          if (pinch && pointers.size >= 2) {
+            var now = pinchState(), rect = canvas.getBoundingClientRect();
+            cam.x += now.mx - pinch.mx; cam.y += now.my - pinch.my;
+            zoomAt(now.mx - rect.left, now.my - rect.top, cam.z * now.d / pinch.d);
+            pinch = now;
+            return;
+          }
+          if (!drag) return;
+          var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+          if (Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+          var r = rubber(drag.cx + dx, drag.cy + dy);
+          cam.x = r.x; cam.y = r.y;
+          var t = performance.now(), dt = Math.max(1, t - lastMove.t);
+          vel.x = (e.clientX - lastMove.x) / dt * 16; vel.y = (e.clientY - lastMove.y) / dt * 16;
+          lastMove = { x: e.clientX, y: e.clientY, t: t };
+        });
+        function endPointer(e) {
+          if (!pointers.has(e.pointerId)) return;
+          pointers.delete(e.pointerId);
+          if (pointers.size === 0) wrap.classList.remove("dragging");
+          if (pinch) {
+            if (pointers.size < 2) {
+              pinch = null; vel.x = vel.y = 0;
+              if (pointers.size === 1) { var p = pointers.values().next().value; startDrag(p.x, p.y); }
+            }
+            return;
+          }
+          if (drag && !moved && e.type === "pointerup") {
+            vel.x = vel.y = 0;
+            var rect = canvas.getBoundingClientRect();
+            var px = e.clientX - rect.left, py = e.clientY - rect.top, o = hit(px, py), t = performance.now();
+            if (o) { showCard(o); lastTap = null; }
+            else if (lastTap && t - lastTap.t < 320 && Math.hypot(px - lastTap.x, py - lastTap.y) < 30) { flyHome(); lastTap = null; }
+            else { closeCard(); lastTap = { x: px, y: py, t: t }; }
+          } else if (!lastMove || performance.now() - lastMove.t > 80 || e.type !== "pointerup") {
+            vel.x = vel.y = 0;
+          }
+          drag = null;
+        }
+        wrap.addEventListener("pointerup", endPointer);
+        wrap.addEventListener("pointercancel", endPointer);
+        wrap.addEventListener("wheel", function (e) {
+          e.preventDefault();
+          flight = null;
+          var rect = canvas.getBoundingClientRect();
+          var dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+          zoomAt(e.clientX - rect.left, e.clientY - rect.top, cam.z * Math.exp(-dy * (e.ctrlKey ? 0.01 : 0.0015)));
+        }, { passive: false });
+        wrap.addEventListener("keydown", function (e) {
+          if (e.target !== wrap) return;
+          var step = 90;
+          switch (e.key) {
+            case "ArrowLeft": flight = null; cam.x += step; break;
+            case "ArrowRight": flight = null; cam.x -= step; break;
+            case "ArrowUp": flight = null; cam.y += step; break;
+            case "ArrowDown": flight = null; cam.y -= step; break;
+            case "+": case "=": flight = null; zoomAt(W / 2, H / 2, cam.z * 1.2); break;
+            case "-": case "_": flight = null; zoomAt(W / 2, H / 2, cam.z / 1.2); break;
+            case "Home": case "0": flyHome(); break;
+            case "Escape": closeCard(); break;
+            default: return;
+          }
+          e.preventDefault();
+        });
+        document.getElementById("galaxy-home").addEventListener("click", flyHome);
         window.addEventListener("resize", resize);
 
-        resize(); seedStars(); requestAnimationFrame(draw);
-        fetch(api, { headers: { Accept: "application/json" } })
-          .then(function (r) { return r.json(); })
-          .then(function (d) {
-            moons = layout(d.moons);
-            sub.textContent = d.count + (d.count === 1 ? " moon" : " moons") + " planted · " + euro(d.total_cents) + " given" + (d.moons.length < d.count ? " · " + (d.count - d.moons.length) + " chose to stay private" : "");
-            if (!d.moons.length) sub.textContent += " · the first named moon hangs at the centre";
-            d.moons.forEach(function (m) {
-              if (!m.has_icon) return;
-              var img = new Image(); img.onload = function () { icons[m.id] = { img: img, ok: true }; }; img.src = "https://api.enfold.baby/v1/support/icon/" + m.id;
-            });
-          })
-          .catch(function () { sub.textContent = "The sky is behind a cloud right now. Try again in a minute."; });
+        var last = 0;
+        function frame(ts) {
+          var dt = last ? Math.min(64, ts - last) : 16;
+          last = ts;
+          if (flight) {
+            var p = Math.min(1, (ts - flight.start) / flight.dur);
+            var ease = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+            cam.x = flight.from.x + (flight.to.x - flight.from.x) * ease;
+            cam.y = flight.from.y + (flight.to.y - flight.from.y) * ease;
+            cam.z = flight.from.z + (flight.to.z - flight.from.z) * ease;
+            if (p >= 1) flight = null;
+          } else if (!drag && !pinch) {
+            if (vel.x || vel.y) {
+              cam.x += vel.x * dt / 16; cam.y += vel.y * dt / 16;
+              var decay = Math.pow(0.92, dt / 16);
+              vel.x *= decay; vel.y *= decay;
+              var c = viewCentre();
+              if (Math.hypot(c.x, c.y) > bound) { vel.x *= 0.7; vel.y *= 0.7; }
+              if (Math.hypot(vel.x, vel.y) < 0.05) vel.x = vel.y = 0;
+            }
+            settle();
+          }
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          drawBackground();
+          drawStars(ts);
+          drawMeteors(ts);
+          drawMoons(ts);
+          positionCard();
+          requestAnimationFrame(frame);
+        }
+
+        function render(d, label) {
+          moons = layout(d.moons);
+          fitMinZoom();
+          var privateCount = d.count - d.moons.length;
+          var text = (label || "") + d.count + (d.count === 1 ? " moon" : " moons") + " planted · " + euro(d.total_cents) + " given" + (privateCount > 0 ? " · " + privateCount + " chose to stay private" : "");
+          if (!d.moons.length) text += " · the first named moon hangs at the centre";
+          sub.textContent = text;
+          canvas.setAttribute("aria-label", "Galaxy of supporter moons. " + text);
+          srList.innerHTML = moons.map(function (o) {
+            var m = o.m;
+            var name = m.link ? '<a href="' + esc(m.link) + '" rel="nofollow noopener" target="_blank">' + esc(m.name) + "</a>" : esc(m.name);
+            return "<li>" + name + ", " + euro(m.amount_cents) + ", " + tierLabel[m.tier] + "</li>";
+          }).join("");
+        }
+        function fakeWall(n) {
+          var rand = rng(n), list = [], total = 0, start = Date.UTC(2026, 8, 1);
+          var tiers = [["tea", 500], ["nest", 1200], ["moon", 3000], ["wish", 0]];
+          for (var i = 0; i < n; i++) {
+            var pick = tiers[Math.floor(rand() * 4)];
+            var amount = pick[1] || 100 * (1 + Math.floor(rand() * 60));
+            total += amount;
+            list.push({ id: "demo-" + i, name: "Demo moon " + (i + 1), link: null, amount_cents: amount, currency: "eur", tier: pick[0], has_icon: false, since: new Date(start + i * 3600e3).toISOString().slice(0, 10), planted_at: new Date(start + i * 3600e3).toISOString() });
+          }
+          return { count: n, total_cents: total, moons: list };
+        }
+
+        resize();
+        cam.z = homeZoom();
+        requestAnimationFrame(frame);
+        if (demo) {
+          render(fakeWall(demo), "Demo sky: ");
+        } else {
+          fetch(api, { headers: { Accept: "application/json" } })
+            .then(function (r) { return r.json(); })
+            .then(function (d) { render(d); })
+            .catch(function () { sub.textContent = "The sky is behind a cloud right now. Try again in a minute."; });
+        }
       })();
     </script>
 

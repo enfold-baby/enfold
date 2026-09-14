@@ -146,6 +146,21 @@ def _display_name(s: Supporter) -> str:
     return name or "A parent"
 
 
+def _moon_json(s: Supporter) -> dict:
+    return {
+        "id": str(s.id),
+        "name": _display_name(s),
+        "link": s.link or None,
+        "amount_cents": s.amount_cents,
+        "currency": s.currency,
+        "tier": s.tier,
+        "has_icon": bool(s.icon),
+        "since": s.created_at.date().isoformat() if s.created_at else None,
+        # Full timestamp so the galaxy can place moons in planting order.
+        "planted_at": s.created_at.isoformat() if s.created_at else None,
+    }
+
+
 PUBLIC_HEADERS = {"Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=60"}
 
 
@@ -163,20 +178,7 @@ async def support_wall(mode: str = "live", db: AsyncSession = Depends(get_db)) -
     for s in rows:
         tiers[s.tier] = tiers.get(s.tier, 0) + 1
         total += s.amount_cents
-    moons = [
-        {
-            "id": str(s.id),
-            "name": _display_name(s),
-            "link": s.link or None,
-            "amount_cents": s.amount_cents,
-            "currency": s.currency,
-            "tier": s.tier,
-            "has_icon": bool(s.icon),
-            "since": s.created_at.date().isoformat() if s.created_at else None,
-        }
-        for s in rows
-        if s.show_on_wall
-    ]
+    moons = [_moon_json(s) for s in rows if s.show_on_wall]
     return JSONResponse(
         {"count": len(rows), "total_cents": total, "currency": "eur", "tiers": tiers, "moons": moons},
         headers=PUBLIC_HEADERS,
