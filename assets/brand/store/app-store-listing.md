@@ -67,6 +67,9 @@ Features: parental controls, age assurance, unrestricted web, user-generated con
 ## Content rights (saved 2026-09-14)
 No third-party content.
 
+## Regulated medical device (declared 2026-09-14)
+No: Enfold is a care log with educational guidance, not a regulated medical device in any country or region. Required for EU/EEA, UK and US distribution because the category is Health & Fitness.
+
 ## Copyright
 2026 GLOBINARY DEVELOPMENT SYSTEM SRL
 
