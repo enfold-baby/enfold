@@ -20,7 +20,11 @@ class User(Base):
     display_name: Mapped[str] = mapped_column(String(120), default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    memberships: Mapped[list["FamilyMembership"]] = relationship(back_populates="user")
+    # Deleting a user or family is left to ON DELETE CASCADE in Postgres; without
+    # passive_deletes the ORM first sets the NOT NULL foreign keys to NULL and fails.
+    memberships: Mapped[list["FamilyMembership"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan", passive_deletes=True
+    )
 
 
 class Family(Base):
@@ -30,8 +34,12 @@ class Family(Base):
     name: Mapped[str] = mapped_column(String(160))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    memberships: Mapped[list["FamilyMembership"]] = relationship(back_populates="family")
-    children: Mapped[list["Child"]] = relationship(back_populates="family")
+    memberships: Mapped[list["FamilyMembership"]] = relationship(
+        back_populates="family", cascade="all, delete-orphan", passive_deletes=True
+    )
+    children: Mapped[list["Child"]] = relationship(
+        back_populates="family", cascade="all, delete-orphan", passive_deletes=True
+    )
 
 
 class FamilyMembership(Base):
