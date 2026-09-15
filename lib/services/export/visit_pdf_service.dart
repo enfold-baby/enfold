@@ -7,7 +7,6 @@ import 'package:pdf/widgets.dart' as pw;
 import '../../core/datetime/clock_format.dart';
 import '../../features/logs/providers/logs_providers.dart';
 import '../../features/today/models/care_log_details.dart';
-import '../../features/today/models/log_type.dart';
 import '../database/app_database.dart';
 
 class VisitPdfService {

@@ -20,9 +20,14 @@ class LearnReviewer {
     );
   }
 
+  /// Only a named clinician with credentials counts as a review; placeholders
+  /// such as "Pending physician review" must never read as "Reviewed by".
+  bool get isReviewed =>
+      credentials.trim().isNotEmpty && !name.toLowerCase().startsWith('pending');
+
   String get displayLine {
-    final creds = credentials.isEmpty ? '' : ', $credentials';
-    return 'Reviewed by $name$creds · $specialty · $reviewedAt';
+    if (!isReviewed) return 'General educational information, not medical advice';
+    return 'Reviewed by $name, $credentials · $specialty · $reviewedAt';
   }
 }
 
