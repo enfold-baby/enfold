@@ -117,6 +117,22 @@ class LearnTriage {
   }
 }
 
+/// A citation shown under a card, as App Store guideline 1.4.1 requires for
+/// medical information: the source name and a link parents can open.
+class LearnSource {
+  const LearnSource({required this.title, required this.url});
+
+  final String title;
+  final String url;
+
+  factory LearnSource.fromJson(Map<String, dynamic> json) {
+    return LearnSource(
+      title: json['title'] as String,
+      url: json['url'] as String,
+    );
+  }
+}
+
 class LearnCard {
   const LearnCard({
     required this.id,
@@ -127,6 +143,7 @@ class LearnCard {
     required this.callDoctorIf,
     required this.reviewer,
     required this.disclaimer,
+    this.sources = const [],
     this.triage,
   });
 
@@ -138,6 +155,7 @@ class LearnCard {
   final List<String> callDoctorIf;
   final LearnReviewer reviewer;
   final String disclaimer;
+  final List<LearnSource> sources;
   final LearnTriage? triage;
 
   factory LearnCard.fromJson(Map<String, dynamic> json) {
@@ -150,6 +168,9 @@ class LearnCard {
       callDoctorIf: (json['callDoctorIf'] as List<dynamic>).cast<String>(),
       reviewer: LearnReviewer.fromJson(json['reviewer'] as Map<String, dynamic>),
       disclaimer: json['disclaimer'] as String,
+      sources: (json['sources'] as List<dynamic>? ?? const [])
+          .map((e) => LearnSource.fromJson(e as Map<String, dynamic>))
+          .toList(),
       triage: json['triage'] != null
           ? LearnTriage.fromJson(json['triage'] as Map<String, dynamic>)
           : null,

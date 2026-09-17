@@ -15,6 +15,16 @@
     "Rash with bloody stool or severe diarrhea",
     "You are unsure, a photo for your pediatrician's nurse line is a good start"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Diaper rash",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/diapers-clothing/Pages/Diaper-Rash.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Nappy rash",
+      "url": "https://www.nhs.uk/baby/caring-for-a-newborn/nappy-rash/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

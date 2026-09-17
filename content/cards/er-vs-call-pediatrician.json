@@ -15,6 +15,20 @@
     "Feeding or sleep questions that are not urgent",
     "You are unsure but baby is stable, call pediatrician first; they will say if you need ER"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): When to call emergency medical services",
+      "url": "https://www.healthychildren.org/English/health-issues/injuries-emergencies/Pages/When-to-Call-Emergency-Medical-Services-EMS.aspx"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Fever, when to call the pediatrician",
+      "url": "https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Fever in children",
+      "url": "https://www.nhs.uk/symptoms/fever-in-children/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

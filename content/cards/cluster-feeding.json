@@ -15,6 +15,20 @@
     "Fever of 100.4°F (38°C) or higher if under 3 months",
     "You are worried about feeding or weight, call; lactation support can help too"
   ],
+  "sources": [
+    {
+      "title": "NHS (UK National Health Service): Breastfeeding, the first few days",
+      "url": "https://www.nhs.uk/baby/breastfeeding-and-bottle-feeding/breastfeeding/the-first-few-days/"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Baby's first month, feeding and nutrition",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/The-First-Month-Feeding-and-Nutrition.aspx"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): How to tell if baby is getting enough milk",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/breastfeeding/Pages/How-to-Tell-if-Baby-is-Getting-Enough-Milk.aspx"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

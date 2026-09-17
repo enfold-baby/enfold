@@ -15,6 +15,16 @@
     "You want early intervention referral, ask at any visit; earlier support helps",
     "Your NICU or developmental follow-up clinic gave specific checklists, use those dates"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Corrected age for preemies",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/preemie/Pages/Corrected-Age-For-Preemies.aspx"
+    },
+    {
+      "title": "US Centers for Disease Control and Prevention: Developmental milestones (Learn the Signs. Act Early.)",
+      "url": "https://www.cdc.gov/act-early/milestones/index.html"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

@@ -15,6 +15,20 @@
     "Vomiting entire feeds repeatedly or signs of dehydration",
     "Anything your NICU team listed as \"call immediately\", those rules override general guides"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Getting ready to leave the NICU",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/preemie/Pages/Getting-Ready-to-Leave-the-NICU.aspx"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Preemie care and development",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/preemie/Pages/default.aspx"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Safe sleep, a parent's guide",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/A-Parents-Guide-to-Safe-Sleep.aspx"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

@@ -14,6 +14,20 @@
     "You want to discuss vitamin D in the context of your feeding plan",
     "Any reaction you think is from the supplement"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Vitamin D for babies, children and adolescents",
+      "url": "https://www.healthychildren.org/English/healthy-living/nutrition/Pages/vitamin-d-on-the-double.aspx"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Where we stand, vitamin D and iron supplements for babies",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Vitamin-Iron-Supplements.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Vitamins for children",
+      "url": "https://www.nhs.uk/baby/weaning-and-feeding/vitamins-for-children/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

@@ -15,6 +15,20 @@
     "Breathing difficulty, blue lips, or dehydration signs",
     "You want guidance after a known exposure, nurse lines can triage"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): How to cocoon a newborn, protecting baby from germs",
+      "url": "https://www.healthychildren.org/English/safety-prevention/immunizations/Pages/How-to-Cocoon-a-Newborn-Only-an-E-Mail-Away.aspx"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Fever, when to call the pediatrician",
+      "url": "https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Caring for a newborn",
+      "url": "https://www.nhs.uk/baby/caring-for-a-newborn/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

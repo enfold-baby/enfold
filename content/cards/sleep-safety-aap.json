@@ -14,6 +14,20 @@
     "Baby turns blue or gray around lips during feeds or sleep, seek emergency care",
     "You need help with safe sleep when exhausted, ask your clinician or postpartum support; plan shifts if possible"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): A parent's guide to safe sleep",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/sleep/Pages/A-Parents-Guide-to-Safe-Sleep.aspx"
+    },
+    {
+      "title": "AAP policy statement, Pediatrics: Sleep-related infant deaths, updated 2022 recommendations",
+      "url": "https://publications.aap.org/pediatrics/article/150/1/e2022057990/188304"
+    },
+    {
+      "title": "NHS (UK National Health Service): Sudden infant death syndrome (SIDS)",
+      "url": "https://www.nhs.uk/baby/caring-for-a-newborn/sudden-infant-death-syndrome-sids/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

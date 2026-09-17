@@ -7,6 +7,7 @@ import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
 import 'providers/learn_content_provider.dart';
 import 'widgets/learn_section.dart';
+import 'widgets/learn_sources.dart';
 import 'widgets/medical_disclaimer.dart';
 
 class LearnCardScreen extends ConsumerWidget {
@@ -91,6 +92,10 @@ class LearnCardScreen extends ConsumerWidget {
               color: AppColors.bloomDeep,
               bullets: card.callDoctorIf,
             ),
+            if (card.sources.isNotEmpty) ...[
+              const SizedBox(height: 24),
+              LearnSources(sources: card.sources),
+            ],
             const SizedBox(height: 24),
             Text(
               card.reviewer.displayLine,

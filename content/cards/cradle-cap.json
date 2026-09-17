@@ -15,6 +15,16 @@
     "No improvement after several weeks of gentle home care and you want guidance",
     "You are unsure if this is cradle cap or something else"
   ],
+  "sources": [
+    {
+      "title": "NHS (UK National Health Service): Cradle cap",
+      "url": "https://www.nhs.uk/conditions/cradle-cap/"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Cradle cap",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/bathing-skin-care/Pages/Cradle-Cap.aspx"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

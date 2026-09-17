@@ -16,6 +16,20 @@
     "Fever in a baby under 3 months",
     "Baby seems in pain or cannot keep any milk down"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Why babies spit up",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Why-Babies-Spit-Up.aspx"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Gastroesophageal reflux (GER) and GERD",
+      "url": "https://www.healthychildren.org/English/health-issues/conditions/abdominal/Pages/GERD-Reflux.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Diarrhoea and vomiting",
+      "url": "https://www.nhs.uk/symptoms/diarrhoea-and-vomiting/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

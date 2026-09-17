@@ -15,6 +15,16 @@
     "Diaper rash with broken skin, pus, or no improvement in 2–3 days of home care",
     "You are unsure, a photo for your pediatrician's nurse line is often enough to start"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Your newborn's skin, birthmarks and rashes",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/bathing-skin-care/Pages/Your-Newborns-Skin-Birthmarks-and-Rashes.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Rashes in babies and children",
+      "url": "https://www.nhs.uk/symptoms/rashes-babies-and-children/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

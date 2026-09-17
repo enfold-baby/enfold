@@ -15,6 +15,20 @@
     "Fever, vomiting, or unusual fussiness with jaundice",
     "Your pediatrician or hospital asked you to recheck bilirubin, follow that plan"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Jaundice",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/Pages/Jaundice.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Jaundice in newborn babies",
+      "url": "https://www.nhs.uk/conditions/jaundice-in-babies/"
+    },
+    {
+      "title": "AAP clinical practice guideline: Management of hyperbilirubinemia in the newborn infant 35 or more weeks of gestation (2022)",
+      "url": "https://publications.aap.org/pediatrics/article/150/3/e2022058859/188726"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

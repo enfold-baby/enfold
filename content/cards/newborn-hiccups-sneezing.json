@@ -15,6 +15,16 @@
     "Signs of dehydration or refusing feeds",
     "You cannot tell normal quirks from illness, call; that is OK"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Common conditions in newborns",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/Pages/Common-Conditions-in-Newborns.aspx"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Newborn reflexes",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/Pages/Newborn-Reflexes.aspx"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

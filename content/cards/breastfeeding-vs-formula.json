@@ -15,6 +15,20 @@
     "You want a lactation consult or formula guidance, your pediatrician can refer or advise",
     "You feel pressured or guilty, talk to your clinician; feeding should not break you"
   ],
+  "sources": [
+    {
+      "title": "NHS (UK National Health Service): Breastfeeding and bottle feeding",
+      "url": "https://www.nhs.uk/baby/breastfeeding-and-bottle-feeding/"
+    },
+    {
+      "title": "AAP policy statement, Pediatrics: Breastfeeding and the use of human milk (2022)",
+      "url": "https://publications.aap.org/pediatrics/article/150/1/e2022057988/188347"
+    },
+    {
+      "title": "World Health Organization: Infant and young child feeding",
+      "url": "https://www.who.int/news-room/fact-sheets/detail/infant-and-young-child-feeding"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

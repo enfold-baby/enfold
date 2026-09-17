@@ -15,6 +15,20 @@
     "Fever under 3 months with poor feeding",
     "Vomiting everything or refusing all feeds, seek care promptly"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Dehydration",
+      "url": "https://www.healthychildren.org/English/health-issues/injuries-emergencies/Pages/dehydration.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Dehydration",
+      "url": "https://www.nhs.uk/conditions/dehydration/"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): How to tell if baby is getting enough milk",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/breastfeeding/Pages/How-to-Tell-if-Baby-is-Getting-Enough-Milk.aspx"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

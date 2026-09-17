@@ -15,6 +15,20 @@
     "You cannot reach your pediatrician and baby is under 3 months with fever, go to ER",
     "Seizure, limpness, or you cannot wake baby"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Fever, when to call the pediatrician",
+      "url": "https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Fever in children",
+      "url": "https://www.nhs.uk/symptoms/fever-in-children/"
+    },
+    {
+      "title": "AAP clinical practice guideline: Evaluation and management of well-appearing febrile infants 8 to 60 days old (2021)",
+      "url": "https://publications.aap.org/pediatrics/article/148/2/e2021052228/179783"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

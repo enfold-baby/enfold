@@ -15,6 +15,20 @@
     "Injection site redness spreading or with red streaks",
     "You are unsure whether symptoms are vaccine-related, your clinic can guide you"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Immunization reactions",
+      "url": "https://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx?symptom=Immunization+Reactions"
+    },
+    {
+      "title": "NHS (UK National Health Service): NHS vaccinations and when to have them",
+      "url": "https://www.nhs.uk/vaccinations/nhs-vaccinations-and-when-to-have-them/"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Fever, when to call the pediatrician",
+      "url": "https://www.healthychildren.org/English/health-issues/conditions/fever/Pages/When-to-Call-the-Pediatrician.aspx"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

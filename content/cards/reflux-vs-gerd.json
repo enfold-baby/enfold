@@ -15,6 +15,20 @@
     "Baby in clear pain during or after every feed",
     "You wonder if this is more than normal spit-up, a visit can clarify"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Gastroesophageal reflux (GER) and GERD",
+      "url": "https://www.healthychildren.org/English/health-issues/conditions/abdominal/Pages/GERD-Reflux.aspx"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Why babies spit up",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/feeding-nutrition/Pages/Why-Babies-Spit-Up.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Reflux in babies",
+      "url": "https://www.nhs.uk/conditions/reflux-in-babies/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

@@ -15,6 +15,16 @@
     "You nicked the skin while trimming and it will not stop bleeding",
     "You want a nurse to show nail trimming in clinic, many offices will"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Nail care, fingers and toes",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/bathing-skin-care/Pages/Nail-Care-Fingers-and-Toes.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Caring for a newborn",
+      "url": "https://www.nhs.uk/baby/caring-for-a-newborn/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

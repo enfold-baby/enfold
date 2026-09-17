@@ -15,6 +15,20 @@
     "Not improved by 12 months, specialist evaluation may be needed",
     "You were given antibiotic drops, use as directed and call if worse"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Tear duct, blocked",
+      "url": "https://www.healthychildren.org/English/tips-tools/symptom-checker/Pages/symptomviewer.aspx?symptom=Tear+Duct+-+Blocked"
+    },
+    {
+      "title": "NHS (UK National Health Service): Watering eyes",
+      "url": "https://www.nhs.uk/symptoms/watering-eyes/"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Eye infections in infants and children",
+      "url": "https://www.healthychildren.org/English/health-issues/conditions/eyes/Pages/Eye-Infections.aspx"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

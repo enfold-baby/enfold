@@ -15,6 +15,20 @@
     "You feel unable to cope or angry enough to harm baby, put baby in a safe crib and call your clinician, a crisis line, or a trusted person immediately",
     "Possible shaken baby or head injury, emergency care"
   ],
+  "sources": [
+    {
+      "title": "National Center on Shaken Baby Syndrome: The Period of PURPLE Crying",
+      "url": "https://dontshake.org/purple-crying"
+    },
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Responding to your baby's cries",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/crying-colic/Pages/Responding-to-Your-Babys-Cries.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Colic",
+      "url": "https://www.nhs.uk/conditions/colic/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

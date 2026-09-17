@@ -15,6 +15,16 @@
     "Baby seems to struggle breathing during or after bath",
     "You want product recommendations for sensitive newborn skin"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): Bathing your newborn",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/bathing-skin-care/Pages/Bathing-Your-Newborn.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Washing and bathing your baby",
+      "url": "https://www.nhs.uk/baby/caring-for-a-newborn/washing-and-bathing-your-baby/"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",

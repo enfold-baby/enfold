@@ -15,6 +15,20 @@
     "Fever under 3 months",
     "You are worried about feeding or weight, lactation support and a weight check can help"
   ],
+  "sources": [
+    {
+      "title": "American Academy of Pediatrics (HealthyChildren.org): How to tell if baby is getting enough milk",
+      "url": "https://www.healthychildren.org/English/ages-stages/baby/breastfeeding/Pages/How-to-Tell-if-Baby-is-Getting-Enough-Milk.aspx"
+    },
+    {
+      "title": "NHS (UK National Health Service): Baby height and weight",
+      "url": "https://www.nhs.uk/baby/babys-development/height-weight-and-reviews/baby-height-and-weight/"
+    },
+    {
+      "title": "World Health Organization: Child growth standards",
+      "url": "https://www.who.int/tools/child-growth-standards"
+    }
+  ],
   "reviewer": {
     "name": "Pending physician review",
     "credentials": "",
