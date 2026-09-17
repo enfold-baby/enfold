@@ -9,8 +9,9 @@ import 'package:integration_test/integration_test.dart';
 /// Local docker API as seen from the Android emulator host bridge.
 const _apiBase = 'http://10.0.2.2:8282';
 
-const accountA = 'raul@globinary.io';
-const accountB = 'raulgldn@gmail.com';
+/// Two inboxes you own; the local API prints dev codes so no mail is needed.
+const accountA = String.fromEnvironment('ACCOUNT_A', defaultValue: 'parent-a@example.com');
+const accountB = String.fromEnvironment('ACCOUNT_B', defaultValue: 'parent-b@example.com');
 
 Future<String> _requestDevCode(String email) async {
   final response = await http.post(

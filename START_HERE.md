@@ -2,7 +2,7 @@
 
 > **Pickup 2026-09-14.** Google Play: 1.0.0+22 in review, 1.0.1+24 on internal testing. App Store: "Enfold: Baby Tracker" 1.0.1 (24)
 > waiting for review; TestFlight group "Raul's devices". Launch plan and evidence: `~/Desktop/LAUNCH-CHECKLIST.md` (outside the repo).
-> Prod deploy facts and the supporters wall: `ops/README.md`. Store listing: `assets/brand/store/app-store-listing.md`.
+> Prod deploy facts: private ops notes in `~/Documents/enfold/ops/` (outside the repo). Supporters wall: `docs/supporters-wall.md`. Store listing: `assets/brand/store/app-store-listing.md`.
 > Reviewer account: `~/Documents/enfold/play-reviewer-account.md`. Next: Stripe galaxy sandbox test (`feature/PICKUP.md`).
 
 

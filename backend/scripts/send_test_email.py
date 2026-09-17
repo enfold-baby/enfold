@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Send one SES test from the running API process. Usage:
 
-    python -m scripts.send_test_email raul@globinary.io
+    python -m scripts.send_test_email you@example.com
 """
 
 from __future__ import annotations

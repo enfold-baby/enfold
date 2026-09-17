@@ -130,7 +130,7 @@ Sleep in-progress is stored in `care_events.details_json` (`sleep_in_progress`, 
 | `POST /v1/beta-requests` | Landing launch-notify form |
 | `GET /v1/app-version` | Sideload version check (install path unwired) |
 
-**VPS:** `u_bloomdue@135.125.226.37` → `/home/u_bloomdue/bloomdue-platform`  
+**VPS:** host, user and directory in the private ops env (`~/Documents/enfold/ops/ops.env`)  
 Containers / Postgres role stay **bloomdue** (do not rename).
 
 **Mail:** SES live from `noreply@enfold.baby` · Graph fallback · SMTP broken (535) (`todos/SES_MAIL.md`)

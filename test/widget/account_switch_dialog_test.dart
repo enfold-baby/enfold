@@ -78,8 +78,8 @@ void main() {
 
   testWidgets('different account shows switch dialog; start fresh clears logs',
       (tester) async {
-    const userA = AuthUser(id: 'user-a', email: 'raul@globinary.io', displayName: 'Raul');
-    const userB = AuthUser(id: 'user-b', email: 'raulgldn@gmail.com', displayName: 'Raul G');
+    const userA = AuthUser(id: 'user-a', email: 'parent-a@example.com', displayName: 'Raul');
+    const userB = AuthUser(id: 'user-b', email: 'parent-b@example.com', displayName: 'Raul G');
 
     await db.settingsDao.setLastSignedInUserId(userA.id);
     await db.into(db.babies).insert(
@@ -135,8 +135,8 @@ void main() {
   });
 
   testWidgets('upload local keeps logs and unlinks server child', (tester) async {
-    const userA = AuthUser(id: 'user-a', email: 'raul@globinary.io', displayName: 'Raul');
-    const userB = AuthUser(id: 'user-b', email: 'raulgldn@gmail.com', displayName: 'Raul G');
+    const userA = AuthUser(id: 'user-a', email: 'parent-a@example.com', displayName: 'Raul');
+    const userB = AuthUser(id: 'user-b', email: 'parent-b@example.com', displayName: 'Raul G');
 
     await db.settingsDao.setLastSignedInUserId(userA.id);
     await db.into(db.babies).insert(
@@ -189,8 +189,8 @@ void main() {
   });
 
   testWidgets('cancel leaves signed out', (tester) async {
-    const userA = AuthUser(id: 'user-a', email: 'raul@globinary.io', displayName: 'Raul');
-    const userB = AuthUser(id: 'user-b', email: 'raulgldn@gmail.com', displayName: 'Raul G');
+    const userA = AuthUser(id: 'user-a', email: 'parent-a@example.com', displayName: 'Raul');
+    const userB = AuthUser(id: 'user-b', email: 'parent-b@example.com', displayName: 'Raul G');
 
     await db.settingsDao.setLastSignedInUserId(userA.id);
 

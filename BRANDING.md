@@ -69,7 +69,7 @@ Flutter: `google_fonts` package.
 
 | Layer | Choice | Notes |
 |---|---|---|
-| **API** | VPS FastAPI (`135.125.226.37`) | `/v1/care-events`, auth, children |
+| **API** | VPS FastAPI (single OVH VPS) | `/v1/care-events`, auth, children |
 | **Database** | PostgreSQL on VPS | `care_events`, `children`, `families`, `users` |
 | **Email** | SES live · Graph fallback | Codes send from `Enfold <noreply@enfold.baby>` via AWS SES (`eu-central-1`). Graph remains fallback. SMTP still 535s (`feature/todos/SES_MAIL.md`) |
 | **API base** | `https://api.enfold.baby` | Auth, children, care-events sync |
@@ -145,7 +145,7 @@ Sideload APKs: `~/Desktop/enfold-1.0.0-N.apk` (latest **+20**). In-app APK insta
 
 Source: `landing/public/` in this repo.  
 Deployed to the VPS landing container.  
-Redeploy: `SSHPASS='…' ./landing/deploy.sh` as `u_bloomdue@135.125.226.37`.  
+Redeploy: `SSHPASS='…' ./landing/deploy.sh` (host and user from the private ops env).  
 Analytics: SimpleAnalytics — no cookie banner.  
 Launch notify: `#notify` form (`#join-beta` still works) → `POST https://api.enfold.baby/v1/beta-requests`. Copy is **Google Play soon, iOS shortly after** — no store URLs, no sideload/download CTAs.  
 Help / support: [https://enfold.baby/support/](https://enfold.baby/support/) — share, plant a moon (Stripe pending), credits. No ads in the app.

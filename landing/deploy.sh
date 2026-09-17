@@ -4,10 +4,21 @@ set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 PUBLIC="$ROOT/public"
-REMOTE_HOST="${REMOTE_HOST:-u_bloomdue@135.125.226.37}"
+
+# Host, user and compose directory live outside the repo. Either export
+# REMOTE_HOST and REMOTE_DIR yourself or keep them in the private ops env file.
+OPS_ENV="${ENFOLD_OPS_ENV:-$HOME/Documents/enfold/ops/ops.env}"
+if [[ -f "$OPS_ENV" ]]; then
+  # shellcheck source=/dev/null
+  source "$OPS_ENV"
+fi
+if [[ -z "${REMOTE_HOST:-}" || -z "${REMOTE_DIR:-}" ]]; then
+  printf 'Set REMOTE_HOST (user@host) and REMOTE_DIR (compose directory), or create %s.\n' "$OPS_ENV" >&2
+  exit 1
+fi
 REMOTE_TMP="/tmp/enfold-landing-$$"
-REMOTE_PUBLIC="/home/u_bloomdue/bloomdue-platform/landing/public"
-COMPOSE_DIR="/home/u_bloomdue/bloomdue-platform"
+REMOTE_PUBLIC="$REMOTE_DIR/landing/public"
+COMPOSE_DIR="$REMOTE_DIR"
 
 if [[ -z "${SSHPASS:-}" ]]; then
   printf 'Set SSHPASS for VPS deploy (%s).\n' "$REMOTE_HOST" >&2

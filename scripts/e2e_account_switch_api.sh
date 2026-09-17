@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # API-level e2e: two real emails against local docker API.
+# Pass your own inboxes: ACCOUNT_A=you@example.com ACCOUNT_B=you+2@example.com ./scripts/e2e_account_switch_api.sh
 # Verifies each account only sees its own children/care events.
 set -euo pipefail
 
 API="${API_BASE:-http://127.0.0.1:8282}"
-ACCOUNT_A="${ACCOUNT_A:-raul@globinary.io}"
-ACCOUNT_B="${ACCOUNT_B:-raulgldn@gmail.com}"
+ACCOUNT_A="${ACCOUNT_A:?set ACCOUNT_A to an inbox you own}"
+ACCOUNT_B="${ACCOUNT_B:?set ACCOUNT_B to a second inbox you own}"
 
 echo "== health =="
 curl -sf "$API/health" | python3 -m json.tool

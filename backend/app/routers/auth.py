@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,6 +18,7 @@ from app.schemas import (
 )
 from app.services.email import EmailSender
 from app.services.otp import OtpStore
+from app.services.rate_limit import client_ip, enforce_limits
 
 router = APIRouter(prefix="/v1/auth", tags=["auth"])
 otp_store = OtpStore()
@@ -26,9 +27,26 @@ logger = logging.getLogger("enfold.auth")
 
 
 @router.post("/magic-code/request")
-async def request_magic_code(payload: MagicCodeRequest) -> dict:
+async def request_magic_code(payload: MagicCodeRequest, request: Request) -> dict:
     email = normalize_email(payload.email)
     settings = get_settings()
+    window = max(60, settings.magic_code_request_window_seconds)
+    await enforce_limits(
+        [
+            (
+                f"magic-code-request:ip:{client_ip(request)}",
+                settings.magic_code_requests_per_ip,
+                window,
+                "Too many sign-in requests from this network. Please try again later.",
+            ),
+            (
+                f"magic-code-request:email:{email}",
+                settings.magic_code_requests_per_email,
+                window,
+                "Too many sign-in codes requested for this email. Please try again later.",
+            ),
+        ]
+    )
     if settings.reviewer_email and settings.reviewer_code and email == normalize_email(settings.reviewer_email):
         # Store-review account: fixed code, no email.
         await otp_store.save(email, settings.reviewer_code)

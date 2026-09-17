@@ -5,10 +5,10 @@
 
 ## What’s true
 
-- AWS SES identity **`noreply@enfold.baby` is verified** in the FormKiosk AWS account (`249896948742`, `eu-central-1`).
+- AWS SES identity **`noreply@enfold.baby` is verified** (region `eu-central-1`).
 - IAM user `enfold-ses-send` can `ses:SendEmail` / `ses:SendRawEmail` on identity `enfold.baby`.
 - Keys live in VPS `.env` (`SES_REGION=eu-central-1`). Do not print them.
-- Probe send to `raulgldn@gmail.com` returned **SES_OK** (SES MessageId, not Graph).
+- Probe send to a personal Gmail inbox returned **SES_OK** (SES MessageId, not Graph).
 
 ## Fallback order
 

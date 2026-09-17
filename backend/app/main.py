@@ -19,6 +19,9 @@ from app.routers import (
 settings = get_settings()
 allowed_origins = set(settings.cors_origins)
 
+if settings.app_env == "production" and settings.jwt_secret == "dev-insecure-change-me":
+    raise RuntimeError("JWT_SECRET must be set to a long random value in production")
+
 app = FastAPI(title="Enfold API", version="0.1.0")
 
 

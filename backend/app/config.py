@@ -16,6 +16,13 @@ class Settings(BaseSettings):
     jwt_expire_minutes: int = 60 * 24 * 7
 
     magic_code_expire_minutes: int = 10
+    # A code is discarded after this many wrong guesses (6 digits, 10 minutes:
+    # without a cap the code space is small enough to brute-force).
+    magic_code_max_attempts: int = 5
+    # Sign-in code requests per fixed window, per email and per client IP.
+    magic_code_requests_per_email: int = 5
+    magic_code_requests_per_ip: int = 30
+    magic_code_request_window_seconds: int = 3600
     dev_magic_code_log: bool = True
 
     # Store-review account: this email always gets reviewer_code as its sign-in
