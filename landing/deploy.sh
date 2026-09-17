@@ -20,28 +20,23 @@ REMOTE_TMP="/tmp/enfold-landing-$$"
 REMOTE_PUBLIC="$REMOTE_DIR/landing/public"
 COMPOSE_DIR="$REMOTE_DIR"
 
-if [[ -z "${SSHPASS:-}" ]]; then
-  printf 'Set SSHPASS for VPS deploy (%s).\n' "$REMOTE_HOST" >&2
-  exit 1
+# Key auth by default. Set SSHPASS to fall back to password auth via sshpass.
+if [[ -n "${SSHPASS:-}" ]]; then
+  command -v sshpass >/dev/null 2>&1 || { printf 'sshpass is required for password auth.\n' >&2; exit 1; }
+  export SSHPASS
+  SSH_BIN=(sshpass -e ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no)
+  SCP_BIN=(sshpass -e scp -o PreferredAuthentications=password -o PubkeyAuthentication=no)
+else
+  SSH_BIN=(ssh -o BatchMode=yes)
+  SCP_BIN=(scp -o BatchMode=yes)
 fi
-
-if ! command -v sshpass >/dev/null 2>&1; then
-  printf 'sshpass is required for deploy.\n' >&2
-  exit 1
-fi
-
-export SSHPASS
 
 ssh_cmd() {
-  sshpass -e ssh -o StrictHostKeyChecking=accept-new \
-    -o PreferredAuthentications=password -o PubkeyAuthentication=no \
-    "$REMOTE_HOST" "$@"
+  "${SSH_BIN[@]}" -o StrictHostKeyChecking=accept-new "$REMOTE_HOST" "$@"
 }
 
 scp_cmd() {
-  sshpass -e scp -o StrictHostKeyChecking=accept-new \
-    -o PreferredAuthentications=password -o PubkeyAuthentication=no \
-    "$@"
+  "${SCP_BIN[@]}" -o StrictHostKeyChecking=accept-new "$@"
 }
 
 printf '==> Preparing remote temp directory\n'
