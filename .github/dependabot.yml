@@ -7,6 +7,12 @@ updates:
     groups:
       flutter:
         patterns: ["*"]
+        update-types: ["minor", "patch"]
+    # Major bumps (Riverpod 3, go_router, notifications) need a deliberate
+    # migration, not a bot PR.
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: pip
     directory: /backend
     schedule:
@@ -14,6 +20,10 @@ updates:
     groups:
       backend:
         patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
