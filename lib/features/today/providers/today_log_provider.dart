@@ -8,16 +8,41 @@ import '../../logs/providers/logs_providers.dart' show mapCareEvents;
 import '../models/care_log_details.dart';
 import '../models/care_log_entry.dart';
 import '../models/log_type.dart';
+import '../models/today_summary.dart';
 import '../../../core/datetime/calendar_day.dart';
 
 final todayLogProvider = StreamProvider<List<CareLogEntry>>((ref) {
   final db = ref.read(databaseProvider);
   // Re-subscribe after midnight so "today" moves with the calendar.
-  ref.watch(currentCalendarDayProvider);
+  final dayStart = ref.watch(currentCalendarDayProvider);
   return Stream.fromFuture(db.careLogDao.ensureDefaultBaby()).asyncExpand(
-    (babyId) => db.careLogDao.watchTodayLogs(babyId).map(mapCareEvents),
+    (babyId) => db.careLogDao
+        .watchTodayLogs(babyId)
+        .map(mapCareEvents)
+        .map((entries) => entriesForToday(entries, dayStart: dayStart)),
   );
 });
+
+/// Keeps the entries that belong on the Today screen: anything logged today,
+/// plus a sleep that began yesterday and is still running (its row is stamped
+/// with its start, so the plain date filter would drop it and Today would
+/// show 0 sleep at 6am after a night that started at 22:00).
+List<CareLogEntry> entriesForToday(
+  List<CareLogEntry> entries, {
+  required DateTime dayStart,
+  DateTime? now,
+}) {
+  final clock = now ?? DateTime.now();
+  return [
+    for (final entry in entries)
+      if (!entry.loggedAt.isBefore(dayStart) ||
+          (entry.type == LogType.sleep &&
+              entry.details.sleepInProgress == true &&
+              (TodaySummary.sleepInterval(entry, clock)?.end ?? clock)
+                  .isAfter(dayStart)))
+        entry,
+  ];
+}
 
 final careLogActionsProvider = Provider<CareLogActions>((ref) {
   return CareLogActions(ref);

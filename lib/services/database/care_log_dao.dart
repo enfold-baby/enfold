@@ -57,14 +57,18 @@ class CareLogDao extends DatabaseAccessor<AppDatabase> with _$CareLogDaoMixin {
     return id;
   }
 
+  /// Today's rows plus yesterday's, so an overnight sleep that is still in
+  /// progress (stamped with its start time) reaches the Today provider, which
+  /// trims the list down with `entriesForToday`.
   Stream<List<CareEvent>> watchTodayLogs(String babyId) {
     final range = _todayRange();
+    final start = range.start.subtract(const Duration(days: 1));
     return (select(careEvents)
           ..where(
             (e) =>
                 _isActive(e) &
                 e.babyId.equals(babyId) &
-                e.occurredAt.isBiggerOrEqualValue(range.start) &
+                e.occurredAt.isBiggerOrEqualValue(start) &
                 e.occurredAt.isSmallerThanValue(range.end),
           )
           ..orderBy([(e) => OrderingTerm.desc(e.occurredAt)]))

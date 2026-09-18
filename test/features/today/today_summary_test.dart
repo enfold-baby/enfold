@@ -67,6 +67,88 @@ void main() {
       expect(summary.sleepLabel, '45m');
     });
 
+    test('an overnight sleep only counts the part after midnight', () {
+      // Slept 22:00 to 02:00; Today (the 18th) should show 2h, not 4h.
+      final now = DateTime(2026, 9, 18, 9, 0);
+      final summary = TodaySummary.fromEntries(
+        [
+          CareLogEntry(
+            id: '1',
+            type: LogType.sleep,
+            loggedAt: DateTime(2026, 9, 18, 2, 0),
+            pendingSync: false,
+            details: CareLogDetails(
+              sleepStart: DateTime(2026, 9, 17, 22, 0),
+              sleepEnd: DateTime(2026, 9, 18, 2, 0),
+              durationMinutes: 240,
+            ),
+          ),
+        ],
+        now: now,
+      );
+      expect(summary.sleepMinutes, 120);
+      expect(summary.sleepLabel, '2h');
+    });
+
+    test('an in-progress sleep that began yesterday counts from midnight', () {
+      final now = DateTime(2026, 9, 18, 1, 30);
+      final summary = TodaySummary.fromEntries(
+        [
+          CareLogEntry(
+            id: '1',
+            type: LogType.sleep,
+            loggedAt: DateTime(2026, 9, 17, 23, 0),
+            pendingSync: false,
+            details: CareLogDetails(
+              sleepStart: DateTime(2026, 9, 17, 23, 0),
+              sleepInProgress: true,
+            ),
+          ),
+        ],
+        now: now,
+      );
+      expect(summary.sleepMinutes, 90);
+    });
+
+    test('a duration-only sleep row is anchored to its logged end time', () {
+      // 3h logged at 01:00 means 22:00 to 01:00: one hour belongs to today.
+      final now = DateTime(2026, 9, 18, 8, 0);
+      final summary = TodaySummary.fromEntries(
+        [
+          CareLogEntry(
+            id: '1',
+            type: LogType.sleep,
+            loggedAt: DateTime(2026, 9, 18, 1, 0),
+            pendingSync: false,
+            details: const CareLogDetails(durationMinutes: 180),
+          ),
+        ],
+        now: now,
+      );
+      expect(summary.sleepMinutes, 60);
+    });
+
+    test('a sleep entirely within today is unchanged', () {
+      final now = DateTime(2026, 9, 18, 16, 0);
+      final summary = TodaySummary.fromEntries(
+        [
+          CareLogEntry(
+            id: '1',
+            type: LogType.sleep,
+            loggedAt: DateTime(2026, 9, 18, 14, 0),
+            pendingSync: false,
+            details: CareLogDetails(
+              sleepStart: DateTime(2026, 9, 18, 12, 30),
+              sleepEnd: DateTime(2026, 9, 18, 14, 0),
+              durationMinutes: 90,
+            ),
+          ),
+        ],
+        now: now,
+      );
+      expect(summary.sleepMinutes, 90);
+    });
+
     test('empty day returns zeros', () {
       final summary = TodaySummary.fromEntries([]);
       expect(summary.feedCount, 0);

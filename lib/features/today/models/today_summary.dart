@@ -1,3 +1,4 @@
+import '../../../core/datetime/calendar_day.dart';
 import 'care_log_entry.dart';
 import 'log_type.dart';
 
@@ -49,14 +50,41 @@ class TodaySummary {
     );
   }
 
+  /// Minutes of [entry]'s sleep that fall inside [now]'s calendar day.
+  ///
+  /// A sleep row is stamped with its end time, so a night that ran 22:00 to
+  /// 02:00 shows up in today's list with 4h of duration. Only the part after
+  /// midnight belongs to today, so the interval is clipped to the day.
   static int _sleepMinutesFor(CareLogEntry entry, DateTime now) {
+    final interval = sleepInterval(entry, now);
+    if (interval == null) return 0;
+    final dayStart = calendarDayStart(now);
+    final dayEnd = calendarDayEnd(dayStart);
+    final start = interval.start.isAfter(dayStart) ? interval.start : dayStart;
+    final end = interval.end.isBefore(dayEnd) ? interval.end : dayEnd;
+    final minutes = end.difference(start).inMinutes;
+    return minutes < 0 ? 0 : minutes;
+  }
+
+  /// The [start, end) span of a sleep entry, or null when it has no duration.
+  /// An in-progress sleep runs until [now]. Rows saved with only a duration
+  /// are anchored to their logged time, which is the sleep's end.
+  static ({DateTime start, DateTime end})? sleepInterval(
+    CareLogEntry entry,
+    DateTime now,
+  ) {
     final details = entry.details;
     if (details.sleepInProgress == true) {
       final start = details.sleepStart ?? entry.loggedAt;
-      final minutes = now.difference(start).inMinutes;
-      return minutes < 0 ? 0 : minutes;
+      return (start: start, end: now.isAfter(start) ? now : start);
     }
-    return details.resolvedSleepDurationMinutes ?? 0;
+    final end = details.sleepEnd ?? entry.loggedAt;
+    final start = details.sleepStart ??
+        (details.durationMinutes != null
+            ? end.subtract(Duration(minutes: details.durationMinutes!))
+            : null);
+    if (start == null) return null;
+    return (start: start, end: end);
   }
 
   String get sleepLabel {
