@@ -12,6 +12,7 @@
 - **App Store: LIVE.** 1.0.1 (27) approved after the 1.4.1 citations fix; listing at https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288 (App Store Connect state READY_FOR_DISTRIBUTION, checked 2026-09-21).
 - **Google Play: not public yet.** Production 1.0.0+22 was submitted 2026-09-12; 1.0.1+24 sits on internal testing. Check the Play Console; when 22 is live, promote a build from current `main` (has the citations and the sleep fix), not 24.
 - **Open source since 2026-09-17.** Org `enfold-baby`, repo `enfold`, AGPL-3.0 + app store covenant, learn cards CC BY-NC-ND, brand and illustrations reserved (`TRADEMARK.md`). CI, Dependabot (minor/patch only), secret scanning, branch ruleset on `main`, org profile, verified domain, Sponsor button. Launch thread on X: https://x.com/Gl0deanR/status/2100594197900181840.
+- **Launch posts (2026-09-21):** Product Hunt scheduled for Wed 2026-09-23 00:01 PT; dev.to article scheduled 2026-09-21 15:00 Bucharest; r/opensource posted; TrustMRR page live (trustmrr.com/startup/enfold). Raul's decision: only PH, X, dev.to and Reddit; Peerlist, HN, Indie Hackers and LinkedIn parked. Copy: `feature/todos/LAUNCH_COPY.md`.
 - **Site** says open source everywhere (home section, `/open/` first section); still says "stores soon" until this session's copy update.
 
 ## Done recently
