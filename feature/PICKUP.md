@@ -11,10 +11,22 @@ Copy one of these into a fresh chat:
 
 ```
 Read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md and ~/Desktop/LAUNCH-CHECKLIST.md (pickup at the top).
-Enfold 1.0.1+25, Drift schema v14. Play: 1.0.0+22 in review, 1.0.1+24 on internal testing. App Store: 1.0.1 (24) in review.
+Enfold 1.0.1+27, Drift schema v14, 208 tests. App Store: 1.0.1 live (id 6811765288). Play: 1.0.0+22 in review since 12 Sep, 1.0.1+24 on internal testing.
+Code is public: github.com/enfold-baby/enfold (AGPL-3.0). Never put VPS hosts, ssh users, personal inboxes or account ids into tracked files.
 Debug API → http://10.0.2.2:8282 (Android emulator); release → https://api.enfold.baby.
 Local docker: docker compose up -d. Contact: support@enfold.baby. Prod VPS is updated by copying files (private ops notes, ~/Documents/enfold/ops/).
 Keep markdown current as we ship. No em dashes. Logins, legal agreements, payments and public posts are Raul's keyboard.
+```
+
+---
+
+## Launch everywhere (Product Hunt, Peerlist, HN, Reddit, ...)
+
+```
+Enfold launch push. Read feature/SESSION.md, feature/todos/LAUNCH_POSTS.md and ~/Desktop/LAUNCH-CHECKLIST.md section 8.
+Facts: Enfold is live on the App Store (https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288), Google Play pending. Open source since 17 Sep 2026: github.com/enfold-baby/enfold, AGPL-3.0. Free, no ads, built by a developer and a neonatologist. Site enfold.baby, /open, /support (donations). X thread already posted: https://x.com/Gl0deanR/status/2100594197900181840.
+Assets: ~/Documents/enfold/review/ (three phone screenshots, 1600x900 composite), landing/public/og-image.jpg, assets/brand/store/.
+Job: for each platform in LAUNCH_POSTS.md prepare the exact copy (title, tagline, description, first comment, tags), the image set, and the best posting time; open the submission page in the browser and fill everything; stop before the final Post/Submit button. Posting is Raul's keyboard. No em dashes. No fake numbers, no asking friends to upvote.
 ```
 
 ---

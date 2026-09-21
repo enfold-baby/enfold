@@ -1,6 +1,6 @@
 # Todo — learn card physician review
 
-> **Priority:** P3 · **Status:** 25 cards written, formal review still pending (2026-09)
+> **Priority:** P2 · **Status:** review pack sent to Raul for Oana on 2026-09-17 (`~/Documents/enfold/review/learn-cards-review-pack-2026-09-17.docx`, urgent cards first). Every card already carries a `sources` list (public citations). Cards are public on GitHub, so sign-offs land in public.
 
 ## Content inventory
 

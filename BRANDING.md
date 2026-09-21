@@ -112,6 +112,9 @@ App talks to **our VPS API**, not Supabase. Local Drift schema mirrors server `c
 31. **Phase 30** — Care-log date picker bounds (3 years back … tomorrow) ✅
 32. **Phase 31** — 12-hour vs 24-hour clock in Settings (Drift v12) ✅
 33. **Phase 32** — Daily vitamin reminder (one time of day, no streak) ✅
+34. **Phase 33** — Open source: `enfold-baby/enfold` public under AGPL-3.0, site and /open updated (2026-09-17) ✅
+35. **Phase 34** — Learn card citations ("Sources" on every card); App Store 1.0.1 approved and live ✅
+36. **Phase 35** — Today sleep total clipped to the calendar day ✅
 
 **Docs hub:** [`feature/README.md`](./feature/README.md)
 

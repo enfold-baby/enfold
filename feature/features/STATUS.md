@@ -1,7 +1,7 @@
 # Feature status — what's built
 
-> Snapshot as of **2026-09-09**. Source of truth is the code; update this when shipping.  
-> App: **`1.0.0+20`** · Drift **v13** · API + landing + support live on prod.
+> Snapshot as of **2026-09-21**. Source of truth is the code; update this when shipping.  
+> App: **`1.0.1+27`** · Drift **v14** · App Store live · Play pending · API + landing + support live · code public (AGPL-3.0).
 
 ## App shell
 
@@ -9,7 +9,7 @@
 |---|---|---|
 | Today | Quick log tiles, summary, recent, **active sleep banner**, growth/meds shortcuts, pregnancy shortcut while expecting | ✅ |
 | Logs | Hub + per-type lists, filters, period bar, active sleep banner, 10-at-a-time Load more | ✅ |
-| Learn | 25 cards, search/filter, triage flow | ✅ |
+| Learn | 25 cards, search/filter, triage flow, **Sources section with citations on every card** (App Review 1.4.1) | ✅ |
 | Settings | Account, caregiver, partner, profile, pregnancy link, export, units, theme, legal, delete account | ✅ |
 
 **Not a tab:** Pregnancy is a full-screen route (`/pregnancy`) from Settings, Today (while expecting), and the Add sheet.
@@ -37,7 +37,7 @@
 
 ## Today screen extras
 
-- Day summary cards (feeds, diapers, sleep minutes — includes in-progress sleep)
+- Day summary cards (feeds, diapers, sleep minutes: clipped to the calendar day, includes in-progress sleep even if it began yesterday)
 - **Sleeping now** banner with elapsed time + Wake up
 - Recent log list with attribution when partner linked
 - Gentle partner nudge banner (dismissible per session)

@@ -1,7 +1,7 @@
 # Todos — what to work on next
 
 > Prioritized pending work. For implemented features see [features/STATUS.md](../features/STATUS.md).  
-> **Focus now:** Play listing leftovers, Stripe help-page links. Keep docs current as we ship.
+> **Focus now:** launch posts on every platform (`LAUNCH_POSTS.md`), Google Play promotion, Romanian UI. Keep docs current as we ship.
 
 ## Queue
 
@@ -15,12 +15,14 @@
 | ✅ | ~~SES from noreply@enfold.baby~~ | [SES_MAIL.md](./SES_MAIL.md) | Live 2026-09-07 |
 | ✅ | ~~4-tab shell + docked Add FAB~~ | — | 2026-09 |
 | ✅ | ~~Growth history trend charts~~ | — | 2026-09 |
-| 🟠 P1 | **Play listing leftovers** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Screenshots, Data safety, AAB upload |
-| 🟠 P2 | **Stripe plant-a-moon links** | [STRIPE_SUPPORT.md](./STRIPE_SUPPORT.md) | Payment Link URLs |
+| 🟠 P1 | **Launch posts everywhere** | [LAUNCH_POSTS.md](./LAUNCH_POSTS.md) | Copy + assets prepared, Raul posts |
+| 🟠 P1 | **Google Play: promote from main once 22 is live** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Then Play badge on the site |
+| 🟠 P2 | **Romanian UI** | [I18N_RO.md](./I18N_RO.md) | gen-l10n + ARB, ~280 strings, 2 to 3 sessions |
+| 🟠 P2 | **Learn card physician review** | [CONTENT_REVIEW.md](./CONTENT_REVIEW.md) | Pack sent to Oana 2026-09-17 |
 | 🟠 P2 | **Multiple children per family** | [MULTI_CHILD.md](./MULTI_CHILD.md) | Active child switcher |
-| 🟡 P3 | **Learn card physician review** | [CONTENT_REVIEW.md](./CONTENT_REVIEW.md) | Human in the loop |
 | 🟡 P3 | **Real-time partner sync** | — | Websocket or denser pull |
-| 🟢 P4 | **Romanian i18n** | [I18N_RO.md](./I18N_RO.md) | Plan locked; sleep on it |
+| 🟡 P3 | Replace Adobe-derived illustrations with original art | — | Then drop the carve-out in LICENSE-NOTES.md |
+| 🟡 P3 | Riverpod 3 / go_router 18 / notifications 22 migration | — | Dependabot ignores majors on purpose |
 | 🟢 P4 | Anonymous-first auth | [roadmaps/VERSION.md](../roadmaps/VERSION.md) | Medium |
 | 🟢 P4 | iOS TestFlight + APNs key | [FCM_PARTNER_PUSH.md](./FCM_PARTNER_PUSH.md) | Apple Developer |
 | 🟢 P4 | 2×/day + short med courses | [roadmaps/VERSION.md](../roadmaps/VERSION.md) | After daily vitamin reminder |
@@ -37,6 +39,11 @@ Sideload APK installer was **removed** for Play policy (see [APP_VERSION_UPDATE.
 
 ## Recently completed ✅
 
+- Today sleep total clipped to the calendar day; overnight in-progress sleep stays on Today (2026-09-18, not yet in a store build)
+- Learn card citations ("Sources" section, 53 verified links) after Apple's 1.4.1 rejection; build 27 approved, App Store live (2026-09-17)
+- Open source: repo public under `enfold-baby/enfold`, AGPL-3.0, community files, CI, security features, org profile, site updated (2026-09-17)
+- Backend auth abuse limits, JWT secret guard, Dependabot bumps deployed (2026-09-17)
+- Stripe plant-a-moon links: 4 live + 4 sandbox Payment Links, supporters wall and galaxy live (2026-09-12)
 - Daily vitamin reminder (one time of day, Today Given, local ping, no streak) — Drift v13, 2026-09-10
 - 12-hour (AM/PM) vs 24-hour clock in Settings (Drift v12, 2026-09-09)
 - Docs catch-up for working-tree UX (2026-09-09)

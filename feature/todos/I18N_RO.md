@@ -1,7 +1,8 @@
 # Todo — Romanian (agreed, not started)
 
-> **Priority:** P4 · **Status:** Plan locked; sleep on implementation  
-> **Repo:** stays **private** for now (no Crowdin / public translation PRs yet)
+> **Priority:** P2 (moved up 2026-09-17: Raul's mother-in-law helps with Damian and reads no English) · **Status:** not started  
+> **Repo:** public since 2026-09-17, so community translation PRs are possible once ARB files exist. Weblate Libre or POEditor application after that.
+> **Plan:** flutter gen-l10n + ARB, extract ~280 hardcoded UI strings, Romanian draft by Claude, native check by Raul and Oana, Settings > Language override, device-locale default. Learn cards stay English until Oana can review a medical translation. Estimate 2 to 3 sessions.
 
 ## UX (locked)
 

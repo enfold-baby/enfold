@@ -70,5 +70,5 @@ Found something? Email support@enfold.baby instead of opening an issue. See
 
 ## Status
 
-Version `1.0.1+26`. Google Play and App Store releases are in review as of September 2026.
+Version `1.0.1+27`. Live on the [App Store](https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288); the Google Play release is in review as of September 2026.
 Where we left off: [`feature/SESSION.md`](./feature/SESSION.md).

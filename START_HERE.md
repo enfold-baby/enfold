@@ -1,7 +1,8 @@
 # Enfold.baby — Project Kickoff
 
-> **Pickup 2026-09-14.** Google Play: 1.0.0+22 in review, 1.0.1+24 on internal testing. App Store: "Enfold: Baby Tracker" 1.0.1 (24)
-> waiting for review; TestFlight group "Raul's devices". Launch plan and evidence: `~/Desktop/LAUNCH-CHECKLIST.md` (outside the repo).
+> **Pickup 2026-09-21.** App Store: "Enfold: Baby Tracker" 1.0.1 (27) LIVE (https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288).
+> Google Play: 1.0.0+22 in review since 12 Sep, 1.0.1+24 on internal testing. Code public since 17 Sep: github.com/enfold-baby/enfold (AGPL-3.0).
+> Launch plan and evidence: `~/Desktop/LAUNCH-CHECKLIST.md` (outside the repo). Next: launch posts on every platform (`feature/todos/LAUNCH_POSTS.md`).
 > Prod deploy facts: private ops notes in `~/Documents/enfold/ops/` (outside the repo). Supporters wall: `docs/supporters-wall.md`. Store listing: `assets/brand/store/app-store-listing.md`.
 > Reviewer account: `~/Documents/enfold/play-reviewer-account.md`. Next: Stripe galaxy sandbox test (`feature/PICKUP.md`).
 
@@ -10,7 +11,7 @@
 > **Domain:** [enfold.baby](https://enfold.baby)  
 > **Folder:** this repo (`bloomdue_baby` on disk; product name **Enfold**)  
 > **Stack:** Flutter + Dart · Android + iOS · free globally  
-> **Current:** `1.0.1+25` · Drift schema v14 · 4-tab shell + Add FAB · VPS API live · FCM (Android + iOS APNs) + SES mail live
+> **Current:** `1.0.1+27` · Drift schema v14 · open source (AGPL-3.0) · 4-tab shell + Add FAB · VPS API live · FCM (Android + iOS APNs) + SES mail live
 
 **Resuming work?** → [`feature/SESSION.md`](./feature/SESSION.md) · **What's next?** → [`feature/todos/README.md`](./feature/todos/README.md) · **Keep docs fresh:** [`feature/MAINTAIN.md`](./feature/MAINTAIN.md)
 

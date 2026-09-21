@@ -1,7 +1,7 @@
 # Enfold — feature docs hub
 
-> **Last updated:** 2026-09-10 · **App version:** `1.0.0+20` · **Drift schema:** v13  
-> **Prod:** landing + API live · support page live · FCM sender live · SES mail live
+> **Last updated:** 2026-09-21 · **App version:** `1.0.1+27` · **Drift schema:** v14 · **Tests:** 208  
+> **Prod:** App Store live · Play pending · landing + API live · code public at github.com/enfold-baby/enfold
 
 Central index for what's built, what's next, and how to resume work.
 
@@ -20,7 +20,8 @@ Central index for what's built, what's next, and how to resume work.
 |---|---|
 | Project kickoff & mission | [`START_HERE.md`](../START_HERE.md) |
 | Brand, colors, build phases | [`BRANDING.md`](../BRANDING.md) |
-| Learn card content | [`content/manifest.json`](../content/manifest.json) (25 cards) |
+| Learn card content | [`content/manifest.json`](../content/manifest.json) (25 cards, each with a `sources` list; license `content/LICENSE.md`) |
+| Open source files | `LICENSE`, `LICENSE-NOTES.md`, `TRADEMARK.md`, `CONTRIBUTING.md`, `SECURITY.md` at the repo root |
 | Root README | [`README.md`](../README.md) |
 
 ## Quick status

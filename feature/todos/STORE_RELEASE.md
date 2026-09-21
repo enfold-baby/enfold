@@ -33,6 +33,6 @@ First Play Console upload:
 
 Back up `android/upload-keystore.jks` and `android/key.properties`. Losing the upload key blocks later updates.
 
-## iOS TestFlight
+## iOS App Store
 
-Still needs an Apple Developer account + App ID `baby.enfold.app`. DUNS is for the Apple org account, not Play.
+Done. 1.0.1 (27) approved and live on 2026-09-2x at https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288 after two rounds: Guideline 2.1 information request (screen recording, answered 2026-09-15) and Guideline 1.4.1 (medical content needs citations; fixed with a Sources section on every learn card, build 27, 2026-09-17). Release flow: `./ios/release.sh --upload`, then swap the build on the version page and Resubmit; details in the iOS memory note and `~/Desktop/LAUNCH-CHECKLIST.md` 9b.
