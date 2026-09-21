@@ -19,7 +19,7 @@
 | Product Hunt | 🟡 scheduled by Raul for Wed 2026-09-23 00:01 PT (10:01 Romania) | Copy in `LAUNCH_COPY.md`; gallery `~/Documents/enfold/launch/ph-0*.jpg`. Needs: tagline (60 chars), description (260), 3 to 5 gallery images 1270x760, first comment (maker story), topics: Parenting, Health & Fitness, Open Source. Launch 00:01 PT on a Tuesday to Thursday. Hunter: Raul himself is fine. |
 | Peerlist | ⏸ parked 2026-09-21 (Raul: PH, X, dev.to, Reddit only for now) | Project page + launch post; Raul's profile needs Enfold as a project first |
 | Hacker News | ⏸ parked 2026-09-21 (copy ready in `LAUNCH_COPY.md` if wanted later) | "Show HN: Enfold, an open-source baby tracker built with my neonatologist wife" + a short first comment with the why. Post 8 to 10am ET on a weekday. Link to the GitHub repo, not the store. |
-| Reddit | 🟡 r/opensource posted 2026-09-21: https://www.reddit.com/r/opensource/comments/1wm7rwp/we_opensourced_our_baby_tracker_app_flutter/ (Promotional flair); r/FlutterDev and r/selfhosted next, one per day | r/opensource, r/FlutterDev, r/selfhosted (backend is self-hostable), r/NewParents and r/beyondthebump only if the sub allows app posts (read rules first) |
+| Reddit | ⏸ r/opensource post 2026-09-21 auto-removed: account karma below the sub's threshold (not in the listed rules, automod). r/FlutterDev and r/selfhosted filter the same way. Options: comment genuinely for a few days first, then post; or skip Reddit for this launch | r/opensource, r/FlutterDev, r/selfhosted (backend is self-hostable), r/NewParents and r/beyondthebump only if the sub allows app posts (read rules first) |
 | Indie Hackers | ⏸ parked 2026-09-21 | Product listing + a "we open-sourced our baby app" post |
 | Lobsters | ⬜ | Needs an invite; skip unless someone offers |
 | dev.to / Hashnode | 🟡 dev.to scheduled by Raul for 2026-09-21 15:00 Bucharest: https://dev.to/gl0deanr/why-we-open-sourced-a-baby-health-app-and-what-the-license-carve-outs-are-o07 | Long-form: "Why we open-sourced a baby health app (and what the license carve-outs are)" |
@@ -38,4 +38,5 @@
 
 - No em dashes. No fake users, reviews or upvotes. Never ask friends to upvote.
 - Reply to comments within the first hour; Raul does that.
+- Reddit: check the account's karma before filling any submit form; most target subs auto-remove low-karma self-promotion regardless of flair.
 - Every post links the GitHub repo and enfold.baby; store link only where the platform is consumer-facing.
