@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/system_ui.dart';
 import 'features/settings/providers/theme_providers.dart';
 import 'features/settings/providers/time_format_providers.dart';
 import 'features/medication/providers/medication_routine_providers.dart';
@@ -36,7 +38,12 @@ class EnfoldApp extends ConsumerWidget {
           data: MediaQuery.of(context).copyWith(
             alwaysUse24HourFormat: use24Hour,
           ),
-          child: child ?? const SizedBox.shrink(),
+          // Edge to edge: the bars stay transparent and their icons follow the
+          // theme. Screens with an AppBar override this from deeper in the tree.
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUi.overlayStyle(Theme.of(context).brightness),
+            child: child ?? const SizedBox.shrink(),
+          ),
         );
       },
     );
