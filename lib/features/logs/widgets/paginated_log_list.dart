@@ -41,7 +41,7 @@ class PaginatedLogList extends ConsumerWidget {
         child: Center(child: CircularProgressIndicator()),
       ),
       error: (_, _) => Text(
-        'Could not load logs.',
+        AppL10n.of(context).logsLoadFailed,
         style: GoogleFonts.nunito(
           color: AppColors.mutedText(Theme.of(context).brightness),
         ),

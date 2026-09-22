@@ -1,13 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../features/settings/providers/locale_providers.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../auth/auth_providers.dart';
 import '../database/database_provider.dart';
 import 'sync_service.dart';
 
 final syncServiceProvider = Provider<SyncService>((ref) {
+  // Rebuilds when the language override loads or changes, so sync errors
+  // speak the same language as the rest of the app.
+  final override = ref.watch(localeOverrideProvider).valueOrNull;
   return SyncService(
     api: ref.watch(apiClientProvider),
     db: ref.watch(databaseProvider),
+    l10n: lookupAppL10n(override ?? resolvedDeviceLocale()),
   );
 });
 

@@ -598,5 +598,9 @@
   "summaryHoursMinutes": "{hours}h {minutes}m",
   "quickLogSupporting": "Vezi notările · ține apăsat ca să adaugi",
   "apiRequestFailed": "Cererea a eșuat",
-  "apiRequestFailedWithCode": "Cererea a eșuat ({code})"
+  "apiRequestFailedWithCode": "Cererea a eșuat ({code})",
+  "nudgeBannerTitle": "Aducere aminte blândă",
+  "growthMeasurementLogged": "Măsurătoare notată",
+  "attributionYou": "tu",
+  "attributionPartner": "Partener"
 }

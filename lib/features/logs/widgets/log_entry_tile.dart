@@ -39,6 +39,7 @@ class LogEntryTile extends ConsumerWidget {
             : 'on device';
     final detail = entry.detailSummary(l10n, useImperial: useImperial);
     final loggedBy = entry.loggedByLabel(
+      l10n,
       currentUserId: currentUserId,
       showAttribution: showAttribution,
     );

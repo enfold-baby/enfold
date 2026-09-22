@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/units/growth_units.dart';
 import '../../settings/providers/time_format_providers.dart';
 import '../models/growth_measurement_entry.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class MeasurementTile extends ConsumerWidget {
   const MeasurementTile({
@@ -62,7 +63,9 @@ class MeasurementTile extends ConsumerWidget {
           style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
         ),
         subtitle: Text(
-          parts.isEmpty ? 'Measurement logged' : parts.join(' · '),
+          parts.isEmpty
+              ? AppL10n.of(context).growthMeasurementLogged
+              : parts.join(' · '),
           style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
         ),
         trailing: IconButton(

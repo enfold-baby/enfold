@@ -8,6 +8,8 @@ import '../api/family_models.dart';
 import '../auth/auth_session.dart';
 import '../database/app_database.dart';
 import '../database/care_log_dao.dart';
+import '../../features/settings/providers/locale_providers.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class SyncResult {
   const SyncResult({
@@ -29,11 +31,17 @@ class SyncService {
   SyncService({
     required EnfoldApiClient api,
     required AppDatabase db,
+    AppL10n? l10n,
   })  : _api = api,
-        _db = db;
+        _db = db,
+        _l10n = l10n ?? lookupAppL10n(resolvedDeviceLocale());
 
   final EnfoldApiClient _api;
   final AppDatabase _db;
+
+  /// Sync errors surface in the UI ("Sync failed: ..."), so they follow the
+  /// app language. The provider passes the same locale the UI shows.
+  final AppL10n _l10n;
 
   static const pullLookbackDays = 2;
   static final _fullHistorySince = DateTime.utc(2000);
@@ -80,7 +88,7 @@ class SyncService {
           createIfMissing: true,
         );
         if (childId == null) {
-          return const SyncResult(pushed: 0, error: 'Could not link a baby profile');
+          return SyncResult(pushed: 0, error: _l10n.syncLinkBabyFailed);
         }
 
         // A stale child link after join/leave: re-link once and retry.
@@ -209,7 +217,7 @@ class SyncService {
         createIfMissing: true,
       );
       if (serverChildId == null) {
-        return const SyncResult(pushed: 0, error: 'Could not link a baby profile');
+        return SyncResult(pushed: 0, error: _l10n.syncLinkBabyFailed);
       }
 
       var pushed = 0;

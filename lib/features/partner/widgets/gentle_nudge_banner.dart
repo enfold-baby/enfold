@@ -34,7 +34,7 @@ class GentleNudgeBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Gentle reminder',
+                  AppL10n.of(context).nudgeBannerTitle,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w800,
                     color: nudge.type.color,

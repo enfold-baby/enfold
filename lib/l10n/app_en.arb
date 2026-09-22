@@ -1218,5 +1218,9 @@
         "type": "int"
       }
     }
-  }
+  },
+  "nudgeBannerTitle": "Gentle reminder",
+  "growthMeasurementLogged": "Measurement logged",
+  "attributionYou": "you",
+  "attributionPartner": "Partner"
 }

@@ -1,6 +1,8 @@
 import 'package:enfold/features/today/models/care_log_entry.dart';
 import 'package:enfold/features/today/models/log_type.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:enfold/l10n/generated/app_localizations.dart';
+import 'package:flutter/widgets.dart';
 
 CareLogEntry _entry({
   String? loggedByUserId,
@@ -17,10 +19,11 @@ CareLogEntry _entry({
 }
 
 void main() {
+  final l10n = lookupAppL10n(const Locale('en'));
   test('loggedByLabel returns you for current user', () {
     final entry = _entry(loggedByUserId: 'user-1', loggedByDisplayName: 'Raul');
     expect(
-      entry.loggedByLabel(currentUserId: 'user-1', showAttribution: true),
+      entry.loggedByLabel(l10n, currentUserId: 'user-1', showAttribution: true),
       'you',
     );
   });
@@ -28,7 +31,7 @@ void main() {
   test('loggedByLabel returns partner display name', () {
     final entry = _entry(loggedByUserId: 'user-2', loggedByDisplayName: 'Raul');
     expect(
-      entry.loggedByLabel(currentUserId: 'user-1', showAttribution: true),
+      entry.loggedByLabel(l10n, currentUserId: 'user-1', showAttribution: true),
       'Raul',
     );
   });
@@ -36,7 +39,7 @@ void main() {
   test('loggedByLabel falls back to Partner without display name', () {
     final entry = _entry(loggedByUserId: 'user-2');
     expect(
-      entry.loggedByLabel(currentUserId: 'user-1', showAttribution: true),
+      entry.loggedByLabel(l10n, currentUserId: 'user-1', showAttribution: true),
       'Partner',
     );
   });
@@ -44,9 +47,9 @@ void main() {
   test('loggedByLabel hidden when attribution disabled or missing author', () {
     expect(
       _entry(loggedByUserId: 'user-2', loggedByDisplayName: 'Raul')
-          .loggedByLabel(showAttribution: false),
+          .loggedByLabel(l10n, showAttribution: false),
       isNull,
     );
-    expect(_entry().loggedByLabel(showAttribution: true), isNull);
+    expect(_entry().loggedByLabel(l10n, showAttribution: true), isNull);
   });
 }

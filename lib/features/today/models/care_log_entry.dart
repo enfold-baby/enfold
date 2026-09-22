@@ -28,14 +28,18 @@ class CareLogEntry {
   final String? loggedByUserId;
   final String? loggedByDisplayName;
 
-  String? loggedByLabel({String? currentUserId, bool showAttribution = true}) {
+  String? loggedByLabel(
+    AppL10n l10n, {
+    String? currentUserId,
+    bool showAttribution = true,
+  }) {
     if (!showAttribution || loggedByUserId == null) return null;
     if (currentUserId != null && loggedByUserId == currentUserId) {
-      return 'you';
+      return l10n.attributionYou;
     }
     final name = loggedByDisplayName?.trim();
     if (name != null && name.isNotEmpty) return name;
-    return 'Partner';
+    return l10n.attributionPartner;
   }
 
   /// Primary time shown on log tiles.
