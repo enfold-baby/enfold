@@ -44,11 +44,11 @@ import 'widgets/today_summary_cards.dart';
 class TodayScreen extends ConsumerStatefulWidget {
   const TodayScreen({super.key});
 
-  static String greetingForHour(int hour) {
-    if (hour >= 5 && hour < 12) return 'Good morning';
-    if (hour >= 12 && hour < 17) return 'Good afternoon';
-    if (hour >= 17 && hour < 22) return 'Good evening';
-    return 'Good night';
+  static String greetingForHour(AppL10n l10n, int hour) {
+    if (hour >= 5 && hour < 12) return l10n.todayGreetingMorning;
+    if (hour >= 12 && hour < 17) return l10n.todayGreetingAfternoon;
+    if (hour >= 17 && hour < 22) return l10n.todayGreetingEvening;
+    return l10n.todayGreetingNight;
   }
 
   @override
@@ -108,6 +108,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
     final expecting = ref.watch(isExpectingProvider);
     final pregnancy = ref.watch(pregnancyProfileProvider).valueOrNull;
     final openSleep = ref.watch(openSleepProvider).valueOrNull;
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -122,7 +123,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
         actions: [
           IconButton.filledTonal(
             key: const Key('export_pdf_app_bar'),
-            tooltip: 'Share 7-day visit PDF',
+            tooltip: l10n.todaySharePdfTooltip,
             onPressed: () => _exportPdf(context, ref),
             icon: const Icon(Icons.picture_as_pdf_outlined),
           ),
@@ -137,8 +138,8 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
             children: [
               _TodayHero(
-                greeting: TodayScreen.greetingForHour(now.hour),
-                syncCopy: isSignedIn ? _partnerSyncCopy(lastSync) : null,
+                greeting: TodayScreen.greetingForHour(l10n, now.hour),
+                syncCopy: isSignedIn ? _partnerSyncCopy(l10n, lastSync) : null,
               ),
               if (openSleep != null) ...[
                 const SizedBox(height: 16),
@@ -152,7 +153,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                     ScaffoldMessenger.of(context)
                       ..hideCurrentSnackBar()
                       ..showSnackBar(
-                        const SnackBar(content: Text('Wake-up logged')),
+                        SnackBar(content: Text(l10n.commonWakeUpLogged)),
                       );
                   },
                   onAdjustStart: () => context.push(
@@ -162,9 +163,9 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
               ],
               if (openSleep == null) const AwakeTimeBanner(),
               const SizedBox(height: 26),
-              const BloomSectionHeader(
-                title: 'Quick actions',
-                subtitle: 'Open a log, or hold a tile to add details.',
+              BloomSectionHeader(
+                title: l10n.todayQuickActionsTitle,
+                subtitle: l10n.todayQuickActionsSubtitle,
               ),
               const SizedBox(height: 12),
               _quickActionGrid(),
@@ -203,12 +204,13 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                 ),
               ],
               const SizedBox(height: 28),
-              const BloomSectionHeader(
-                title: 'Recent',
-                subtitle: 'The latest care moments, all in one place.',
+              BloomSectionHeader(
+                title: l10n.todayRecentTitle,
+                subtitle: l10n.todayRecentSubtitle,
               ),
               const SizedBox(height: 12),
               ..._recentLogSection(
+                l10n: l10n,
                 logsAsync: logsAsync,
                 isSignedIn: isSignedIn,
                 useImperial: useImperial,
@@ -216,9 +218,9 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                 currentUserId: session?.user.id,
               ),
               const SizedBox(height: 30),
-              const BloomSectionHeader(
-                title: 'More care',
-                subtitle: 'Growth, medication, tummy time, and pumping.',
+              BloomSectionHeader(
+                title: l10n.todayMoreCareTitle,
+                subtitle: l10n.todayMoreCareSubtitle,
               ),
               const SizedBox(height: 12),
               GrowthEntryCard(
@@ -244,7 +246,9 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
-                      SnackBar(content: Text('${routine.name} logged')),
+                      SnackBar(
+                        content: Text(l10n.todayRoutineLogged(routine.name)),
+                      ),
                     );
                 },
               ),
@@ -333,6 +337,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
   }
 
   List<Widget> _recentLogSection({
+    required AppL10n l10n,
     required AsyncValue<List<CareLogEntry>> logsAsync,
     required bool isSignedIn,
     required bool useImperial,
@@ -346,22 +351,21 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
           child: Center(child: CircularProgressIndicator()),
         ),
       ],
-      error: (error, _) => const [
+      error: (error, _) => [
         _RecentPlaceholder(
           icon: Icons.cloud_off_outlined,
-          title: 'Recent logs are resting',
-          message: 'You can still add a care moment above and try again later.',
+          title: l10n.todayRecentRestingTitle,
+          message: l10n.todayRecentRestingMessage,
         ),
       ],
       data: (logs) {
         if (logs.isEmpty) {
-          return const [
+          return [
             _RecentPlaceholder(
-              key: Key('empty_logs'),
+              key: const Key('empty_logs'),
               icon: Icons.nights_stay_outlined,
-              title: 'A quiet start',
-              message:
-                  'Nothing logged yet today. Tap a button when you\'re ready.',
+              title: l10n.todayQuietStartTitle,
+              message: l10n.todayQuietStartMessage,
             ),
           ];
         }
@@ -411,18 +415,16 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text('Could not create PDF. Try again.')),
+          SnackBar(content: Text(l10n.commonPdfFailed)),
         );
     }
   }
 
-  String _partnerSyncCopy(SyncResult? lastSync) {
-    if (lastSync == null) return 'Syncing shared care…';
-    if (!lastSync.ok) return 'Sync needs a little attention';
-    if (lastSync.pulled > 0) {
-      return '${lastSync.pulled} new partner log${lastSync.pulled == 1 ? '' : 's'}';
-    }
-    return 'Shared care is up to date';
+  String _partnerSyncCopy(AppL10n l10n, SyncResult? lastSync) {
+    if (lastSync == null) return l10n.todaySyncing;
+    if (!lastSync.ok) return l10n.todaySyncNeedsAttention;
+    if (lastSync.pulled > 0) return l10n.todaySyncPartnerLogs(lastSync.pulled);
+    return l10n.todaySyncUpToDate;
   }
 }
 
@@ -471,12 +473,12 @@ class _TodayHero extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "You're doing fine.",
+                  AppL10n.of(context).todayReassurance,
                   style: theme.textTheme.headlineMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'One calm care moment at a time.',
+                  AppL10n.of(context).todayTagline,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: AppColors.mutedText(brightness),
                   ),
@@ -604,9 +606,10 @@ class _PregnancyShortcutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final week = pregnancyWeekFromDueDate(dueDate, DateTime.now());
+    final l10n = AppL10n.of(context);
     final subtitle = week == null
-        ? 'Kicks, appointments, and due date'
-        : 'Week $week · kicks and appointments';
+        ? l10n.todayPregnancyNoWeek
+        : l10n.todayPregnancyWeek(week);
 
     return Material(
       key: const Key('today_pregnancy_card'),
@@ -626,7 +629,7 @@ class _PregnancyShortcutCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Pregnancy',
+                      l10n.todayPregnancyTitle,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     Text(

@@ -417,5 +417,6 @@
       }
     }
   },
-  "settingsAccountSyncUpToDate": "up to date"
+  "settingsAccountSyncUpToDate": "up to date",
+  "todayReassurance": "You're doing fine."
 }

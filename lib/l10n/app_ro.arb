@@ -218,5 +218,6 @@
   "settingsAccountDeleteFailed": "Nu am putut șterge contul. Încearcă din nou.",
   "settingsAccountSyncPushed": "{count} trimise",
   "settingsAccountSyncPulled": "{count} de la partener",
-  "settingsAccountSyncUpToDate": "la zi"
+  "settingsAccountSyncUpToDate": "la zi",
+  "todayReassurance": "Te descurci bine."
 }

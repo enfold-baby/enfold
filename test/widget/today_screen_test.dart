@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 
 import '../helpers/test_database.dart';
 import '../helpers/localized_app.dart';
+import 'package:enfold/l10n/generated/app_localizations.dart';
 
 void main() {
   group('TodayScreen', () {
@@ -93,8 +94,12 @@ void main() {
 
   group('TodayScreen helpers', () {
     test('greetingForHour returns night copy after 10pm', () {
-      expect(TodayScreen.greetingForHour(23), 'Good night');
-      expect(TodayScreen.greetingForHour(8), 'Good morning');
+      final en = lookupAppL10n(const Locale('en'));
+      expect(TodayScreen.greetingForHour(en, 23), 'Good night');
+      expect(TodayScreen.greetingForHour(en, 8), 'Good morning');
+
+      final ro = lookupAppL10n(const Locale('ro'));
+      expect(TodayScreen.greetingForHour(ro, 23), 'Noapte bună');
     });
   });
 
