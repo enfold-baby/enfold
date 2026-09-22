@@ -263,7 +263,7 @@ If you know a new parent, a midwife, a lactation consultant or a paediatric ward
 Thread: https://x.com/Gl0deanR/status/2100594197900181840
 
 - **After Show HN goes up:** "Enfold is on Hacker News today. If you have questions about the license carve-outs or how we handle medical content, I am in the thread: [HN link]"
-- **After Product Hunt goes up:** "Enfold is on Product Hunt today: [PH link]. Free, no ads, open source. If it helps a tired parent you know, pass it on."
+- **Product Hunt day (schedule on x.com as a standalone post for Wed 2026-09-23 10:05 Romania; X cannot schedule replies, so add a short reply in the pinned thread by hand later):** "Enfold is on Product Hunt today. A calm baby tracker built with my neonatologist wife: free, no ads, offline first, open source under AGPL. If it could help a tired parent you know, pass it on. Questions welcome, I am in the comments all day. https://www.producthunt.com/products/enfold" (attach ph-01-hero.jpg)
 - **When Play approves:** "Enfold is now on Google Play too: [Play link]. Same app, same promise: free, no ads, open source."
 - **dev.to article (post after 15:00 Bucharest on 2026-09-21, as a reply to the pinned thread):** "Wrote up why we open-sourced a baby health app, and what the AGPL carve-outs are: no ad SDKs you can verify, cards with sources, an app store covenant for forks, and what is still unfinished. https://dev.to/gl0deanr/why-we-open-sourced-a-baby-health-app-and-what-the-license-carve-outs-are-o07"
 
