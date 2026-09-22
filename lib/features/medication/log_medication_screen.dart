@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/database/database_provider.dart';
 import '../logs/widgets/chip_picker.dart';
 import '../logs/widgets/time_field.dart';
@@ -70,11 +71,14 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
       return;
     }
 
+    final l10n = AppL10n.of(context);
     final details = CareLogDetails.fromJsonString(row.detailsJson);
     final name = details.medicationName ?? '';
+    // Matches on the current language only: an older log saved under another
+    // language just leaves the chips unselected, the name still shows.
     MedicationPreset? matchingPreset;
     for (final preset in MedicationPresets.presets) {
-      if (preset.name == name) {
+      if (preset.name(l10n) == name) {
         matchingPreset = preset;
         break;
       }
@@ -83,7 +87,7 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
     setState(() {
       _loading = false;
       _category = details.medicationCategory ?? 'vitamin';
-      _selectedPreset = matchingPreset?.name;
+      _selectedPreset = matchingPreset?.id;
       _nameController.text = name;
       _doseController.text = details.medicationDose ?? '';
       _occurredAt = row.occurredAt;
@@ -101,24 +105,26 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
   }
 
   void _applyPreset(MedicationPreset preset) {
+    final l10n = AppL10n.of(context);
+    final name = preset.name(l10n);
     setState(() {
       _category = preset.category;
-      _selectedPreset = preset.name;
-      _nameController.text = preset.name;
-      if (preset.suggestedDose != null) {
-        _doseController.text = preset.suggestedDose!;
-      }
+      _selectedPreset = preset.id;
+      _nameController.text = name;
+      final dose = preset.suggestedDose(l10n);
+      if (dose != null) _doseController.text = dose;
     });
-    _hydrateReminder(name: preset.name);
+    _hydrateReminder(name: name);
   }
 
   Future<void> _save() async {
+    final l10n = AppL10n.of(context);
     final name = _nameController.text.trim();
     if (name.isEmpty) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text('Enter a name for this dose')),
+          SnackBar(content: Text(l10n.medicationNameRequired)),
         );
       return;
     }
@@ -166,7 +172,9 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
       ..showSnackBar(
         SnackBar(
           content: Text(
-            widget.isEditing ? 'Dose updated' : 'Dose logged',
+            widget.isEditing
+                ? l10n.medicationUpdated
+                : l10n.medicationLogged,
           ),
         ),
       );
@@ -175,11 +183,14 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
+    final title = widget.isEditing
+        ? l10n.medicationFormTitleEdit
+        : l10n.medicationFormTitleNew;
+
     if (_loading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.isEditing ? 'Edit dose' : 'Log dose'),
-        ),
+        appBar: AppBar(title: Text(title)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -187,15 +198,13 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
     final presets = MedicationPresets.forCategory(_category);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isEditing ? 'Edit dose' : 'Log dose'),
-      ),
+      appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
             Text(
-              'What did baby take?',
+              l10n.medicationWhatTaken,
               style: GoogleFonts.nunito(
                 fontSize: 15,
                 color: AppColors.mutedText(Theme.of(context).brightness),
@@ -204,10 +213,13 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
             const SizedBox(height: 20),
             ChipPicker<String>(
               key: const Key('medication_category_picker'),
-              label: 'Category',
+              label: l10n.medicationCategoryLabel,
               options: [
-                for (final (value, label) in MedicationPresets.categories)
-                  ChipOption(value: value, label: label),
+                for (final value in MedicationPresets.categoryValues)
+                  ChipOption(
+                    value: value,
+                    label: MedicationPresets.categoryLabel(l10n, value),
+                  ),
               ],
               selected: _category,
               onSelected: (value) => setState(() {
@@ -217,7 +229,7 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Common choices',
+              l10n.medicationCommonChoices,
               style: GoogleFonts.nunito(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
@@ -232,14 +244,14 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
               children: [
                 for (final preset in presets)
                   ChoiceChip(
-                    key: Key('medication_preset_${preset.name}'),
-                    label: Text(preset.name),
-                    selected: _selectedPreset == preset.name,
+                    key: Key('medication_preset_${preset.id}'),
+                    label: Text(preset.name(l10n)),
+                    selected: _selectedPreset == preset.id,
                     onSelected: (_) => _applyPreset(preset),
                     selectedColor: AppColors.medicationAmber,
                     labelStyle: GoogleFonts.nunito(
                       fontWeight: FontWeight.w700,
-                      color: _selectedPreset == preset.name
+                      color: _selectedPreset == preset.id
                           ? AppColors.cream
                           : AppColors.mutedText(Theme.of(context).brightness),
                     ),
@@ -250,9 +262,9 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
             TextField(
               key: const Key('medication_name'),
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                hintText: 'e.g. Vitamin D drops',
+              decoration: InputDecoration(
+                labelText: l10n.medicationNameLabel,
+                hintText: l10n.medicationNameHint,
               ),
               textCapitalization: TextCapitalization.sentences,
               onChanged: (_) {
@@ -264,14 +276,14 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
             TextField(
               key: const Key('medication_dose'),
               controller: _doseController,
-              decoration: const InputDecoration(
-                labelText: 'Dose (optional)',
-                hintText: 'e.g. 1 drop, 2.5 ml',
+              decoration: InputDecoration(
+                labelText: l10n.medicationDoseLabel,
+                hintText: l10n.medicationDoseHint,
               ),
             ),
             const SizedBox(height: 16),
             TimeField(
-              label: 'Time',
+              label: l10n.commonTimeLabel,
               value: _occurredAt,
               onChanged: (value) => setState(() => _occurredAt = value),
             ),
@@ -280,11 +292,11 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
               key: const Key('medication_daily_reminder_toggle'),
               contentPadding: EdgeInsets.zero,
               title: Text(
-                'Remind me every day',
+                l10n.medicationRemindDaily,
                 style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
               ),
               subtitle: Text(
-                'A gentle ping around this time. Off by default, never a streak.',
+                l10n.medicationRemindDailySubtitle,
                 style: GoogleFonts.nunito(
                   fontSize: 13,
                   color: AppColors.mutedText(Theme.of(context).brightness),
@@ -297,7 +309,9 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
             TextField(
               key: const Key('medication_note'),
               controller: _noteController,
-              decoration: const InputDecoration(labelText: 'Note (optional)'),
+              decoration: InputDecoration(
+                labelText: l10n.commonNoteOptional,
+              ),
               textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: 24),
@@ -311,10 +325,10 @@ class _LogMedicationScreenState extends ConsumerState<LogMedicationScreen> {
               ),
               child: Text(
                 _busy
-                    ? 'Saving…'
+                    ? l10n.commonSaving
                     : widget.isEditing
-                        ? 'Save changes'
-                        : 'Save dose',
+                        ? l10n.commonSaveChanges
+                        : l10n.medicationSaveButton,
               ),
             ),
           ],

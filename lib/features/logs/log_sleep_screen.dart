@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/database/database_provider.dart';
 import '../today/models/care_log_details.dart';
 import '../today/models/log_type.dart';
@@ -94,12 +95,13 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
     if (!mounted) return false;
     setState(() => _busy = false);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('A sleep is already in progress')),
+      SnackBar(content: Text(AppL10n.of(context).sleepAlreadyInProgress)),
     );
     return false;
   }
 
   Future<void> _save() async {
+    final l10n = AppL10n.of(context);
     setState(() => _busy = true);
     final note = _noteController.text.trim();
     final actions = ref.read(careLogActionsProvider);
@@ -129,7 +131,7 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
         ..showSnackBar(
           SnackBar(
             content: Text(
-              widget.isEditing ? 'Sleep updated' : 'Sleeping now. Start saved',
+              widget.isEditing ? l10n.sleepUpdated : l10n.sleepStarted,
             ),
           ),
         );
@@ -171,7 +173,11 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(widget.isEditing ? 'Sleep updated' : 'Sleep logged'),
+          content: Text(
+            widget.isEditing
+                ? l10n.sleepUpdated
+                : LogType.sleep.confirmation(l10n),
+          ),
         ),
       );
     Navigator.of(context).pop();
@@ -181,34 +187,33 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
   Widget build(BuildContext context) {
     final duration = _durationMinutes;
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
+    final title =
+        widget.isEditing ? l10n.sleepFormTitleEdit : l10n.sleepFormTitleNew;
 
     if (_loading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.isEditing ? 'Edit sleep' : 'Log sleep'),
-        ),
+        appBar: AppBar(title: Text(title)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isEditing ? 'Edit sleep' : 'Log sleep'),
-      ),
+      appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
             if (!widget.isEditing)
               SegmentedButton<_SleepMode>(
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: _SleepMode.range,
-                    label: Text('Log a nap'),
+                    label: Text(l10n.sleepModeNap),
                   ),
                   ButtonSegment(
                     value: _SleepMode.now,
-                    label: Text('Sleeping now'),
+                    label: Text(l10n.sleepModeNow),
                   ),
                 ],
                 selected: {_mode},
@@ -227,23 +232,21 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
               ),
             const SizedBox(height: 20),
             Text(
-              _openEnded
-                  ? 'When did they drift off? Leave the end empty if they are still asleep.'
-                  : 'From when to when?',
+              _openEnded ? l10n.sleepPromptOpenEnded : l10n.sleepPromptRange,
               style: GoogleFonts.nunito(
                 color: AppColors.mutedText(brightness),
               ),
             ),
             const SizedBox(height: 16),
             TimeField(
-              label: 'Fell asleep',
+              label: l10n.sleepFellAsleep,
               value: _sleepStart,
               onChanged: (value) => setState(() => _sleepStart = value),
             ),
             if (!_openEnded) ...[
               const SizedBox(height: 12),
               TimeField(
-                label: 'Woke up',
+                label: l10n.sleepWokeUp,
                 value: _sleepEnd,
                 onChanged: (value) => setState(() => _sleepEnd = value),
               ),
@@ -254,11 +257,11 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
                 key: const Key('sleep_still_sleeping'),
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Still sleeping',
+                  l10n.sleepStillSleeping,
                   style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
                 ),
                 subtitle: Text(
-                  'No wake-up yet. You can tap Wake up on Today later.',
+                  l10n.sleepStillSleepingSubtitle,
                   style: GoogleFonts.nunito(
                     color: AppColors.mutedText(brightness),
                   ),
@@ -271,8 +274,11 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
               const SizedBox(height: 8),
               Text(
                 duration < 60
-                    ? 'Duration: ${duration}min'
-                    : 'Duration: ${duration ~/ 60}h ${duration % 60}m',
+                    ? l10n.sleepDurationMinutes(duration)
+                    : l10n.sleepDurationHoursMinutes(
+                        duration ~/ 60,
+                        duration % 60,
+                      ),
                 key: const Key('sleep_duration_preview'),
                 style: GoogleFonts.nunito(
                   fontWeight: FontWeight.w800,
@@ -284,7 +290,9 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
             TextField(
               key: const Key('sleep_note'),
               controller: _noteController,
-              decoration: const InputDecoration(labelText: 'Note (optional)'),
+              decoration: InputDecoration(
+                labelText: l10n.commonNoteOptional,
+              ),
               textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: 24),
@@ -302,12 +310,12 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
               ),
               child: Text(
                 _busy
-                    ? 'Saving…'
+                    ? l10n.commonSaving
                     : _openEnded
-                        ? 'Save, still sleeping'
+                        ? l10n.sleepSaveStillSleeping
                         : widget.isEditing
-                            ? 'Save changes'
-                            : 'Save sleep',
+                            ? l10n.commonSaveChanges
+                            : l10n.sleepSaveButton,
               ),
             ),
           ],

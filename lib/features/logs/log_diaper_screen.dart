@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/database/database_provider.dart';
 import '../today/models/care_log_details.dart';
 import '../today/models/log_type.dart';
@@ -99,7 +100,11 @@ class _LogDiaperScreenState extends ConsumerState<LogDiaperScreen> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(widget.isEditing ? 'Diaper updated' : 'Diaper logged'),
+          content: Text(
+            widget.isEditing
+                ? AppL10n.of(context).diaperUpdated
+                : LogType.diaper.confirmation(AppL10n.of(context)),
+          ),
         ),
       );
     Navigator.of(context).pop();
@@ -107,25 +112,25 @@ class _LogDiaperScreenState extends ConsumerState<LogDiaperScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
+    final title =
+        widget.isEditing ? l10n.diaperFormTitleEdit : l10n.diaperFormTitleNew;
+
     if (_loading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.isEditing ? 'Edit diaper' : 'Log diaper'),
-        ),
+        appBar: AppBar(title: Text(title)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isEditing ? 'Edit diaper' : 'Log diaper'),
-      ),
+      appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
             Text(
-              'What happened?',
+              l10n.diaperWhatHappened,
               style: GoogleFonts.nunito(
                 fontSize: 15,
                 color: AppColors.mutedText(Theme.of(context).brightness),
@@ -135,14 +140,14 @@ class _LogDiaperScreenState extends ConsumerState<LogDiaperScreen> {
             SwitchListTile(
               key: const Key('diaper_wet_toggle'),
               contentPadding: EdgeInsets.zero,
-              title: const Text('Peed (wet)'),
+              title: Text(l10n.diaperWet),
               value: _wet,
               onChanged: (value) => setState(() => _wet = value),
             ),
             SwitchListTile(
               key: const Key('diaper_dirty_toggle'),
               contentPadding: EdgeInsets.zero,
-              title: const Text('Pooped'),
+              title: Text(l10n.diaperDirty),
               value: _dirty,
               onChanged: (value) => setState(() {
                 _dirty = value;
@@ -153,12 +158,12 @@ class _LogDiaperScreenState extends ConsumerState<LogDiaperScreen> {
               const SizedBox(height: 12),
               ChipPicker<String>(
                 key: const Key('stool_consistency_picker'),
-                label: 'Poop consistency',
-                options: const [
-                  ChipOption(value: 'normal', label: 'Normal'),
-                  ChipOption(value: 'soft', label: 'Soft'),
-                  ChipOption(value: 'hard', label: 'Hard'),
-                  ChipOption(value: 'loose', label: 'Loose'),
+                label: l10n.diaperStoolLabel,
+                options: [
+                  ChipOption(value: 'normal', label: l10n.diaperStoolNormal),
+                  ChipOption(value: 'soft', label: l10n.diaperStoolSoft),
+                  ChipOption(value: 'hard', label: l10n.diaperStoolHard),
+                  ChipOption(value: 'loose', label: l10n.diaperStoolLoose),
                 ],
                 selected: _stoolConsistency,
                 onSelected: (value) => setState(() => _stoolConsistency = value),
@@ -166,7 +171,7 @@ class _LogDiaperScreenState extends ConsumerState<LogDiaperScreen> {
             ],
             const SizedBox(height: 16),
             TimeField(
-              label: 'Time',
+              label: l10n.commonTimeLabel,
               value: _occurredAt,
               onChanged: (value) => setState(() => _occurredAt = value),
             ),
@@ -174,7 +179,9 @@ class _LogDiaperScreenState extends ConsumerState<LogDiaperScreen> {
             TextField(
               key: const Key('diaper_note'),
               controller: _noteController,
-              decoration: const InputDecoration(labelText: 'Note (optional)'),
+              decoration: InputDecoration(
+                labelText: l10n.commonNoteOptional,
+              ),
               textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: 24),
@@ -188,10 +195,10 @@ class _LogDiaperScreenState extends ConsumerState<LogDiaperScreen> {
               ),
               child: Text(
                 _busy
-                    ? 'Saving…'
+                    ? l10n.commonSaving
                     : widget.isEditing
-                        ? 'Save changes'
-                        : 'Save diaper',
+                        ? l10n.commonSaveChanges
+                        : l10n.diaperSaveButton,
               ),
             ),
           ],

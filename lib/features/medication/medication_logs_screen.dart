@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../logs/widgets/log_period_bar.dart';
 import '../logs/widgets/paginated_log_list.dart';
 import '../logs/widgets/type_filter_chips.dart';
@@ -51,8 +52,14 @@ class MedicationLogsScreen extends ConsumerWidget {
             DetailFilterChips<String>(
               label: 'Category',
               options: [
-                for (final (value, label) in MedicationPresets.categories)
-                  DetailFilterOption(value: value, label: label),
+                for (final value in MedicationPresets.categoryValues)
+                  DetailFilterOption(
+                    value: value,
+                    label: MedicationPresets.categoryLabel(
+                      AppL10n.of(context),
+                      value,
+                    ),
+                  ),
               ],
               selected: category,
               onSelected: (value) =>

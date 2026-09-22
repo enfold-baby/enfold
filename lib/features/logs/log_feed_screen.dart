@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../core/units/volume_units.dart';
 import '../../services/database/database_provider.dart';
 import '../../widgets/bloom_section_header.dart';
@@ -105,6 +106,7 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
   }
 
   Future<void> _save() async {
+    final l10n = AppL10n.of(context);
     setState(() => _busy = true);
     final useImperial = ref.read(useImperialUnitsProvider).valueOrNull ?? false;
     final duration = int.tryParse(_durationController.text.trim());
@@ -141,7 +143,11 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(widget.isEditing ? 'Feed updated' : 'Feed logged'),
+          content: Text(
+            widget.isEditing
+                ? l10n.feedUpdated
+                : LogType.feed.confirmation(l10n),
+          ),
         ),
       );
     Navigator.of(context).pop();
@@ -153,36 +159,37 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
         ref.watch(useImperialUnitsProvider).valueOrNull ?? false;
     final theme = Theme.of(context);
     final brightness = theme.brightness;
+    final l10n = AppL10n.of(context);
+    final title =
+        widget.isEditing ? l10n.feedFormTitleEdit : l10n.feedFormTitleNew;
 
     if (_loading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.isEditing ? 'Edit feed' : 'Log feed'),
-        ),
+        appBar: AppBar(title: Text(title)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.isEditing ? 'Edit feed' : 'Log feed')),
+      appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 120),
           children: [
             _FeedFormHero(isEditing: widget.isEditing),
             const SizedBox(height: 26),
-            const BloomSectionHeader(
-              title: 'Feed type',
-              subtitle: 'Choose what fits this moment.',
+            BloomSectionHeader(
+              title: l10n.feedTypeSectionTitle,
+              subtitle: l10n.feedTypeSectionSubtitle,
             ),
             const SizedBox(height: 12),
             BloomSurface(
               child: ChipPicker<String>(
                 key: const Key('feed_mode_picker'),
-                label: 'What kind of feed?',
-                options: const [
-                  ChipOption(value: 'breast', label: 'Breast'),
-                  ChipOption(value: 'formula', label: 'Formula'),
+                label: l10n.feedModeLabel,
+                options: [
+                  ChipOption(value: 'breast', label: l10n.feedModeBreast),
+                  ChipOption(value: 'formula', label: l10n.feedModeFormula),
                 ],
                 selected: _feedMode,
                 onSelected: (value) => setState(() {
@@ -205,10 +212,16 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
                   children: [
                     ChipPicker<String>(
                       key: const Key('breast_delivery_picker'),
-                      label: 'How was breast milk given? (optional)',
-                      options: const [
-                        ChipOption(value: 'direct', label: 'At breast'),
-                        ChipOption(value: 'pumped', label: 'Pumped · bottle'),
+                      label: l10n.feedDeliveryLabel,
+                      options: [
+                        ChipOption(
+                          value: 'direct',
+                          label: l10n.feedDeliveryDirect,
+                        ),
+                        ChipOption(
+                          value: 'pumped',
+                          label: l10n.feedDeliveryPumped,
+                        ),
                       ],
                       selected: _breastDelivery,
                       onSelected: (value) => setState(() {
@@ -219,11 +232,11 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
                     const SizedBox(height: 22),
                     ChipPicker<String>(
                       key: const Key('breast_side_picker'),
-                      label: 'Side (optional)',
-                      options: const [
-                        ChipOption(value: 'left', label: 'Left'),
-                        ChipOption(value: 'right', label: 'Right'),
-                        ChipOption(value: 'both', label: 'Both'),
+                      label: l10n.feedSideLabel,
+                      options: [
+                        ChipOption(value: 'left', label: l10n.feedSideLeft),
+                        ChipOption(value: 'right', label: l10n.feedSideRight),
+                        ChipOption(value: 'both', label: l10n.feedSideBoth),
                       ],
                       selected: _breastSide,
                       onSelected: (value) =>
@@ -234,9 +247,9 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
               ),
             ],
             const SizedBox(height: 26),
-            const BloomSectionHeader(
-              title: 'Details',
-              subtitle: 'Optional is genuinely optional.',
+            BloomSectionHeader(
+              title: l10n.formDetailsTitle,
+              subtitle: l10n.formDetailsSubtitle,
             ),
             const SizedBox(height: 12),
             BloomSurface(
@@ -246,10 +259,10 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
                     key: const Key('feed_duration'),
                     controller: _durationController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Duration (minutes)',
-                      hintText: 'e.g. 15',
-                      prefixIcon: Icon(Icons.timer_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.feedDurationLabel,
+                      hintText: l10n.feedDurationHint,
+                      prefixIcon: const Icon(Icons.timer_outlined),
                     ),
                   ),
                   if (_showAmountField) ...[
@@ -262,15 +275,15 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
                       ),
                       decoration: InputDecoration(
                         labelText: useImperial
-                            ? 'Amount (fl oz)'
-                            : 'Amount (ml)',
+                            ? l10n.feedAmountFlOz
+                            : l10n.feedAmountMl,
                         prefixIcon: const Icon(Icons.water_drop_outlined),
                       ),
                     ),
                   ],
                   const SizedBox(height: 14),
                   TimeField(
-                    label: 'Time',
+                    label: l10n.commonTimeLabel,
                     value: _occurredAt,
                     onChanged: (value) => setState(() => _occurredAt = value),
                   ),
@@ -278,10 +291,10 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
                   TextField(
                     key: const Key('feed_note'),
                     controller: _noteController,
-                    decoration: const InputDecoration(
-                      labelText: 'Note',
-                      hintText: 'Anything worth remembering?',
-                      prefixIcon: Icon(Icons.notes_outlined),
+                    decoration: InputDecoration(
+                      labelText: l10n.commonNoteLabel,
+                      hintText: l10n.commonNoteHint,
+                      prefixIcon: const Icon(Icons.notes_outlined),
                     ),
                     textCapitalization: TextCapitalization.sentences,
                     maxLines: 2,
@@ -307,10 +320,10 @@ class _LogFeedScreenState extends ConsumerState<LogFeedScreen> {
               : const Icon(Icons.check_rounded),
           label: Text(
             _busy
-                ? 'Saving…'
+                ? l10n.commonSaving
                 : widget.isEditing
-                ? 'Save changes'
-                : 'Save feed',
+                ? l10n.commonSaveChanges
+                : l10n.feedSaveButton,
           ),
         ),
       ),
@@ -354,12 +367,14 @@ class _FeedFormHero extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isEditing ? 'Update this feed' : 'A feed, simply logged',
+                  isEditing
+                      ? AppL10n.of(context).feedFormHeroEdit
+                      : AppL10n.of(context).feedFormHeroNew,
                   style: theme.textTheme.titleMedium,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Add only the details you remember. The time is already set.',
+                  AppL10n.of(context).feedFormHeroSubtitle,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: AppColors.mutedText(brightness),
                   ),

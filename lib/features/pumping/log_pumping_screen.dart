@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../core/units/volume_units.dart';
 import '../../services/database/database_provider.dart';
 import '../logs/widgets/chip_picker.dart';
@@ -96,7 +97,7 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text('Add how much you pumped.')),
+          SnackBar(content: Text(AppL10n.of(context).pumpingAmountRequired)),
         );
       return;
     }
@@ -135,7 +136,9 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
       ..showSnackBar(
         SnackBar(
           content: Text(
-            widget.isEditing ? 'Pumping updated' : 'Pumping logged',
+            widget.isEditing
+                ? AppL10n.of(context).pumpingUpdated
+                : LogType.pumping.confirmation(AppL10n.of(context)),
           ),
         ),
       );
@@ -145,26 +148,25 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
   @override
   Widget build(BuildContext context) {
     final useImperial = ref.watch(useImperialUnitsProvider).valueOrNull ?? false;
+    final l10n = AppL10n.of(context);
+    final title =
+        widget.isEditing ? l10n.pumpingFormTitleEdit : l10n.pumpingFormTitleNew;
 
     if (_loading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.isEditing ? 'Edit pumping' : 'Log pumping'),
-        ),
+        appBar: AppBar(title: Text(title)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isEditing ? 'Edit pumping' : 'Log pumping'),
-      ),
+      appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
             Text(
-              'How much did you pump?',
+              l10n.pumpingHowMuch,
               style: GoogleFonts.nunito(
                 fontSize: 15,
                 color: AppColors.mutedText(Theme.of(context).brightness),
@@ -173,11 +175,11 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
             const SizedBox(height: 20),
             ChipPicker<String>(
               key: const Key('pumping_side_picker'),
-              label: 'Side (optional)',
-              options: const [
-                ChipOption(value: 'left', label: 'Left'),
-                ChipOption(value: 'right', label: 'Right'),
-                ChipOption(value: 'both', label: 'Both'),
+              label: l10n.pumpingSideLabel,
+              options: [
+                ChipOption(value: 'left', label: l10n.feedSideLeft),
+                ChipOption(value: 'right', label: l10n.feedSideRight),
+                ChipOption(value: 'both', label: l10n.feedSideBoth),
               ],
               selected: _side,
               onSelected: (value) => setState(() => _side = value),
@@ -189,8 +191,11 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
-                labelText: useImperial ? 'Amount (fl oz)' : 'Amount (ml)',
-                hintText: useImperial ? 'e.g. 3.0' : 'e.g. 90',
+                labelText:
+                    useImperial ? l10n.feedAmountFlOz : l10n.feedAmountMl,
+                hintText: useImperial
+                    ? l10n.pumpingAmountHintFlOz
+                    : l10n.pumpingAmountHintMl,
               ),
             ),
             const SizedBox(height: 16),
@@ -198,14 +203,14 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
               key: const Key('pumping_duration'),
               controller: _durationController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Duration (minutes, optional)',
-                hintText: 'e.g. 15',
+              decoration: InputDecoration(
+                labelText: l10n.pumpingDurationLabel,
+                hintText: l10n.feedDurationHint,
               ),
             ),
             const SizedBox(height: 16),
             TimeField(
-              label: 'Time',
+              label: l10n.commonTimeLabel,
               value: _occurredAt,
               onChanged: (value) => setState(() => _occurredAt = value),
             ),
@@ -213,7 +218,9 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
             TextField(
               key: const Key('pumping_note'),
               controller: _noteController,
-              decoration: const InputDecoration(labelText: 'Note (optional)'),
+              decoration: InputDecoration(
+                labelText: l10n.commonNoteOptional,
+              ),
               textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: 24),
@@ -227,10 +234,10 @@ class _LogPumpingScreenState extends ConsumerState<LogPumpingScreen> {
               ),
               child: Text(
                 _busy
-                    ? 'Saving…'
+                    ? l10n.commonSaving
                     : widget.isEditing
-                        ? 'Save changes'
-                        : 'Save pumping',
+                        ? l10n.commonSaveChanges
+                        : l10n.pumpingSaveButton,
               ),
             ),
           ],

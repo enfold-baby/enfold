@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/database/database_provider.dart';
 import '../logs/widgets/time_field.dart';
 import '../today/models/care_log_details.dart';
@@ -74,7 +75,7 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(content: Text('Enter how many minutes')),
+          SnackBar(content: Text(AppL10n.of(context).tummyMinutesRequired)),
         );
       return;
     }
@@ -111,7 +112,9 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
       ..showSnackBar(
         SnackBar(
           content: Text(
-            widget.isEditing ? 'Tummy time updated' : 'Tummy time logged',
+            widget.isEditing
+                ? AppL10n.of(context).tummyUpdated
+                : LogType.tummyTime.confirmation(AppL10n.of(context)),
           ),
         ),
       );
@@ -120,25 +123,25 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppL10n.of(context);
+    final title =
+        widget.isEditing ? l10n.tummyFormTitleEdit : l10n.tummyFormTitleNew;
+
     if (_loading) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.isEditing ? 'Edit tummy time' : 'Log tummy time'),
-        ),
+        appBar: AppBar(title: Text(title)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isEditing ? 'Edit tummy time' : 'Log tummy time'),
-      ),
+      appBar: AppBar(title: Text(title)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
             Text(
-              'How long on tummy?',
+              l10n.tummyHowLong,
               style: GoogleFonts.nunito(
                 fontSize: 15,
                 color: AppColors.mutedText(Theme.of(context).brightness),
@@ -146,7 +149,7 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Quick picks',
+              l10n.tummyQuickPicks,
               style: GoogleFonts.nunito(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
@@ -162,7 +165,7 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
                 for (final minutes in [3, 5, 10, 15])
                   ChoiceChip(
                     key: Key('tummy_preset_$minutes'),
-                    label: Text('$minutes min'),
+                    label: Text(l10n.tummyMinutesChip(minutes)),
                     selected: _durationController.text == '$minutes',
                     onSelected: (_) => _applyPreset(minutes),
                     selectedColor: AppColors.tummyCoral,
@@ -180,14 +183,14 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
               key: const Key('tummy_duration'),
               controller: _durationController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Duration (minutes)',
-                hintText: 'e.g. 5',
+              decoration: InputDecoration(
+                labelText: l10n.tummyDurationLabel,
+                hintText: l10n.tummyDurationHint,
               ),
             ),
             const SizedBox(height: 16),
             TimeField(
-              label: 'Time',
+              label: l10n.commonTimeLabel,
               value: _occurredAt,
               onChanged: (value) => setState(() => _occurredAt = value),
             ),
@@ -195,7 +198,9 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
             TextField(
               key: const Key('tummy_note'),
               controller: _noteController,
-              decoration: const InputDecoration(labelText: 'Note (optional)'),
+              decoration: InputDecoration(
+                labelText: l10n.commonNoteOptional,
+              ),
               textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: 24),
@@ -209,10 +214,10 @@ class _LogTummyTimeScreenState extends ConsumerState<LogTummyTimeScreen> {
               ),
               child: Text(
                 _busy
-                    ? 'Saving…'
+                    ? l10n.commonSaving
                     : widget.isEditing
-                        ? 'Save changes'
-                        : 'Save tummy time',
+                        ? l10n.commonSaveChanges
+                        : l10n.tummySaveButton,
               ),
             ),
           ],
