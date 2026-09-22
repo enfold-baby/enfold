@@ -1,6 +1,6 @@
 # Enfold — feature docs hub
 
-> **Last updated:** 2026-09-22 · **App version:** `1.0.2+28` · **Drift schema:** v16 · **Tests:** 220  
+> **Last updated:** 2026-09-22 · **App version:** `1.0.2+28` · **Drift schema:** v16 · **Tests:** 221  
 > **Prod:** App Store live · Play pending · landing + API live · code public at github.com/enfold-baby/enfold
 
 Central index for what's built, what's next, and how to resume work.
