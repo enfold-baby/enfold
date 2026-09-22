@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../../../core/datetime/clock_format.dart';
 import 'care_log_details.dart';
 import 'log_type.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class CareLogEntry {
   const CareLogEntry({
@@ -63,8 +64,8 @@ class CareLogEntry {
   static bool _sameCalendarDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
-  String? detailSummary({bool useImperial = false}) {
-    final summary = details.summarize(type, useImperial: useImperial);
+  String? detailSummary(AppL10n l10n, {bool useImperial = false}) {
+    final summary = details.summarize(l10n, type, useImperial: useImperial);
     if (summary.isEmpty && note.isEmpty) return null;
     if (summary.isEmpty) return note;
     if (note.isEmpty) return summary;

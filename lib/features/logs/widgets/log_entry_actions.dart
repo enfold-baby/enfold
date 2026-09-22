@@ -36,7 +36,7 @@ Future<void> showLogEntryActions(
               ),
               const SizedBox(height: 8),
               Text(
-                entry.detailSummary() ?? l10n.logActionsFallbackTitle,
+                entry.detailSummary(l10n) ?? l10n.logActionsFallbackTitle,
                 style: GoogleFonts.nunito(
                   color: AppColors.mutedText(Theme.of(context).brightness),
                 ),

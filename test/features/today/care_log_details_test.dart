@@ -1,8 +1,11 @@
 import 'package:enfold/features/today/models/care_log_details.dart';
 import 'package:enfold/features/today/models/log_type.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:enfold/l10n/generated/app_localizations.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
+  final l10n = lookupAppL10n(const Locale('en'));
   group('CareLogDetails', () {
     test('round-trips breast feed with pumped delivery', () {
       const details = CareLogDetails(
@@ -15,7 +18,7 @@ void main() {
       final restored = CareLogDetails.fromJsonString(details.toJsonString());
       expect(restored.breastDelivery, 'pumped');
       expect(
-        restored.summarize(LogType.feed),
+        restored.summarize(l10n, LogType.feed),
         'breast · pumped · bottle · left · 90ml · 12min',
       );
     });
@@ -26,15 +29,15 @@ void main() {
         dirty: true,
         stoolConsistency: 'soft',
       );
-      expect(details.summarize(LogType.diaper), 'wet · poop · soft');
+      expect(details.summarize(l10n, LogType.diaper), 'wet · poop · soft');
     });
 
     test('summarizes sleep duration and in-progress state', () {
       const details = CareLogDetails(durationMinutes: 45);
-      expect(details.summarize(LogType.sleep), '45min');
+      expect(details.summarize(l10n, LogType.sleep), '45min');
 
       const active = CareLogDetails(sleepInProgress: true);
-      expect(active.summarize(LogType.sleep), 'sleeping now');
+      expect(active.summarize(l10n, LogType.sleep), 'sleeping now');
     });
 
     test('summarizes medication with category, name, and dose', () {
@@ -44,7 +47,7 @@ void main() {
         medicationDose: '1 drop',
       );
       expect(
-        details.summarize(LogType.medication),
+        details.summarize(l10n, LogType.medication),
         'vitamin · Vitamin D drops · 1 drop',
       );
 
@@ -60,7 +63,7 @@ void main() {
         durationMinutes: 12,
       );
       expect(
-        details.summarize(LogType.pumping),
+        details.summarize(l10n, LogType.pumping),
         'left · 90ml · 12min',
       );
     });
@@ -70,7 +73,7 @@ void main() {
         activity: CareLogDetails.tummyTimeActivity,
         durationMinutes: 5,
       );
-      expect(details.summarize(LogType.tummyTime), '5min');
+      expect(details.summarize(l10n, LogType.tummyTime), '5min');
 
       final restored = CareLogDetails.fromJsonString(details.toJsonString());
       expect(restored.activity, CareLogDetails.tummyTimeActivity);
@@ -82,7 +85,7 @@ void main() {
         bottleMl: 118,
       );
       expect(
-        details.summarize(LogType.feed, useImperial: true),
+        details.summarize(l10n, LogType.feed, useImperial: true),
         'formula · 4 fl oz',
       );
     });

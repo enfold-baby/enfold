@@ -134,7 +134,7 @@ class VisitPdfService {
     final type = resolveLogType(event.type, details);
     final label = type?.label(l10n) ?? event.type;
     final summary =
-        type == null ? '' : details.summarize(type, useImperial: useImperial);
+        type == null ? '' : details.summarize(l10n, type, useImperial: useImperial);
     final parts = <String>[label];
     if (summary.isNotEmpty) parts.add(summary);
     if (event.note.isNotEmpty) parts.add(event.note);

@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:enfold/widgets/paginated_column.dart';
+import '../helpers/localized_app.dart';
 
 Widget _host(List<int> items) {
   return ProviderScope(
-    child: MaterialApp(
-      home: Scaffold(
+    child: localizedApp(
+      Scaffold(
         body: ListView(
           children: [
             const SizedBox(height: 300),

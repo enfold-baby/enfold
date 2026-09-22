@@ -9,6 +9,7 @@ import '../../settings/providers/units_providers.dart';
 import '../../today/models/care_log_entry.dart';
 import 'log_entry_actions.dart';
 import 'log_entry_tile.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class PaginatedLogList extends ConsumerWidget {
   const PaginatedLogList({
@@ -16,14 +17,14 @@ class PaginatedLogList extends ConsumerWidget {
     required this.logsAsync,
     this.pageSize = 10,
     this.visibleCountProvider,
-    this.emptyMessage = 'No logs in this period.',
+    this.emptyMessage,
     this.emptyKey,
   });
 
   final AsyncValue<List<CareLogEntry>> logsAsync;
   final int pageSize;
   final StateProvider<int>? visibleCountProvider;
-  final String emptyMessage;
+  final String? emptyMessage;
   final Key? emptyKey;
 
   @override
@@ -61,7 +62,7 @@ class PaginatedLogList extends ConsumerWidget {
               ),
             ),
             child: Text(
-              emptyMessage,
+              emptyMessage ?? AppL10n.of(context).logsEmptyPeriod,
               style: GoogleFonts.nunito(
                 color: AppColors.mutedText(Theme.of(context).brightness),
               ),

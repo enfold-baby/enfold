@@ -59,8 +59,8 @@ class _AddGrowthMeasurementScreenState
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          const SnackBar(
-            content: Text('Add at least one measurement.'),
+          SnackBar(
+            content: Text(AppL10n.of(context).growthAddAtLeastOne),
           ),
         );
       return;
@@ -78,7 +78,9 @@ class _AddGrowthMeasurementScreenState
     if (!mounted) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(const SnackBar(content: Text('Measurement saved')));
+      ..showSnackBar(
+        SnackBar(content: Text(AppL10n.of(context).growthSaved)),
+      );
     Navigator.of(context).pop();
   }
 

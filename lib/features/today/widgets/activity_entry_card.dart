@@ -4,6 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/units/volume_units.dart';
 import '../../tummy_time/providers/tummy_time_providers.dart';
 import '../models/care_log_entry.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class ActivityEntryCard extends StatelessWidget {
   const ActivityEntryCard({
@@ -29,25 +30,29 @@ class ActivityEntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final isDark = brightness == Brightness.dark;
+    final l10n = AppL10n.of(context);
     final tummyMinutes = tummyMinutesToday(tummyLogs);
     final pumpedMl = _pumpedMlToday(pumpingLogs);
 
     String subtitle;
     final parts = <String>[];
     if (tummyLogs.isEmpty && pumpingLogs.isEmpty) {
-      subtitle = 'Track tummy sessions and pumping output';
+      subtitle = l10n.activityCardEmpty;
     } else {
       if (tummyLogs.isNotEmpty) {
         parts.add(
           tummyLogs.length == 1
-              ? '${formatTummyMinutes(tummyMinutes)} tummy'
-              : '${tummyLogs.length} tummy · ${formatTummyMinutes(tummyMinutes)}',
+              ? l10n.activityTummySummary(formatTummyMinutes(tummyMinutes))
+              : l10n.activityTummySummaryCount(
+                  tummyLogs.length,
+                  formatTummyMinutes(tummyMinutes),
+                ),
         );
       }
       if (pumpingLogs.isNotEmpty) {
-        parts.add(_pumpedSummary(pumpedMl));
+        parts.add(_pumpedSummary(l10n, pumpedMl));
       }
-      subtitle = 'Today: ${parts.join(' · ')}';
+      subtitle = l10n.activityCardToday(parts.join(' · '));
     }
 
     return Material(
@@ -90,7 +95,7 @@ class ActivityEntryCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Tummy & pumping',
+                          l10n.activityCardTitle,
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.w800,
@@ -119,7 +124,7 @@ class ActivityEntryCard extends StatelessWidget {
                       key: const Key('add_tummy_quick'),
                       onPressed: onAddTummy,
                       icon: const Icon(Icons.add, size: 18),
-                      label: const Text('Tummy'),
+                      label: Text(l10n.logTypeTummyTime),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.tummyCoral,
                         side: const BorderSide(color: AppColors.tummyCoral),
@@ -132,7 +137,7 @@ class ActivityEntryCard extends StatelessWidget {
                       key: const Key('add_pumping_quick'),
                       onPressed: onAddPumping,
                       icon: const Icon(Icons.add, size: 18),
-                      label: const Text('Pump'),
+                      label: Text(l10n.logTypePumping),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.pumpLavender,
                         side: const BorderSide(color: AppColors.pumpLavender),
@@ -147,12 +152,12 @@ class ActivityEntryCard extends StatelessWidget {
                   TextButton(
                     key: const Key('open_tummy_logs'),
                     onPressed: onTapTummy,
-                    child: const Text('Tummy logs'),
+                    child: Text(l10n.activityTummyLogs),
                   ),
                   TextButton(
                     key: const Key('open_pumping_logs'),
                     onPressed: onTapPumping,
-                    child: const Text('Pump logs'),
+                    child: Text(l10n.activityPumpLogs),
                   ),
                 ],
               ),
@@ -171,10 +176,10 @@ class ActivityEntryCard extends StatelessWidget {
     return total;
   }
 
-  String _pumpedSummary(int ml) {
-    if (ml <= 0) {
-      return pumpingLogs.length == 1 ? '1 pump' : '${pumpingLogs.length} pumps';
-    }
-    return '${VolumeUnits.formatBottleMl(ml, useImperial: useImperial)} pumped';
+  String _pumpedSummary(AppL10n l10n, int ml) {
+    if (ml <= 0) return l10n.activityPumpSummary(pumpingLogs.length);
+    return l10n.activityPumpedAmount(
+      VolumeUnits.formatBottleMl(ml, useImperial: useImperial),
+    );
   }
 }

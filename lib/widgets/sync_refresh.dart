@@ -12,6 +12,7 @@ import '../features/today/providers/today_log_provider.dart';
 import '../features/tummy_time/providers/tummy_time_providers.dart';
 import '../services/auth/auth_providers.dart';
 import '../services/sync/sync_providers.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// Pull-to-refresh that runs partner sync, then lets Drift streams rebuild UI.
 class SyncRefresh extends ConsumerWidget {
@@ -66,8 +67,8 @@ class SyncRefresh extends ConsumerWidget {
           SnackBar(
             content: Text(
               result.error == null
-                  ? 'Couldn’t sync right now. Your local logs are safe.'
-                  : 'Sync failed: ${result.error}',
+                  ? AppL10n.of(context).syncFailedSafe
+                  : AppL10n.of(context).syncFailedWithError('${result.error}'),
             ),
           ),
         );

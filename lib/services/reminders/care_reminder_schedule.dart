@@ -1,3 +1,5 @@
+import '../../l10n/generated/app_localizations.dart';
+
 /// When to fire the "how is baby" ping if nothing is logged yet today.
 ///
 /// Evening, not overnight: 18:00 if it's still afternoon; otherwise about
@@ -11,8 +13,10 @@ DateTime? nextCareReminderAt(DateTime now) {
   return later.isAfter(quiet) ? quiet : later;
 }
 
-String careReminderBody(String babyName) {
+String careReminderBody(AppL10n l10n, String babyName) {
   final name = babyName.trim();
-  final who = name.isEmpty || name.toLowerCase() == 'baby' ? 'baby' : name;
-  return 'How is $who today? No logs so far. Add one when you can.';
+  final who = name.isEmpty || name.toLowerCase() == 'baby'
+      ? l10n.careReminderFallbackWho
+      : name;
+  return l10n.careReminderBody(who);
 }

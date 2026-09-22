@@ -4,6 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/units/growth_units.dart';
 import '../../growth/data/milestone_catalog.dart';
 import '../../growth/models/growth_measurement_entry.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class GrowthEntryCard extends StatelessWidget {
   const GrowthEntryCard({
@@ -23,16 +24,21 @@ class GrowthEntryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final isDark = brightness == Brightness.dark;
+    final l10n = AppL10n.of(context);
 
-    String subtitle;
-    if (latestMeasurement?.weightKg != null) {
-      subtitle =
-          'Latest weight ${GrowthUnits.formatWeightKg(latestMeasurement!.weightKg, useImperial: useImperial)} · '
-          '$milestonesAchieved/${MilestoneCatalog.totalCount} milestones';
-    } else {
-      subtitle =
-          '$milestonesAchieved/${MilestoneCatalog.totalCount} milestones celebrated';
-    }
+    final subtitle = latestMeasurement?.weightKg != null
+        ? l10n.growthCardWithWeight(
+            GrowthUnits.formatWeightKg(
+              latestMeasurement!.weightKg,
+              useImperial: useImperial,
+            ),
+            milestonesAchieved,
+            MilestoneCatalog.totalCount,
+          )
+        : l10n.growthCardEmpty(
+            milestonesAchieved,
+            MilestoneCatalog.totalCount,
+          );
 
     return Material(
       color: isDark ? AppColors.nightElevated : Colors.white,
@@ -71,7 +77,7 @@ class GrowthEntryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Growth & milestones',
+                      l10n.growthTitle,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
                         fontSize: 16,

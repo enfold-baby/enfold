@@ -28,23 +28,21 @@ Future<bool> confirmVisitPdfExport(BuildContext context) async {
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (dialogContext) {
+      final l10n = AppL10n.of(dialogContext);
       return AlertDialog(
         key: const Key('export_pdf_confirm_dialog'),
-        title: const Text('Share a 7-day visit PDF?'),
-        content: const Text(
-          'Creates a one-page summary of feeds, diapers, sleep, and other care '
-          'from the last 7 days, handy for a partner or a pediatrician visit.',
-        ),
+        title: Text(l10n.settingsExportConfirmTitle),
+        content: Text(l10n.settingsExportConfirmBody),
         actions: [
           TextButton(
             key: const Key('export_pdf_cancel'),
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             key: const Key('export_pdf_confirm'),
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Create PDF'),
+            child: Text(l10n.settingsExportConfirmAction),
           ),
         ],
       );
@@ -96,10 +94,10 @@ class _ExportSectionState extends ConsumerState<ExportSection> {
       );
 
       if (!mounted) return;
-      setState(() => _status = 'PDF ready to share or print.');
+      setState(() => _status = l10n.settingsExportReady);
     } catch (e) {
       if (!mounted) return;
-      setState(() => _status = 'Could not create PDF. Try again.');
+      setState(() => _status = l10n.commonPdfFailed);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -108,17 +106,18 @@ class _ExportSectionState extends ConsumerState<ExportSection> {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
           title: Text(
-            'Visit export',
+            l10n.settingsExportTitle,
             style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
           ),
           subtitle: Text(
-            '7-day feed, diaper, and sleep summary for your pediatrician.',
+            l10n.settingsExportSubtitle,
             style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
           ),
         ),
@@ -137,7 +136,11 @@ class _ExportSectionState extends ConsumerState<ExportSection> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.picture_as_pdf_outlined),
-                label: Text(_busy ? 'Creating PDF…' : 'Export 7-day PDF'),
+                label: Text(
+                  _busy
+                      ? l10n.settingsExportButtonBusy
+                      : l10n.settingsExportButton,
+                ),
               ),
               if (_status != null) ...[
                 const SizedBox(height: 12),

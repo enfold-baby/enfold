@@ -1,3 +1,4 @@
+import '../../../l10n/generated/app_localizations.dart';
 import '../../today/models/care_log_entry.dart';
 import '../../today/models/log_type.dart';
 
@@ -5,12 +6,21 @@ class PartnerNudge {
   const PartnerNudge({
     required this.type,
     required this.hoursSince,
-    required this.message,
+    required this.nothingToday,
   });
 
   final LogType type;
   final int hoursSince;
-  final String message;
+
+  /// Nothing of this type logged at all today, as opposed to a stale last log.
+  final bool nothingToday;
+
+  String message(AppL10n l10n) => switch (type) {
+        LogType.feed => nothingToday ? l10n.nudgeFeedNone : l10n.nudgeFeedStale,
+        LogType.diaper =>
+          nothingToday ? l10n.nudgeDiaperNone : l10n.nudgeDiaperStale,
+        _ => nothingToday ? l10n.nudgeSleepNone : l10n.nudgeSleepStale,
+      };
 }
 
 PartnerNudge? detectGentleNudge({
@@ -25,9 +35,7 @@ PartnerNudge? detectGentleNudge({
     return PartnerNudge(
       type: LogType.feed,
       hoursSince: feed == null ? feedHours : now.difference(feed.loggedAt).inHours,
-      message: feed == null
-          ? 'No feed logged yet today. Only if you want a gentle reminder.'
-          : 'It has been a while since the last feed was logged.',
+      nothingToday: feed == null,
     );
   }
 
@@ -37,9 +45,7 @@ PartnerNudge? detectGentleNudge({
       type: LogType.diaper,
       hoursSince:
           diaper == null ? diaperHours : now.difference(diaper.loggedAt).inHours,
-      message: diaper == null
-          ? 'No diaper logged yet today. Only if you want a gentle reminder.'
-          : 'It has been a while since the last diaper was logged.',
+      nothingToday: diaper == null,
     );
   }
 
@@ -49,9 +55,7 @@ PartnerNudge? detectGentleNudge({
       type: LogType.sleep,
       hoursSince:
           sleep == null ? sleepHours : now.difference(sleep.loggedAt).inHours,
-      message: sleep == null
-          ? 'No sleep logged yet today. Only if you want a gentle reminder.'
-          : 'It has been a while since sleep was logged.',
+      nothingToday: sleep == null,
     );
   }
 

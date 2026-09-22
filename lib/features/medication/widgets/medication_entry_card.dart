@@ -6,6 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../services/database/app_database.dart';
 import '../../today/models/care_log_entry.dart';
 import '../utils/medication_routine_due.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class MedicationEntryCard extends StatelessWidget {
   const MedicationEntryCard({
@@ -68,7 +69,7 @@ class MedicationEntryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Meds & vitamins',
+                      AppL10n.of(context).medicationLogsTitle,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w800,
                         fontSize: 16,
@@ -77,7 +78,7 @@ class MedicationEntryCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     if (enabled.isEmpty)
                       Text(
-                        _fallbackSubtitle(todayLogs),
+                        _fallbackSubtitle(AppL10n.of(context), todayLogs),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 13,
                           color: AppColors.mutedText(brightness),
@@ -96,7 +97,7 @@ class MedicationEntryCard extends StatelessWidget {
               ),
               IconButton(
                 key: const Key('add_medication_quick'),
-                tooltip: 'Log medication',
+                tooltip: AppL10n.of(context).medicationCardLogAction,
                 onPressed: onAdd,
                 icon: const Icon(Icons.add_circle_outline),
                 color: AppColors.medicationAmber,
@@ -109,19 +110,20 @@ class MedicationEntryCard extends StatelessWidget {
     );
   }
 
-  static String _fallbackSubtitle(List<CareLogEntry> todayLogs) {
+  static String _fallbackSubtitle(
+    AppL10n l10n,
+    List<CareLogEntry> todayLogs,
+  ) {
     final count = todayLogs.length;
     final latest = todayLogs.isEmpty ? null : todayLogs.first;
-    if (count == 0) {
-      return 'Track vitamins, supplements, and medications';
-    }
+    if (count == 0) return l10n.medicationCardEmpty;
     if (latest?.details.medicationName != null) {
       final name = latest!.details.medicationName!;
       return count == 1
-          ? 'Today: $name'
-          : 'Today: $count doses · latest $name';
+          ? l10n.medicationCardToday(name)
+          : l10n.medicationCardTodayCount(count, name);
     }
-    return count == 1 ? '1 dose logged today' : '$count doses logged today';
+    return l10n.medicationCardDosesToday(count);
   }
 }
 
@@ -167,7 +169,7 @@ class _RoutineLine extends StatelessWidget {
           if (due && onGive != null)
             IconButton(
               key: Key('medication_give_${routine.id}'),
-              tooltip: 'Log ${routine.name}',
+              tooltip: AppL10n.of(context).medicationGiveNow(routine.name),
               visualDensity: VisualDensity.compact,
               onPressed: () => onGive!(routine),
               icon: const Icon(Icons.check_circle_outline, size: 22),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../l10n/generated/app_localizations.dart';
 
 /// Shows [items] one page at a time inside a parent scroll view.
 ///
@@ -115,7 +116,7 @@ class _PaginatedColumnState<T> extends ConsumerState<PaginatedColumn<T>> {
           OutlinedButton(
             key: widget.loadMoreKey,
             onPressed: _loadMore,
-            child: Text('Load more ($remaining remaining)'),
+            child: Text(AppL10n.of(context).loadMoreRemaining(remaining)),
           ),
         ],
       ],

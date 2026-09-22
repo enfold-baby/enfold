@@ -961,5 +961,262 @@
   "commonYes": "Yes",
   "commonNo": "No",
   "learnCardsEnglishNote": "Learn cards are in English for now.",
-  "learnWhatsNormal": "What's normal"
+  "learnWhatsNormal": "What's normal",
+  "notificationChannelMedicationName": "Vitamin reminders",
+  "notificationChannelMedicationDescription": "Gentle ping for a daily vitamin or medication.",
+  "notificationChannelCareName": "Care reminders",
+  "notificationChannelCareDescription": "Gentle ping if nothing is logged by evening.",
+  "notificationActionGiven": "Given",
+  "notificationActionLater": "Later",
+  "careReminderBody": "How is {who} today? No logs so far. Add one when you can.",
+  "@careReminderBody": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "careReminderFallbackWho": "baby",
+  "medicationReminderBody": "{medication} for {who}?",
+  "@medicationReminderBody": {
+    "placeholders": {
+      "medication": {
+        "type": "String"
+      },
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "medicationReminderFallbackMedication": "a vitamin",
+  "nudgeFeedNone": "No feed logged yet today. Only if you want a gentle reminder.",
+  "nudgeFeedStale": "It has been a while since the last feed was logged.",
+  "nudgeDiaperNone": "No diaper logged yet today. Only if you want a gentle reminder.",
+  "nudgeDiaperStale": "It has been a while since the last diaper was logged.",
+  "nudgeSleepNone": "No sleep logged yet today. Only if you want a gentle reminder.",
+  "nudgeSleepStale": "It has been a while since sleep was logged.",
+  "syncLinkBabyFailed": "Could not link a baby profile",
+  "logsLoadFailed": "Could not load logs.",
+  "logsEmptyPeriod": "No logs in this period.",
+  "loadMoreRemaining": "Load more ({remaining} remaining)",
+  "@loadMoreRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      }
+    }
+  },
+  "todaySoFar": "Today so far",
+  "todaySoFarSubtitle": "A small snapshot, never a score.",
+  "awakeJustWokeUp": "Just woke up",
+  "awakeFor": "Awake for {elapsed}",
+  "@awakeFor": {
+    "placeholders": {
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "awakeSince": "Since {time}",
+  "@awakeSince": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "activityCardTitle": "Tummy & pumping",
+  "activityCardEmpty": "Track tummy sessions and pumping output",
+  "activityCardToday": "Today: {summary}",
+  "@activityCardToday": {
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "activityTummySummary": "{minutes} tummy",
+  "@activityTummySummary": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "activityTummySummaryCount": "{count} tummy · {minutes}",
+  "@activityTummySummaryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "activityPumpSummary": "{count, plural, =1{1 pump} other{{count} pumps}}",
+  "@activityPumpSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "activityPumpedAmount": "{amount} pumped",
+  "@activityPumpedAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "activityTummyLogs": "Tummy logs",
+  "activityPumpLogs": "Pump logs",
+  "medicationCardEmpty": "Track vitamins, supplements, and medications",
+  "medicationCardToday": "Today: {name}",
+  "@medicationCardToday": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medicationCardTodayCount": "Today: {count} doses · latest {name}",
+  "@medicationCardTodayCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medicationCardDosesToday": "{count, plural, =1{1 dose logged today} other{{count} doses logged today}}",
+  "@medicationCardDosesToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "medicationCardLogAction": "Log medication",
+  "medicationGiveNow": "Log {name}",
+  "@medicationGiveNow": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medicationRoutinesTitle": "Daily reminders",
+  "medicationRoutinesSubtitle": "Optional. A quiet ping for vitamins like vitamin D. Never a streak.",
+  "medicationRoutinesEmpty": "Log a dose and turn on “Remind me every day.”",
+  "medicationRoutineAround": "Around {time}",
+  "@medicationRoutineAround": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "medicationRoutineRemove": "Remove reminder",
+  "growthCardEmpty": "{achieved}/{total} milestones celebrated",
+  "@growthCardEmpty": {
+    "placeholders": {
+      "achieved": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "growthCardWithWeight": "Latest weight {weight} · {achieved}/{total} milestones",
+  "@growthCardWithWeight": {
+    "placeholders": {
+      "weight": {
+        "type": "String"
+      },
+      "achieved": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "todaySummaryFeeds": "{count, plural, =1{feed} other{feeds}}",
+  "@todaySummaryFeeds": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todaySummaryDiapers": "{count, plural, =1{diaper} other{diapers}}",
+  "@todaySummaryDiapers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todaySummarySleep": "sleep",
+  "summaryBreast": "breast",
+  "summaryPumpedBottle": "pumped · bottle",
+  "summaryAtBreast": "at breast",
+  "summaryFormula": "formula",
+  "summaryBottle": "bottle",
+  "summarySideLeft": "left",
+  "summarySideRight": "right",
+  "summarySideBoth": "both",
+  "summaryWet": "wet",
+  "summaryPoop": "poop",
+  "summaryStoolNormal": "normal",
+  "summaryStoolSoft": "soft",
+  "summaryStoolHard": "hard",
+  "summaryStoolLoose": "loose",
+  "summarySleepingNow": "sleeping now",
+  "summaryLogged": "logged",
+  "summaryCategoryVitamin": "vitamin",
+  "summaryCategorySupplement": "supplement",
+  "summaryCategoryMedication": "medication",
+  "summaryMinutes": "{minutes}min",
+  "@summaryMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryHours": "{hours}h",
+  "@summaryHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "summaryHoursMinutes": "{hours}h {minutes}m",
+  "@summaryHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "quickLogSupporting": "View log · hold to add",
+  "apiRequestFailed": "Request failed",
+  "apiRequestFailedWithCode": "Request failed ({code})",
+  "@apiRequestFailedWithCode": {
+    "placeholders": {
+      "code": {
+        "type": "int"
+      }
+    }
+  }
 }

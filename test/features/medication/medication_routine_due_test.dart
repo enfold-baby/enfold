@@ -4,6 +4,8 @@ import 'package:enfold/features/today/models/care_log_details.dart';
 import 'package:enfold/features/today/models/care_log_entry.dart';
 import 'package:enfold/features/today/models/log_type.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:enfold/l10n/generated/app_localizations.dart';
+import 'package:flutter/widgets.dart';
 
 CareLogEntry _med(String name, DateTime at) {
   return CareLogEntry(
@@ -109,13 +111,20 @@ void main() {
   });
 
   test('reminder copy uses the baby name', () {
+    final en = lookupAppL10n(const Locale('en'));
     expect(
-      medicationReminderBody('Vitamin D drops', 'Damian'),
+      medicationReminderBody(en, 'Vitamin D drops', 'Damian'),
       'Vitamin D drops for Damian?',
     );
     expect(
-      medicationReminderBody('Vigantol', 'Baby'),
+      medicationReminderBody(en, 'Vigantol', 'Baby'),
       'Vigantol for baby?',
+    );
+
+    final ro = lookupAppL10n(const Locale('ro'));
+    expect(
+      medicationReminderBody(ro, 'Vigantol', 'Damian'),
+      'Vigantol pentru Damian?',
     );
   });
 }

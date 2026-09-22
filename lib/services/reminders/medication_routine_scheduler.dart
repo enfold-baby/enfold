@@ -4,6 +4,7 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../../features/medication/utils/medication_routine_due.dart';
 import 'local_notifications.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 const medicationReminderChannelId = 'medication_routines';
 const _notificationIdBase = 7200;
@@ -26,6 +27,7 @@ class MedicationReminderJob {
 
 abstract class MedicationRoutineScheduler {
   Future<void> sync({
+    required AppL10n l10n,
     required List<MedicationReminderJob> jobs,
     required String babyName,
   });
@@ -36,6 +38,7 @@ class NoOpMedicationRoutineScheduler implements MedicationRoutineScheduler {
 
   @override
   Future<void> sync({
+    required AppL10n l10n,
     required List<MedicationReminderJob> jobs,
     required String babyName,
   }) async {}
@@ -48,6 +51,7 @@ class LocalMedicationRoutineScheduler implements MedicationRoutineScheduler {
 
   @override
   Future<void> sync({
+    required AppL10n l10n,
     required List<MedicationReminderJob> jobs,
     required String babyName,
   }) async {
@@ -71,11 +75,11 @@ class LocalMedicationRoutineScheduler implements MedicationRoutineScheduler {
 
     await requestLocalNotificationPermission(plugin);
 
-    const details = NotificationDetails(
+    final details = NotificationDetails(
       android: AndroidNotificationDetails(
         medicationReminderChannelId,
-        'Vitamin reminders',
-        channelDescription: 'Gentle ping for a daily vitamin or medication.',
+        l10n.notificationChannelMedicationName,
+        channelDescription: l10n.notificationChannelMedicationDescription,
         importance: Importance.defaultImportance,
         priority: Priority.defaultPriority,
         // showsUserInterface must be true: without it Android routes the tap
@@ -84,17 +88,17 @@ class LocalMedicationRoutineScheduler implements MedicationRoutineScheduler {
         actions: [
           AndroidNotificationAction(
             medicationGivenActionId,
-            'Given',
+            l10n.notificationActionGiven,
             showsUserInterface: true,
           ),
           AndroidNotificationAction(
             medicationLaterActionId,
-            'Later',
+            l10n.notificationActionLater,
             showsUserInterface: true,
           ),
         ],
       ),
-      iOS: DarwinNotificationDetails(
+      iOS: const DarwinNotificationDetails(
         categoryIdentifier: medicationReminderCategoryId,
       ),
     );
@@ -104,7 +108,7 @@ class LocalMedicationRoutineScheduler implements MedicationRoutineScheduler {
       await plugin.zonedSchedule(
         id,
         'Enfold',
-        medicationReminderBody(job.name, babyName),
+        medicationReminderBody(l10n, job.name, babyName),
         tz.TZDateTime.from(job.when, tz.local),
         details,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

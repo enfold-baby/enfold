@@ -1,6 +1,9 @@
+import 'dart:ui' show PlatformDispatcher;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/database/database_provider.dart';
 
 /// The languages the UI ships in. English is the fallback for every other
@@ -38,4 +41,22 @@ class LocaleOverrideNotifier extends AsyncNotifier<Locale?> {
     }
     return null;
   }
+}
+
+/// Strings outside the widget tree. Local notifications are scheduled from
+/// providers, with no BuildContext to read [AppL10n] from, so they resolve the
+/// same locale the UI would show: the Settings override, else the device
+/// language, else English.
+final appL10nProvider = FutureProvider<AppL10n>((ref) async {
+  final override = await ref.watch(localeOverrideProvider.future);
+  return lookupAppL10n(override ?? resolvedDeviceLocale());
+});
+
+/// The shipped locale closest to the device language, English otherwise.
+Locale resolvedDeviceLocale() {
+  final device = PlatformDispatcher.instance.locale;
+  for (final locale in supportedLocales) {
+    if (locale.languageCode == device.languageCode) return locale;
+  }
+  return supportedLocales.first;
 }

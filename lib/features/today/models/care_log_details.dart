@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../../core/units/volume_units.dart';
 import 'log_type.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class CareLogDetails {
   const CareLogDetails({
@@ -124,32 +125,36 @@ class CareLogDetails {
     return sleepEnd!.difference(sleepStart!).inMinutes;
   }
 
-  String summarize(LogType type, {bool useImperial = false}) {
+  String summarize(
+    AppL10n l10n,
+    LogType type, {
+    bool useImperial = false,
+  }) {
     switch (type) {
       case LogType.feed:
         final parts = <String>[];
         if (feedMode == 'breast') {
-          parts.add('breast');
+          parts.add(l10n.summaryBreast);
           if (breastDelivery == 'pumped') {
-            parts.add('pumped · bottle');
+            parts.add(l10n.summaryPumpedBottle);
           } else if (breastDelivery == 'direct') {
-            parts.add('at breast');
+            parts.add(l10n.summaryAtBreast);
           }
-          if (breastSide != null) parts.add(breastSide!);
+          if (breastSide != null) parts.add(_sideLabel(l10n, breastSide!));
           if (breastDelivery == 'pumped' && bottleMl != null) {
             parts.add(
               VolumeUnits.formatBottleMl(bottleMl!, useImperial: useImperial),
             );
           }
         } else if (feedMode == 'formula') {
-          parts.add('formula');
+          parts.add(l10n.summaryFormula);
           if (bottleMl != null) {
             parts.add(
               VolumeUnits.formatBottleMl(bottleMl!, useImperial: useImperial),
             );
           }
         } else if (feedMode == 'bottle') {
-          parts.add('bottle');
+          parts.add(l10n.summaryBottle);
           if (bottleMl != null) {
             parts.add(
               VolumeUnits.formatBottleMl(bottleMl!, useImperial: useImperial),
@@ -157,24 +162,26 @@ class CareLogDetails {
           }
         }
         if (feedDurationMinutes != null) {
-          parts.add('${feedDurationMinutes}min');
+          parts.add(l10n.summaryMinutes(feedDurationMinutes!));
         }
         return parts.join(' · ');
       case LogType.diaper:
         final parts = <String>[];
-        if (wet == true) parts.add('wet');
-        if (dirty == true) parts.add('poop');
-        if (stoolConsistency != null) parts.add(stoolConsistency!);
+        if (wet == true) parts.add(l10n.summaryWet);
+        if (dirty == true) parts.add(l10n.summaryPoop);
+        if (stoolConsistency != null) {
+          parts.add(_stoolLabel(l10n, stoolConsistency!));
+        }
         return parts.join(' · ');
       case LogType.sleep:
-        if (sleepInProgress == true) return 'sleeping now';
+        if (sleepInProgress == true) return l10n.summarySleepingNow;
         final minutes = resolvedSleepDurationMinutes;
-        if (minutes != null) return _formatDuration(minutes);
+        if (minutes != null) return _formatDuration(l10n, minutes);
         return '';
       case LogType.medication:
         final parts = <String>[];
         if (medicationCategory != null) {
-          parts.add(_medicationCategoryLabel(medicationCategory!));
+          parts.add(_medicationCategoryLabel(l10n, medicationCategory!));
         }
         if (medicationName != null && medicationName!.isNotEmpty) {
           parts.add(medicationName!);
@@ -185,33 +192,52 @@ class CareLogDetails {
         return parts.join(' · ');
       case LogType.pumping:
         final parts = <String>[];
-        if (breastSide != null) parts.add(breastSide!);
+        if (breastSide != null) parts.add(_sideLabel(l10n, breastSide!));
         if (bottleMl != null) {
           parts.add(
             VolumeUnits.formatBottleMl(bottleMl!, useImperial: useImperial),
           );
         }
-        if (durationMinutes != null) parts.add('${durationMinutes}min');
+        if (durationMinutes != null) {
+          parts.add(l10n.summaryMinutes(durationMinutes!));
+        }
         return parts.join(' · ');
       case LogType.tummyTime:
         final minutes = durationMinutes;
-        if (minutes != null) return _formatDuration(minutes);
-        return 'logged';
+        if (minutes != null) return _formatDuration(l10n, minutes);
+        return l10n.summaryLogged;
     }
   }
 
-  static String _medicationCategoryLabel(String category) => switch (category) {
-        'vitamin' => 'vitamin',
-        'supplement' => 'supplement',
-        'medication' => 'medication',
+  static String _sideLabel(AppL10n l10n, String side) => switch (side) {
+        'left' => l10n.summarySideLeft,
+        'right' => l10n.summarySideRight,
+        'both' => l10n.summarySideBoth,
+        _ => side,
+      };
+
+  static String _stoolLabel(AppL10n l10n, String consistency) =>
+      switch (consistency) {
+        'normal' => l10n.summaryStoolNormal,
+        'soft' => l10n.summaryStoolSoft,
+        'hard' => l10n.summaryStoolHard,
+        'loose' => l10n.summaryStoolLoose,
+        _ => consistency,
+      };
+
+  static String _medicationCategoryLabel(AppL10n l10n, String category) =>
+      switch (category) {
+        'vitamin' => l10n.summaryCategoryVitamin,
+        'supplement' => l10n.summaryCategorySupplement,
+        'medication' => l10n.summaryCategoryMedication,
         _ => category,
       };
 
-  static String _formatDuration(int minutes) {
-    if (minutes < 60) return '${minutes}min';
+  static String _formatDuration(AppL10n l10n, int minutes) {
+    if (minutes < 60) return l10n.summaryMinutes(minutes);
     final hours = minutes ~/ 60;
     final remainder = minutes % 60;
-    if (remainder == 0) return '${hours}h';
-    return '${hours}h ${remainder}m';
+    if (remainder == 0) return l10n.summaryHours(hours);
+    return l10n.summaryHoursMinutes(hours, remainder);
   }
 }

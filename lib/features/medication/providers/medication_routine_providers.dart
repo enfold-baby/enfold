@@ -14,6 +14,7 @@ import '../../today/models/log_type.dart';
 import '../../today/providers/today_log_provider.dart';
 import '../utils/medication_routine_due.dart';
 import 'medication_providers.dart';
+import '../../settings/providers/locale_providers.dart';
 
 final medicationRoutineSchedulerProvider =
     Provider<MedicationRoutineScheduler>((ref) {
@@ -196,7 +197,9 @@ class MedicationRoutineActions {
             ),
           ),
     ];
+    final l10n = await _ref.read(appL10nProvider.future);
     await _ref.read(medicationRoutineSchedulerProvider).sync(
+          l10n: l10n,
           jobs: jobs,
           babyName: baby?.name ?? 'Baby',
         );

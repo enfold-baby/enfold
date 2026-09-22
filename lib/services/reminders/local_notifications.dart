@@ -6,6 +6,9 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../features/settings/providers/locale_providers.dart';
+import '../../l10n/generated/app_localizations.dart';
+
 const medicationReminderCategoryId = 'med_routine';
 const medicationGivenActionId = 'given';
 const medicationLaterActionId = 'later';
@@ -27,13 +30,22 @@ Future<FlutterLocalNotificationsPlugin?> ensureLocalNotifications() async {
   }
 
   const android = AndroidInitializationSettings('@drawable/ic_stat_enfold');
+  // iOS registers its categories once per launch, so these follow the device
+  // language rather than a later Settings override.
+  final l10n = lookupAppL10n(resolvedDeviceLocale());
   final darwin = DarwinInitializationSettings(
     notificationCategories: [
       DarwinNotificationCategory(
         medicationReminderCategoryId,
         actions: [
-          DarwinNotificationAction.plain(medicationGivenActionId, 'Given'),
-          DarwinNotificationAction.plain(medicationLaterActionId, 'Later'),
+          DarwinNotificationAction.plain(
+            medicationGivenActionId,
+            l10n.notificationActionGiven,
+          ),
+          DarwinNotificationAction.plain(
+            medicationLaterActionId,
+            l10n.notificationActionLater,
+          ),
         ],
       ),
     ],

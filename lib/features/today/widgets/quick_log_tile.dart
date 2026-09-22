@@ -12,26 +12,28 @@ class QuickLogTile extends StatelessWidget {
     required this.color,
     required this.onTap,
     this.onLongPress,
-    this.supportingText = 'View log · hold to add',
+    this.supportingText,
   });
 
   final LogType type;
   final Color color;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
-  final String supportingText;
+  final String? supportingText;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final label = type.label(AppL10n.of(context));
+    final l10n = AppL10n.of(context);
+    final label = type.label(l10n);
+    final supporting = supportingText ?? l10n.quickLogSupporting;
     final brightness = theme.brightness;
     final isDark = brightness == Brightness.dark;
 
     return BloomSurface(
       onTap: onTap,
       onLongPress: onLongPress,
-      semanticLabel: '$label. $supportingText',
+      semanticLabel: '$label. $supporting',
       padding: const EdgeInsets.all(16),
       radius: 22,
       child: ConstrainedBox(
@@ -68,7 +70,7 @@ class QuickLogTile extends StatelessWidget {
             Text(label, style: theme.textTheme.titleMedium),
             const SizedBox(height: 2),
             Text(
-              supportingText,
+              supporting,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.labelSmall?.copyWith(

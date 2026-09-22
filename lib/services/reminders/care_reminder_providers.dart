@@ -7,6 +7,7 @@ import '../../features/today/providers/today_log_provider.dart';
 import '../database/database_provider.dart';
 import 'care_reminder_scheduler.dart';
 import 'local_care_reminder_scheduler.dart';
+import '../../features/settings/providers/locale_providers.dart';
 
 final careReminderSchedulerProvider = Provider<CareReminderScheduler>((ref) {
   return LocalCareReminderScheduler();
@@ -59,7 +60,9 @@ class CareReminderActions {
     final enabled = await db.settingsDao.careRemindersEnabled();
     final baby = _ref.read(activeBabyProvider).valueOrNull;
     final logs = _ref.read(todayLogProvider).valueOrNull ?? const [];
+    final l10n = await _ref.read(appL10nProvider.future);
     await _ref.read(careReminderSchedulerProvider).sync(
+          l10n: l10n,
           enabled: enabled,
           babyName: baby?.name ?? 'Baby',
           hasLogsToday: logs.isNotEmpty,

@@ -5,6 +5,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'care_reminder_schedule.dart';
 import 'care_reminder_scheduler.dart';
 import 'local_notifications.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 const _notificationId = 7101;
 const _channelId = 'care_reminders';
@@ -14,6 +15,7 @@ class LocalCareReminderScheduler implements CareReminderScheduler {
 
   @override
   Future<void> sync({
+    required AppL10n l10n,
     required bool enabled,
     required String babyName,
     required bool hasLogsToday,
@@ -30,21 +32,21 @@ class LocalCareReminderScheduler implements CareReminderScheduler {
 
     await requestLocalNotificationPermission(plugin);
 
-    const details = NotificationDetails(
+    final details = NotificationDetails(
       android: AndroidNotificationDetails(
         _channelId,
-        'Care reminders',
-        channelDescription: 'Gentle ping if nothing is logged by evening.',
+        l10n.notificationChannelCareName,
+        channelDescription: l10n.notificationChannelCareDescription,
         importance: Importance.defaultImportance,
         priority: Priority.defaultPriority,
       ),
-      iOS: DarwinNotificationDetails(),
+      iOS: const DarwinNotificationDetails(),
     );
 
     await plugin.zonedSchedule(
       _notificationId,
       'Enfold',
-      careReminderBody(babyName),
+      careReminderBody(l10n, babyName),
       tz.TZDateTime.from(when, tz.local),
       details,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

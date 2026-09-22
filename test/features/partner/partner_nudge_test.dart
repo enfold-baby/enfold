@@ -55,6 +55,7 @@ void main() {
   test('detectGentleNudge handles missing logs for the day', () {
     final nudge = detectGentleNudge(todayLogs: const [], now: now);
     expect(nudge?.type, LogType.feed);
-    expect(nudge?.message, contains('No feed logged yet today'));
+    expect(nudge?.nothingToday, isTrue);
+    expect(nudge?.type, LogType.feed);
   });
 }

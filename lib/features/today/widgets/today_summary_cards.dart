@@ -5,6 +5,7 @@ import '../../../widgets/bloom_section_header.dart';
 import '../../../widgets/bloom_surface.dart';
 import '../models/log_type.dart';
 import '../models/today_summary.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class TodaySummaryCards extends StatelessWidget {
   const TodaySummaryCards({super.key, required this.summary});
@@ -14,13 +15,14 @@ class TodaySummaryCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const BloomSectionHeader(
-          title: 'Today so far',
-          subtitle: 'A small snapshot, never a score.',
+        BloomSectionHeader(
+          title: l10n.todaySoFar,
+          subtitle: l10n.todaySoFarSubtitle,
         ),
         const SizedBox(height: 12),
         BloomSurface(
@@ -34,7 +36,7 @@ class TodaySummaryCards extends StatelessWidget {
                     key: const Key('today_summary_feed'),
                     type: LogType.feed,
                     value: '${summary.feedCount}',
-                    label: summary.feedCount == 1 ? 'feed' : 'feeds',
+                    label: l10n.todaySummaryFeeds(summary.feedCount),
                   ),
                 ),
                 const VerticalDivider(width: 1),
@@ -43,7 +45,7 @@ class TodaySummaryCards extends StatelessWidget {
                     key: const Key('today_summary_diaper'),
                     type: LogType.diaper,
                     value: '${summary.diaperCount}',
-                    label: summary.diaperCount == 1 ? 'diaper' : 'diapers',
+                    label: l10n.todaySummaryDiapers(summary.diaperCount),
                   ),
                 ),
                 const VerticalDivider(width: 1),
@@ -52,7 +54,7 @@ class TodaySummaryCards extends StatelessWidget {
                     key: const Key('today_summary_sleep'),
                     type: LogType.sleep,
                     value: summary.sleepLabel,
-                    label: 'sleep',
+                    label: l10n.todaySummarySleep,
                   ),
                 ),
               ],

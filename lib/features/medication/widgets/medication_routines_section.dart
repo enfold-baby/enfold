@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../services/database/app_database.dart';
 import '../../settings/providers/time_format_providers.dart';
 import '../providers/medication_routine_providers.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class MedicationRoutinesSection extends ConsumerWidget {
   const MedicationRoutinesSection({super.key});
@@ -22,7 +23,7 @@ class MedicationRoutinesSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Daily reminders',
+          AppL10n.of(context).medicationRoutinesTitle,
           style: GoogleFonts.nunito(
             fontSize: 13,
             fontWeight: FontWeight.w800,
@@ -32,7 +33,7 @@ class MedicationRoutinesSection extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Optional. A quiet ping for vitamins like vitamin D. Never a streak.',
+          AppL10n.of(context).medicationRoutinesSubtitle,
           style: GoogleFonts.nunito(
             fontSize: 14,
             height: 1.4,
@@ -42,7 +43,7 @@ class MedicationRoutinesSection extends ConsumerWidget {
         const SizedBox(height: 12),
         if (routines.isEmpty)
           Text(
-            'Log a dose and turn on “Remind me every day.”',
+            AppL10n.of(context).medicationRoutinesEmpty,
             style: GoogleFonts.nunito(
               color: AppColors.mutedText(brightness),
             ),
@@ -84,7 +85,7 @@ class _RoutineTile extends ConsumerWidget {
           style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
         ),
         subtitle: Text(
-          'Around $timeLabel',
+          AppL10n.of(context).medicationRoutineAround(timeLabel),
           style: GoogleFonts.nunito(
             color: AppColors.mutedText(brightness),
           ),
@@ -102,7 +103,7 @@ class _RoutineTile extends ConsumerWidget {
             ),
             IconButton(
               key: Key('medication_routine_delete_${routine.id}'),
-              tooltip: 'Remove reminder',
+              tooltip: AppL10n.of(context).medicationRoutineRemove,
               onPressed: () => ref
                   .read(medicationRoutineActionsProvider)
                   .deleteRoutine(routine.id),

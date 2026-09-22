@@ -37,7 +37,7 @@ class LogEntryTile extends ConsumerWidget {
         : isSignedIn
             ? 'will sync'
             : 'on device';
-    final detail = entry.detailSummary(useImperial: useImperial);
+    final detail = entry.detailSummary(l10n, useImperial: useImperial);
     final loggedBy = entry.loggedByLabel(
       currentUserId: currentUserId,
       showAttribution: showAttribution,

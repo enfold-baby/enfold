@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../models/partner_nudge.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 class GentleNudgeBanner extends StatelessWidget {
   const GentleNudgeBanner({super.key, required this.nudge, this.onDismiss});
@@ -41,7 +42,7 @@ class GentleNudgeBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  nudge.message,
+                  nudge.message(AppL10n.of(context)),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: 14,
                     color: AppColors.mutedText(brightness),

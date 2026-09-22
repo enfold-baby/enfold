@@ -1,3 +1,5 @@
+import '../../../l10n/generated/app_localizations.dart';
+
 import '../../today/models/care_log_entry.dart';
 import '../../today/models/log_type.dart';
 import 'medication_name.dart';
@@ -67,11 +69,19 @@ DateTime? latestDoseAt({
   return latest;
 }
 
-String medicationReminderBody(String medName, String babyName) {
-  final med = medName.trim().isEmpty ? 'a vitamin' : medName.trim();
+String medicationReminderBody(
+  AppL10n l10n,
+  String medName,
+  String babyName,
+) {
+  final med = medName.trim().isEmpty
+      ? l10n.medicationReminderFallbackMedication
+      : medName.trim();
   final name = babyName.trim();
-  final who = name.isEmpty || name.toLowerCase() == 'baby' ? 'baby' : name;
-  return '$med for $who?';
+  final who = name.isEmpty || name.toLowerCase() == 'baby'
+      ? l10n.careReminderFallbackWho
+      : name;
+  return l10n.medicationReminderBody(med, who);
 }
 
 String medicationRoutineTodayLine({
