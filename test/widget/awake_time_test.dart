@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/test_database.dart';
+import '../helpers/localized_app.dart';
 
 Future<void> _logFinishedSleep(ProviderContainer container, Duration ago) {
   final end = DateTime.now().subtract(ago);
@@ -31,7 +32,7 @@ Future<void> _pumpToday(WidgetTester tester, ProviderContainer container) async 
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
-      child: const MaterialApp(home: TodayScreen()),
+      child: localizedApp(const TodayScreen()),
     ),
   );
   await tester.pump();
@@ -93,7 +94,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: SettingsScreen()),
+        child: localizedApp(const SettingsScreen()),
       ),
     );
     await tester.pump();

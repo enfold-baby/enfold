@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../today/models/log_type.dart';
 
 class HubTypeFilterChips extends StatelessWidget {
@@ -33,7 +34,7 @@ class HubTypeFilterChips extends StatelessWidget {
         for (final type in LogType.values)
           _FilterChip(
             key: Key('filter_${type.formSegment}'),
-            label: type.label,
+            label: type.label(AppL10n.of(context)),
             selected: !isAll && selected.contains(type),
             color: type.color,
             onTap: () => onTypeTap(type),

@@ -1989,6 +1989,17 @@ class $AppSettingsTable extends AppSettings
     ),
     defaultValue: const Constant(true),
   );
+  static const VerificationMeta _languageTagMeta = const VerificationMeta(
+    'languageTag',
+  );
+  @override
+  late final GeneratedColumn<String> languageTag = GeneratedColumn<String>(
+    'language_tag',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2001,6 +2012,7 @@ class $AppSettingsTable extends AppSettings
     careRemindersEnabled,
     use24HourTime,
     showAwakeTime,
+    languageTag,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2095,6 +2107,15 @@ class $AppSettingsTable extends AppSettings
         ),
       );
     }
+    if (data.containsKey('language_tag')) {
+      context.handle(
+        _languageTagMeta,
+        languageTag.isAcceptableOrUnknown(
+          data['language_tag']!,
+          _languageTagMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2144,6 +2165,10 @@ class $AppSettingsTable extends AppSettings
         DriftSqlType.bool,
         data['${effectivePrefix}show_awake_time'],
       )!,
+      languageTag: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}language_tag'],
+      ),
     );
   }
 
@@ -2172,6 +2197,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
 
   /// Today screen line "Awake for 1h 20m" after the last logged sleep. On by default.
   final bool showAwakeTime;
+
+  /// Forced UI language as a BCP 47 tag ("ro", "en"). Null follows the device.
+  final String? languageTag;
   const AppSetting({
     required this.id,
     required this.onboardingCompleted,
@@ -2183,6 +2211,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     required this.careRemindersEnabled,
     required this.use24HourTime,
     required this.showAwakeTime,
+    this.languageTag,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2203,6 +2232,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     map['care_reminders_enabled'] = Variable<bool>(careRemindersEnabled);
     map['use24_hour_time'] = Variable<bool>(use24HourTime);
     map['show_awake_time'] = Variable<bool>(showAwakeTime);
+    if (!nullToAbsent || languageTag != null) {
+      map['language_tag'] = Variable<String>(languageTag);
+    }
     return map;
   }
 
@@ -2220,6 +2252,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       careRemindersEnabled: Value(careRemindersEnabled),
       use24HourTime: Value(use24HourTime),
       showAwakeTime: Value(showAwakeTime),
+      languageTag: languageTag == null && nullToAbsent
+          ? const Value.absent()
+          : Value(languageTag),
     );
   }
 
@@ -2249,6 +2284,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       ),
       use24HourTime: serializer.fromJson<bool>(json['use24HourTime']),
       showAwakeTime: serializer.fromJson<bool>(json['showAwakeTime']),
+      languageTag: serializer.fromJson<String?>(json['languageTag']),
     );
   }
   @override
@@ -2269,6 +2305,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       'careRemindersEnabled': serializer.toJson<bool>(careRemindersEnabled),
       'use24HourTime': serializer.toJson<bool>(use24HourTime),
       'showAwakeTime': serializer.toJson<bool>(showAwakeTime),
+      'languageTag': serializer.toJson<String?>(languageTag),
     };
   }
 
@@ -2283,6 +2320,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     bool? careRemindersEnabled,
     bool? use24HourTime,
     bool? showAwakeTime,
+    Value<String?> languageTag = const Value.absent(),
   }) => AppSetting(
     id: id ?? this.id,
     onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
@@ -2298,6 +2336,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     careRemindersEnabled: careRemindersEnabled ?? this.careRemindersEnabled,
     use24HourTime: use24HourTime ?? this.use24HourTime,
     showAwakeTime: showAwakeTime ?? this.showAwakeTime,
+    languageTag: languageTag.present ? languageTag.value : this.languageTag,
   );
   AppSetting copyWithCompanion(AppSettingsCompanion data) {
     return AppSetting(
@@ -2327,6 +2366,9 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
       showAwakeTime: data.showAwakeTime.present
           ? data.showAwakeTime.value
           : this.showAwakeTime,
+      languageTag: data.languageTag.present
+          ? data.languageTag.value
+          : this.languageTag,
     );
   }
 
@@ -2342,7 +2384,8 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
           ..write('lastSignedInUserId: $lastSignedInUserId, ')
           ..write('careRemindersEnabled: $careRemindersEnabled, ')
           ..write('use24HourTime: $use24HourTime, ')
-          ..write('showAwakeTime: $showAwakeTime')
+          ..write('showAwakeTime: $showAwakeTime, ')
+          ..write('languageTag: $languageTag')
           ..write(')'))
         .toString();
   }
@@ -2359,6 +2402,7 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
     careRemindersEnabled,
     use24HourTime,
     showAwakeTime,
+    languageTag,
   );
   @override
   bool operator ==(Object other) =>
@@ -2373,7 +2417,8 @@ class AppSetting extends DataClass implements Insertable<AppSetting> {
           other.lastSignedInUserId == this.lastSignedInUserId &&
           other.careRemindersEnabled == this.careRemindersEnabled &&
           other.use24HourTime == this.use24HourTime &&
-          other.showAwakeTime == this.showAwakeTime);
+          other.showAwakeTime == this.showAwakeTime &&
+          other.languageTag == this.languageTag);
 }
 
 class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
@@ -2387,6 +2432,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
   final Value<bool> careRemindersEnabled;
   final Value<bool> use24HourTime;
   final Value<bool> showAwakeTime;
+  final Value<String?> languageTag;
   const AppSettingsCompanion({
     this.id = const Value.absent(),
     this.onboardingCompleted = const Value.absent(),
@@ -2398,6 +2444,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     this.careRemindersEnabled = const Value.absent(),
     this.use24HourTime = const Value.absent(),
     this.showAwakeTime = const Value.absent(),
+    this.languageTag = const Value.absent(),
   });
   AppSettingsCompanion.insert({
     this.id = const Value.absent(),
@@ -2410,6 +2457,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     this.careRemindersEnabled = const Value.absent(),
     this.use24HourTime = const Value.absent(),
     this.showAwakeTime = const Value.absent(),
+    this.languageTag = const Value.absent(),
   });
   static Insertable<AppSetting> custom({
     Expression<int>? id,
@@ -2422,6 +2470,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     Expression<bool>? careRemindersEnabled,
     Expression<bool>? use24HourTime,
     Expression<bool>? showAwakeTime,
+    Expression<String>? languageTag,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -2439,6 +2488,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
         'care_reminders_enabled': careRemindersEnabled,
       if (use24HourTime != null) 'use24_hour_time': use24HourTime,
       if (showAwakeTime != null) 'show_awake_time': showAwakeTime,
+      if (languageTag != null) 'language_tag': languageTag,
     });
   }
 
@@ -2453,6 +2503,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     Value<bool>? careRemindersEnabled,
     Value<bool>? use24HourTime,
     Value<bool>? showAwakeTime,
+    Value<String?>? languageTag,
   }) {
     return AppSettingsCompanion(
       id: id ?? this.id,
@@ -2467,6 +2518,7 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
       careRemindersEnabled: careRemindersEnabled ?? this.careRemindersEnabled,
       use24HourTime: use24HourTime ?? this.use24HourTime,
       showAwakeTime: showAwakeTime ?? this.showAwakeTime,
+      languageTag: languageTag ?? this.languageTag,
     );
   }
 
@@ -2511,6 +2563,9 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
     if (showAwakeTime.present) {
       map['show_awake_time'] = Variable<bool>(showAwakeTime.value);
     }
+    if (languageTag.present) {
+      map['language_tag'] = Variable<String>(languageTag.value);
+    }
     return map;
   }
 
@@ -2526,7 +2581,8 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
           ..write('lastSignedInUserId: $lastSignedInUserId, ')
           ..write('careRemindersEnabled: $careRemindersEnabled, ')
           ..write('use24HourTime: $use24HourTime, ')
-          ..write('showAwakeTime: $showAwakeTime')
+          ..write('showAwakeTime: $showAwakeTime, ')
+          ..write('languageTag: $languageTag')
           ..write(')'))
         .toString();
   }
@@ -5259,6 +5315,7 @@ typedef $$AppSettingsTableCreateCompanionBuilder =
       Value<bool> careRemindersEnabled,
       Value<bool> use24HourTime,
       Value<bool> showAwakeTime,
+      Value<String?> languageTag,
     });
 typedef $$AppSettingsTableUpdateCompanionBuilder =
     AppSettingsCompanion Function({
@@ -5272,6 +5329,7 @@ typedef $$AppSettingsTableUpdateCompanionBuilder =
       Value<bool> careRemindersEnabled,
       Value<bool> use24HourTime,
       Value<bool> showAwakeTime,
+      Value<String?> languageTag,
     });
 
 class $$AppSettingsTableFilterComposer
@@ -5330,6 +5388,11 @@ class $$AppSettingsTableFilterComposer
 
   ColumnFilters<bool> get showAwakeTime => $composableBuilder(
     column: $table.showAwakeTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get languageTag => $composableBuilder(
+    column: $table.languageTag,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5392,6 +5455,11 @@ class $$AppSettingsTableOrderingComposer
     column: $table.showAwakeTime,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get languageTag => $composableBuilder(
+    column: $table.languageTag,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$AppSettingsTableAnnotationComposer
@@ -5448,6 +5516,11 @@ class $$AppSettingsTableAnnotationComposer
     column: $table.showAwakeTime,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get languageTag => $composableBuilder(
+    column: $table.languageTag,
+    builder: (column) => column,
+  );
 }
 
 class $$AppSettingsTableTableManager
@@ -5491,6 +5564,7 @@ class $$AppSettingsTableTableManager
                 Value<bool> careRemindersEnabled = const Value.absent(),
                 Value<bool> use24HourTime = const Value.absent(),
                 Value<bool> showAwakeTime = const Value.absent(),
+                Value<String?> languageTag = const Value.absent(),
               }) => AppSettingsCompanion(
                 id: id,
                 onboardingCompleted: onboardingCompleted,
@@ -5502,6 +5576,7 @@ class $$AppSettingsTableTableManager
                 careRemindersEnabled: careRemindersEnabled,
                 use24HourTime: use24HourTime,
                 showAwakeTime: showAwakeTime,
+                languageTag: languageTag,
               ),
           createCompanionCallback:
               ({
@@ -5515,6 +5590,7 @@ class $$AppSettingsTableTableManager
                 Value<bool> careRemindersEnabled = const Value.absent(),
                 Value<bool> use24HourTime = const Value.absent(),
                 Value<bool> showAwakeTime = const Value.absent(),
+                Value<String?> languageTag = const Value.absent(),
               }) => AppSettingsCompanion.insert(
                 id: id,
                 onboardingCompleted: onboardingCompleted,
@@ -5526,6 +5602,7 @@ class $$AppSettingsTableTableManager
                 careRemindersEnabled: careRemindersEnabled,
                 use24HourTime: use24HourTime,
                 showAwakeTime: showAwakeTime,
+                languageTag: languageTag,
               ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

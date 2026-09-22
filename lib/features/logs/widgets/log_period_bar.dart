@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../models/log_period_filter.dart';
 
 typedef PeriodFilterNotifier = StateProvider<LogPeriodFilter>;
@@ -18,6 +19,7 @@ class LogPeriodBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final period = ref.watch(periodProvider);
+    final l10n = AppL10n.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,8 +31,8 @@ class LogPeriodBar extends ConsumerWidget {
             for (final preset in LogPeriodPreset.values)
               _PeriodChip(
                 label: preset == LogPeriodPreset.custom && period.isCustom
-                    ? period.periodLabel()
-                    : preset.label,
+                    ? period.periodLabel(l10n)
+                    : preset.label(l10n),
                 selected: period.preset == preset,
                 onTap: () async {
                   if (preset == LogPeriodPreset.custom) {
@@ -46,7 +48,7 @@ class LogPeriodBar extends ConsumerWidget {
         if (period.isCustom) ...[
           const SizedBox(height: 8),
           Text(
-            'Showing ${period.periodLabel()}',
+            l10n.logsPeriodShowing(period.periodLabel(l10n)),
             style: GoogleFonts.nunito(
               fontSize: 13,
               color: AppColors.mutedText(Theme.of(context).brightness),

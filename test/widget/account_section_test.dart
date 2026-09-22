@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/pump_until.dart';
 import '../helpers/test_database.dart';
+import '../helpers/localized_app.dart';
 
 void main() {
   testWidgets('account section shows sign-in flow', (tester) async {
@@ -14,7 +15,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: Scaffold(body: AccountSection())),
+        child: localizedApp(const Scaffold(body: AccountSection())),
       ),
     );
     await tester.pump();

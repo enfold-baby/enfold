@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../providers/app_info_provider.dart';
 
 class AboutSection extends ConsumerWidget {
@@ -11,6 +12,7 @@ class AboutSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
     final infoAsync = ref.watch(appPackageInfoProvider);
 
     return infoAsync.when(
@@ -22,7 +24,7 @@ class AboutSection extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'About',
+              l10n.settingsAboutTitle,
               style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
@@ -41,7 +43,7 @@ class AboutSection extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Grow with confidence. · Enfold.baby',
+              l10n.settingsAboutTagline,
               style: GoogleFonts.nunito(
                 fontSize: 14,
                 color: AppColors.mutedText(brightness),
@@ -50,9 +52,7 @@ class AboutSection extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'Enfold provides general educational information. It does not replace '
-              'professional medical advice, diagnosis, or treatment. In an emergency, '
-              'call your local emergency number.',
+              l10n.settingsAboutDisclaimer,
               style: GoogleFonts.nunito(
                 fontSize: 13,
                 color: AppColors.mutedText(brightness),

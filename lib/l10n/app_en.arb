@@ -1,0 +1,302 @@
+{
+  "@@locale": "en",
+  "navToday": "Today",
+  "@navToday": {
+    "description": "Bottom navigation tab: the current day"
+  },
+  "navLogs": "Logs",
+  "@navLogs": {
+    "description": "Bottom navigation tab: log history"
+  },
+  "navLearn": "Learn",
+  "@navLearn": {
+    "description": "Bottom navigation tab: learn cards"
+  },
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Bottom navigation tab: settings"
+  },
+  "navAddTooltip": "Add",
+  "@navAddTooltip": {
+    "description": "Tooltip on the centre add button"
+  },
+  "quickAddTitle": "Add a log",
+  "quickAddGrowth": "Growth",
+  "quickAddPregnancy": "Pregnancy",
+  "logTypeFeed": "Feed",
+  "logTypeDiaper": "Diaper",
+  "logTypeSleep": "Sleep",
+  "logTypeMedication": "Meds",
+  "logTypePumping": "Pump",
+  "logTypeTummyTime": "Tummy",
+  "logTypeFeedLogged": "Feed logged",
+  "logTypeDiaperLogged": "Diaper logged",
+  "logTypeSleepLogged": "Sleep logged",
+  "logTypeMedicationLogged": "Medication logged",
+  "logTypePumpingLogged": "Pumping logged",
+  "logTypeTummyTimeLogged": "Tummy time logged",
+  "todayGreetingMorning": "Good morning",
+  "todayGreetingAfternoon": "Good afternoon",
+  "todayGreetingEvening": "Good evening",
+  "todayGreetingNight": "Good night",
+  "todaySharePdfTooltip": "Share 7-day visit PDF",
+  "todayQuickActionsTitle": "Quick actions",
+  "todayQuickActionsSubtitle": "Open a log, or hold a tile to add details.",
+  "todayRecentTitle": "Recent",
+  "todayRecentSubtitle": "The latest care moments, all in one place.",
+  "todayMoreCareTitle": "More care",
+  "todayMoreCareSubtitle": "Growth, medication, tummy time, and pumping.",
+  "todayRecentRestingTitle": "Recent logs are resting",
+  "todayRecentRestingMessage": "You can still add a care moment above and try again later.",
+  "todayQuietStartTitle": "A quiet start",
+  "todayQuietStartMessage": "Nothing logged yet today. Tap a button when you're ready.",
+  "todayTagline": "One calm care moment at a time.",
+  "todayPregnancyTitle": "Pregnancy",
+  "todayPregnancyNoWeek": "Kicks, appointments, and due date",
+  "todayPregnancyWeek": "Week {week} · kicks and appointments",
+  "@todayPregnancyWeek": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      }
+    }
+  },
+  "todaySyncing": "Syncing shared care…",
+  "todaySyncNeedsAttention": "Sync needs a little attention",
+  "todaySyncUpToDate": "Shared care is up to date",
+  "todaySyncPartnerLogs": "{count, plural, =1{1 new partner log} other{{count} new partner logs}}",
+  "@todaySyncPartnerLogs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "todayRoutineLogged": "{name} logged",
+  "@todayRoutineLogged": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "commonWakeUpLogged": "Wake-up logged",
+  "commonCancel": "Cancel",
+  "commonBabyFallbackName": "Baby",
+  "commonPdfFailed": "Could not create PDF. Try again.",
+  "logsTitle": "Logs",
+  "logsHubHeading": "Your log history",
+  "logsHubSubtitle": "Browse everything here, or open a type for focused filters.",
+  "logsHubGrowth": "Growth",
+  "logsHubMilestones": "Milestones",
+  "logsFilterLabel": "Filter",
+  "logsPeriodLast7Days": "7 days",
+  "logsPeriodLast30Days": "30 days",
+  "logsPeriodCustom": "Period",
+  "syncFailedSafe": "Couldn’t sync right now. Your local logs are safe.",
+  "syncFailedWithError": "Sync failed: {error}",
+  "@syncFailedWithError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsTitle": "Settings",
+  "settingsPregnancyTitle": "Pregnancy",
+  "settingsPregnancySubtitle": "Due date, kicks, and appointments.",
+  "settingsAppearanceTitle": "Appearance",
+  "settingsAppearanceSubtitle": "Parents log at night, so dark mode matters.",
+  "settingsThemeSystem": "System",
+  "settingsThemeLight": "Light",
+  "settingsThemeDark": "Dark",
+  "settingsLanguageTitle": "Language",
+  "settingsLanguageSubtitle": "Learn cards stay in English for now.",
+  "settingsLanguageSystem": "Device",
+  "@settingsLanguageSystem": {
+    "description": "Follow the device language"
+  },
+  "settingsLanguageEnglish": "English",
+  "settingsLanguageRomanian": "Romanian",
+  "settingsTimeTitle": "Time",
+  "settingsTimeSubtitle": "How times appear in logs, pickers, and the visit PDF.",
+  "settingsTime12Hour": "12-hour (AM/PM)",
+  "settingsTime24Hour": "24-hour",
+  "settingsUnitsTitle": "Units",
+  "settingsUnitsSubtitle": "Bottle amounts in logs and PDF export.",
+  "settingsUnitsMetric": "Metric (ml)",
+  "settingsUnitsUs": "US (fl oz)",
+  "settingsAwakeTitle": "Time awake",
+  "settingsAwakeSubtitle": "Show how long the baby has been awake since the last logged sleep, on the Today screen.",
+  "settingsCheckInTitle": "Evening check-in",
+  "settingsCheckInSubtitle": "A gentle ping if nothing is logged by evening. Off by default. Never a streak, never guilt.",
+  "settingsLegalTitle": "Legal",
+  "settingsLegalSubtitle": "How we handle your family’s data.",
+  "settingsPrivacyPolicy": "Privacy policy",
+  "settingsTermsOfUse": "Terms of use",
+  "settingsAboutTitle": "About",
+  "settingsAboutTagline": "Grow with confidence. · Enfold.baby",
+  "settingsAboutDisclaimer": "Enfold provides general educational information. It does not replace professional medical advice, diagnosis, or treatment. In an emergency, call your local emergency number.",
+  "settingsExportTitle": "Visit export",
+  "settingsExportSubtitle": "7-day feed, diaper, and sleep summary for your pediatrician.",
+  "settingsExportButton": "Export 7-day PDF",
+  "settingsExportButtonBusy": "Creating PDF…",
+  "settingsExportConfirmTitle": "Share a 7-day visit PDF?",
+  "settingsExportConfirmBody": "Creates a one-page summary of feeds, diapers, sleep, and other care from the last 7 days, handy for a partner or a pediatrician visit.",
+  "settingsExportConfirmAction": "Create PDF",
+  "settingsExportReady": "PDF ready to share or print.",
+  "settingsBabyTitle": "Baby profile",
+  "settingsBabySubtitle": "Name and birth date appear in exports and sync.",
+  "settingsBabyNameLabel": "Name",
+  "settingsBabyBirthDateLabel": "Birth date",
+  "settingsBabySetBirthDate": "Set birth date (optional)",
+  "settingsBabyBorn": "Born {date}",
+  "@settingsBabyBorn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsBabyClearBirthDate": "Clear birth date",
+  "settingsBabyPreterm": "Born preterm",
+  "settingsBabyPretermSubtitle": "We will add corrected-age milestones later.",
+  "settingsBabySave": "Save profile",
+  "settingsBabySaving": "Saving…",
+  "settingsBabySaved": "Profile saved on device.",
+  "settingsBabySaveFailed": "Could not save profile.",
+  "settingsCaregiverTitle": "Your caregiver profile",
+  "settingsCaregiverSubtitle": "So partners see who logged each feed, diaper, or sleep.",
+  "settingsCaregiverRolePrompt": "I am…",
+  "settingsCaregiverRolePartner": "Partner",
+  "settingsCaregiverRoleGrandma": "Grandma",
+  "settingsCaregiverRoleGrandpa": "Grandpa",
+  "settingsCaregiverRoleCaregiver": "Caregiver",
+  "settingsCaregiverRoleOther": "Other",
+  "settingsCaregiverNameLabel": "Name (optional)",
+  "settingsCaregiverNameHint": "e.g. Ana",
+  "settingsCaregiverPreview": "On logs: {name}",
+  "@settingsCaregiverPreview": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCaregiverSignInFirst": "Sign in to save your profile.",
+  "settingsCaregiverCleared": "Profile cleared. Logs will use your email name.",
+  "settingsCaregiverSaved": "Saved as “{name}”. New logs will show this.",
+  "@settingsCaregiverSaved": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsCaregiverSaveFailed": "Could not save profile. Try again.",
+  "settingsPartnerPushTitle": "Partner notifications",
+  "settingsPartnerPushSubtitle": "Optional awareness. Off by default, no guilt.",
+  "settingsPartnerPushWhenLogs": "When partner logs",
+  "settingsPartnerPushWhenLogsSubtitle": "Push when your co-parent adds a feed, diaper, or sleep entry.",
+  "settingsPartnerNudgeTitle": "Gentle reminders",
+  "settingsPartnerNudgeSubtitle": "Soft in-app nudge if a core log has not been recorded in a while.",
+  "settingsPartnerPushNote": "Pushes arrive when your co-parent logs a feed, diaper, or sleep. Enfold asks for notification permission on this device.",
+  "settingsPartnerSignInFirst": "Sign in first to create an invite.",
+  "settingsPartnerInviteCopied": "Invite code {code} copied.",
+  "@settingsPartnerInviteCopied": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPartnerInviteFailed": "Could not create invite. Try again.",
+  "settingsPartnerJoinFailed": "Could not join with that code.",
+  "settingsPartnerLeaveTitle": "Leave this family?",
+  "settingsPartnerLeaveBody": "You will stop sharing with your partner.\n\n• On this phone, synced care logs will be cleared so you start fresh.\n• Your partner’s family keeps all their logs and baby data. Nothing is deleted for them on the server.\n\nYou can join again later with a new invite code.",
+  "settingsPartnerLeaveConfirm": "Leave family",
+  "settingsPartnerLeft": "You left the family. Local synced logs were cleared; partner data stays on their account.",
+  "settingsAccountInvalidEmail": "Enter a valid email address.",
+  "settingsAccountCodeBusy": "Could not send code. The mail service is busy. Try again in a moment.",
+  "settingsAccountCodeFailedWithMessage": "Could not send code ({message}).",
+  "@settingsAccountCodeFailedWithMessage": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAccountCodeFailedOffline": "Could not send code. Check your connection and try again.",
+  "settingsAccountCodeSent": "Check your email for a 6-digit code.",
+  "settingsAccountCodeInvalid": "Invalid or expired code.",
+  "settingsAccountSignInCancelled": "Sign-in cancelled.",
+  "settingsAccountSignedIn": "Signed in",
+  "settingsAccountSignedInSyncRetry": "Signed in, but sync will retry ({error}).",
+  "@settingsAccountSignedInSyncRetry": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAccountSwitchTitle": "Different account",
+  "settingsAccountSwitchBody": "This device already has logs from another account. What should we do with the data on this phone?",
+  "settingsAccountSwitchUpload": "Upload local logs",
+  "settingsAccountSwitchFresh": "Start fresh",
+  "pdfTagline": "Grow with confidence.",
+  "pdfTitle": "7-day care summary for pediatric visit",
+  "pdfChild": "Child: {name}",
+  "@pdfChild": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfPeriod": "Period: {start} - {end}",
+  "@pdfPeriod": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfGenerated": "Generated: {date}",
+  "@pdfGenerated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfDailyTotals": "Daily totals",
+  "pdfColumnDate": "Date",
+  "pdfColumnFeeds": "Feeds",
+  "pdfColumnDiapers": "Diapers",
+  "pdfColumnSleep": "Sleep",
+  "pdfEventLog": "Event log",
+  "pdfNoEvents": "No care events logged in this period.",
+  "pdfDisclaimer": "Educational information only - not medical advice. Share with your pediatrician for context.",
+  "logsEmptyAll": "No logs in this period. Open a type above to add one.",
+  "logsEmptyForTypes": "No {types} logs in this period.",
+  "@logsEmptyForTypes": {
+    "placeholders": {
+      "types": {
+        "type": "String"
+      }
+    }
+  },
+  "logEntryPumping": "Pumping",
+  "logEntryTummyTime": "Tummy time",
+  "logsPeriodShowing": "Showing {period}",
+  "@logsPeriodShowing": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  }
+}

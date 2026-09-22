@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/theme/app_colors.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../features/pregnancy/providers/pregnancy_providers.dart';
 import '../services/sync/periodic_sync.dart';
 import 'quick_add_sheet.dart';
@@ -21,20 +22,31 @@ class AppShell extends ConsumerStatefulWidget {
     return location.startsWith('/learn/');
   }
 
-  static const _tabs = [
-    (icon: Icons.today_outlined, selectedIcon: Icons.today, label: 'Today'),
-    (
-      icon: Icons.edit_note_outlined,
-      selectedIcon: Icons.edit_note,
-      label: 'Logs',
-    ),
-    (icon: Icons.menu_book_outlined, selectedIcon: Icons.menu_book, label: 'Learn'),
-    (
-      icon: Icons.settings_outlined,
-      selectedIcon: Icons.settings,
-      label: 'Settings',
-    ),
-  ];
+  static List<({IconData icon, IconData selectedIcon, String label})> tabs(
+    AppL10n l10n,
+  ) =>
+      [
+        (
+          icon: Icons.today_outlined,
+          selectedIcon: Icons.today,
+          label: l10n.navToday,
+        ),
+        (
+          icon: Icons.edit_note_outlined,
+          selectedIcon: Icons.edit_note,
+          label: l10n.navLogs,
+        ),
+        (
+          icon: Icons.menu_book_outlined,
+          selectedIcon: Icons.menu_book,
+          label: l10n.navLearn,
+        ),
+        (
+          icon: Icons.settings_outlined,
+          selectedIcon: Icons.settings,
+          label: l10n.navSettings,
+        ),
+      ];
 
   @override
   ConsumerState<AppShell> createState() => _AppShellState();
@@ -75,6 +87,8 @@ class _AppShellState extends ConsumerState<AppShell> {
   }
 
   Widget _buildScaffold(String location) {
+    final l10n = AppL10n.of(context);
+    final tabs = AppShell.tabs(l10n);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final shell = widget.navigationShell;
     final expecting = ref.watch(isExpectingProvider);
@@ -87,7 +101,7 @@ class _AppShellState extends ConsumerState<AppShell> {
       floatingActionButton: showAdd
           ? FloatingActionButton(
               key: const Key('quick_add_fab'),
-              tooltip: 'Add',
+              tooltip: l10n.navAddTooltip,
               backgroundColor: isDark ? AppColors.sageDeep : AppColors.sage,
               foregroundColor: AppColors.cream,
               onPressed: () =>
@@ -109,9 +123,9 @@ class _AppShellState extends ConsumerState<AppShell> {
             for (var i = 0; i < 2; i++)
               Expanded(
                 child: _NavItem(
-                  icon: AppShell._tabs[i].icon,
-                  selectedIcon: AppShell._tabs[i].selectedIcon,
-                  label: AppShell._tabs[i].label,
+                  icon: tabs[i].icon,
+                  selectedIcon: tabs[i].selectedIcon,
+                  label: tabs[i].label,
                   isSelected: shell.currentIndex == i,
                   isDark: isDark,
                   onTap: () => shell.goBranch(i, initialLocation: true),
@@ -121,9 +135,9 @@ class _AppShellState extends ConsumerState<AppShell> {
             for (var i = 2; i < 4; i++)
               Expanded(
                 child: _NavItem(
-                  icon: AppShell._tabs[i].icon,
-                  selectedIcon: AppShell._tabs[i].selectedIcon,
-                  label: AppShell._tabs[i].label,
+                  icon: tabs[i].icon,
+                  selectedIcon: tabs[i].selectedIcon,
+                  label: tabs[i].label,
                   isSelected: shell.currentIndex == i,
                   isDark: isDark,
                   onTap: () => shell.goBranch(i, initialLocation: true),

@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 
-enum LogPeriodPreset {
-  last7Days(7, '7 days'),
-  last30Days(30, '30 days'),
-  custom(null, 'Period');
+import '../../../l10n/generated/app_localizations.dart';
 
-  const LogPeriodPreset(this.days, this.label);
+enum LogPeriodPreset {
+  last7Days(7),
+  last30Days(30),
+  custom(null);
+
+  const LogPeriodPreset(this.days);
 
   final int? days;
-  final String label;
+
+  String label(AppL10n l10n) => switch (this) {
+        LogPeriodPreset.last7Days => l10n.logsPeriodLast7Days,
+        LogPeriodPreset.last30Days => l10n.logsPeriodLast30Days,
+        LogPeriodPreset.custom => l10n.logsPeriodCustom,
+      };
 }
 
 @immutable
@@ -61,13 +68,13 @@ class LogPeriodFilter {
     return (start: start, end: end);
   }
 
-  String periodLabel() {
+  String periodLabel(AppL10n l10n) {
     if (preset == LogPeriodPreset.custom &&
         customStart != null &&
         customEnd != null) {
       return '${_shortDate(customStart!)} – ${_shortDate(customEnd!)}';
     }
-    return preset.label;
+    return preset.label(l10n);
   }
 
   static String _shortDate(DateTime date) {

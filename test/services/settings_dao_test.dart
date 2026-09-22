@@ -21,6 +21,20 @@ void main() {
       expect(await db.settingsDao.isOnboardingCompleted(), isFalse);
     });
 
+    test('language tag defaults to null (follow the device) and persists',
+        () async {
+      final db = _testDb();
+      addTearDown(db.close);
+
+      expect(await db.settingsDao.languageTag(), isNull);
+
+      await db.settingsDao.setLanguageTag('ro');
+      expect(await db.settingsDao.languageTag(), 'ro');
+
+      await db.settingsDao.setLanguageTag(null);
+      expect(await db.settingsDao.languageTag(), isNull);
+    });
+
     test('setOnboardingCompleted persists flag', () async {
       final db = _testDb();
       addTearDown(db.close);

@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import '../helpers/test_database.dart';
+import '../helpers/localized_app.dart';
 
 GoRouter _testRouter() {
   return GoRouter(
@@ -35,7 +36,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(routerConfig: _testRouter()),
+        child: localizedRouterApp(_testRouter()),
       ),
     );
 
@@ -79,7 +80,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(routerConfig: _testRouter()),
+        child: localizedRouterApp(_testRouter()),
       ),
     );
 
@@ -105,7 +106,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(routerConfig: _testRouter()),
+        child: localizedRouterApp(_testRouter()),
       ),
     );
     await tester.pumpAndSettle();
@@ -140,7 +141,7 @@ void main() {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
-          child: MaterialApp.router(routerConfig: _testRouter()),
+          child: localizedRouterApp(_testRouter()),
         ),
       );
       await tester.pumpAndSettle();

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/datetime/clock_format.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../settings/providers/time_format_providers.dart';
 import '../../today/models/care_log_entry.dart';
 import '../../today/providers/today_log_provider.dart';
@@ -157,7 +158,7 @@ class _DeletedLogTile extends StatelessWidget {
         ),
         leading: Icon(entry.type.icon, color: AppColors.mutedText(Theme.of(context).brightness)),
         title: Text(
-          entry.type.label,
+          entry.type.label(AppL10n.of(context)),
           style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
         ),
         subtitle: Text(

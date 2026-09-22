@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../providers/time_format_providers.dart';
 
 class TimeFormatSection extends ConsumerWidget {
@@ -12,6 +13,7 @@ class TimeFormatSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final clockAsync = ref.watch(use24HourTimeProvider);
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
 
     return clockAsync.when(
       loading: () => const SizedBox.shrink(),
@@ -21,11 +23,11 @@ class TimeFormatSection extends ConsumerWidget {
         children: [
           ListTile(
             title: Text(
-              'Time',
+              l10n.settingsTimeTitle,
               style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
             ),
             subtitle: Text(
-              'How times appear in logs, pickers, and the visit PDF.',
+              l10n.settingsTimeSubtitle,
               style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
             ),
           ),
@@ -33,14 +35,14 @@ class TimeFormatSection extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SegmentedButton<bool>(
               key: const Key('clock_format_selector'),
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: false,
-                  label: Text('12-hour (AM/PM)'),
+                  label: Text(l10n.settingsTime12Hour),
                 ),
                 ButtonSegment(
                   value: true,
-                  label: Text('24-hour'),
+                  label: Text(l10n.settingsTime24Hour),
                 ),
               ],
               selected: {use24Hour},

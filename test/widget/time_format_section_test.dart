@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/test_database.dart';
+import '../helpers/localized_app.dart';
 
 void main() {
   testWidgets('settings can switch to 24-hour time', (tester) async {
@@ -19,7 +20,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: SettingsScreen()),
+        child: localizedApp(const SettingsScreen()),
       ),
     );
     await tester.pump();

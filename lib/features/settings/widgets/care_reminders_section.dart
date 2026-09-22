@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/reminders/care_reminder_providers.dart';
 
 class CareRemindersSection extends ConsumerWidget {
@@ -11,6 +12,7 @@ class CareRemindersSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
     final enabled = ref.watch(careRemindersEnabledProvider).valueOrNull ?? false;
     final actions = ref.read(careReminderActionsProvider);
 
@@ -20,11 +22,11 @@ class CareRemindersSection extends ConsumerWidget {
         SwitchListTile(
           key: const Key('care_reminders_toggle'),
           title: Text(
-            'Evening check-in',
+            l10n.settingsCheckInTitle,
             style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
           ),
           subtitle: Text(
-            'A gentle ping if nothing is logged by evening. Off by default. Never a streak, never guilt.',
+            l10n.settingsCheckInSubtitle,
             style: GoogleFonts.nunito(
               fontSize: 13,
               color: AppColors.mutedText(brightness),

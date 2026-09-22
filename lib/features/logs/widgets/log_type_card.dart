@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../today/models/log_type.dart';
 
 class LogTypeCard extends StatelessWidget {
@@ -47,7 +48,7 @@ class LogTypeCard extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                type.label,
+                type.label(AppL10n.of(context)),
                 style: GoogleFonts.nunito(
                   fontWeight: FontWeight.w800,
                   fontSize: 15,

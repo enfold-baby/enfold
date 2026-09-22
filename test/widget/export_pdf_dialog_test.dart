@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/test_database.dart';
+import '../helpers/localized_app.dart';
 
 void main() {
   testWidgets('Today PDF button explains the export before sharing', (
@@ -15,7 +16,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: TodayScreen()),
+        child: localizedApp(const TodayScreen()),
       ),
     );
     await tester.pump();

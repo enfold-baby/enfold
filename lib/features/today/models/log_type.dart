@@ -1,35 +1,39 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 enum LogType {
-  feed('Feed', 'Feed logged', 'feeding', Icons.restaurant_outlined),
-  diaper('Diaper', 'Diaper logged', 'diaper', Icons.baby_changing_station_outlined),
-  sleep('Sleep', 'Sleep logged', 'sleep', Icons.bedtime_outlined),
-  medication(
-    'Meds',
-    'Medication logged',
-    'medication',
-    Icons.medication_outlined,
-  ),
-  pumping(
-    'Pump',
-    'Pumping logged',
-    'pumping',
-    Icons.water_drop_outlined,
-  ),
-  tummyTime(
-    'Tummy',
-    'Tummy time logged',
-    'note',
-    Icons.child_care_outlined,
-  );
+  feed('feeding', Icons.restaurant_outlined),
+  diaper('diaper', Icons.baby_changing_station_outlined),
+  sleep('sleep', Icons.bedtime_outlined),
+  medication('medication', Icons.medication_outlined),
+  pumping('pumping', Icons.water_drop_outlined),
+  tummyTime('note', Icons.child_care_outlined);
 
-  const LogType(this.label, this.confirmation, this.apiType, this.icon);
+  const LogType(this.apiType, this.icon);
 
-  final String label;
-  final String confirmation;
   final IconData icon;
+
+  /// Short tab/tile name, e.g. "Feed".
+  String label(AppL10n l10n) => switch (this) {
+        LogType.feed => l10n.logTypeFeed,
+        LogType.diaper => l10n.logTypeDiaper,
+        LogType.sleep => l10n.logTypeSleep,
+        LogType.medication => l10n.logTypeMedication,
+        LogType.pumping => l10n.logTypePumping,
+        LogType.tummyTime => l10n.logTypeTummyTime,
+      };
+
+  /// Snackbar text after saving, e.g. "Feed logged".
+  String confirmation(AppL10n l10n) => switch (this) {
+        LogType.feed => l10n.logTypeFeedLogged,
+        LogType.diaper => l10n.logTypeDiaperLogged,
+        LogType.sleep => l10n.logTypeSleepLogged,
+        LogType.medication => l10n.logTypeMedicationLogged,
+        LogType.pumping => l10n.logTypePumpingLogged,
+        LogType.tummyTime => l10n.logTypeTummyTimeLogged,
+      };
 
   /// Matches VPS `care_events.type`.
   final String apiType;

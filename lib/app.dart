@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/system_ui.dart';
+import 'features/settings/providers/locale_providers.dart';
 import 'features/settings/providers/theme_providers.dart';
 import 'features/settings/providers/time_format_providers.dart';
 import 'features/medication/providers/medication_routine_providers.dart';
+import 'l10n/generated/app_localizations.dart';
 import 'services/push/push_providers.dart';
 import 'services/reminders/care_reminder_providers.dart';
 
@@ -25,10 +28,21 @@ class EnfoldApp extends ConsumerWidget {
     final use24Hour =
         ref.watch(use24HourTimeProvider).valueOrNull ?? false;
     final router = ref.watch(appRouterProvider);
+    // Null follows the device language; anything we do not ship falls back to
+    // English through `supportedLocales`.
+    final locale = ref.watch(localeOverrideProvider).valueOrNull;
 
     return MaterialApp.router(
       title: 'Enfold',
       debugShowCheckedModeBanner: false,
+      locale: locale,
+      supportedLocales: supportedLocales,
+      localizationsDelegates: const [
+        AppL10n.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,

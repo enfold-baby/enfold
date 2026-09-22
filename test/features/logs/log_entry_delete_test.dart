@@ -8,6 +8,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../../helpers/localized_app.dart';
 
 class _DeleteHarness extends ConsumerWidget {
   const _DeleteHarness({required this.entry});
@@ -52,7 +53,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [databaseProvider.overrideWithValue(db)],
-        child: MaterialApp(home: _DeleteHarness(entry: entry)),
+        child: localizedApp(_DeleteHarness(entry: entry)),
       ),
     );
 

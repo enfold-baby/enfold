@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 import '../helpers/pump_until.dart';
 import '../helpers/test_database.dart';
+import '../helpers/localized_app.dart';
 
 class _SignedInAuthNotifier extends AuthSessionNotifier {
   @override
@@ -85,7 +86,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: Scaffold(body: PartnerSection())),
+        child: localizedApp(const Scaffold(body: PartnerSection())),
       ),
     );
     await pumpUntilFound(tester, find.text('Partner sharing'));
@@ -117,7 +118,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: Scaffold(body: PartnerSection())),
+        child: localizedApp(const Scaffold(body: PartnerSection())),
       ),
     );
     await pumpUntilFound(tester, find.byKey(const Key('partner_leave_family')));

@@ -2,10 +2,13 @@ import 'package:enfold/features/today/models/log_type.dart';
 import 'package:enfold/services/database/app_database.dart';
 import 'package:enfold/services/export/visit_pdf_service.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/widgets.dart';
+import 'package:enfold/l10n/generated/app_localizations.dart';
 
 void main() {
   group('VisitPdfService', () {
     const service = VisitPdfService();
+    final l10n = lookupAppL10n(const Locale('en'));
 
     test('buildSevenDaySummary returns non-empty PDF bytes', () async {
       final generatedAt = DateTime(2026, 7, 1, 12);
@@ -33,6 +36,7 @@ void main() {
       ];
 
       final bytes = await service.buildSevenDaySummary(
+        l10n: l10n,
         babyName: 'Baby',
         events: events,
         generatedAt: generatedAt,
@@ -44,6 +48,7 @@ void main() {
 
     test('empty events still produces valid PDF', () async {
       final bytes = await service.buildSevenDaySummary(
+        l10n: l10n,
         babyName: 'Baby',
         events: const [],
         generatedAt: DateTime(2026, 7, 1),

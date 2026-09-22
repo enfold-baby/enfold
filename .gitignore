@@ -44,6 +44,8 @@ caddy_config/
 
 # Flutter / Dart
 .dart_tool/
+# gen-l10n output; `flutter pub get` rebuilds it from lib/l10n/*.arb
+lib/l10n/generated/
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages

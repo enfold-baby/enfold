@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/test_database.dart';
+import '../helpers/localized_app.dart';
 
 void main() {
   testWidgets('pregnancy screen shows due date and kick counter', (tester) async {
@@ -13,7 +14,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: PregnancyScreen()),
+        child: localizedApp(const PregnancyScreen()),
       ),
     );
     await tester.pump(const Duration(milliseconds: 300));
@@ -38,7 +39,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: PregnancyScreen()),
+        child: localizedApp(const PregnancyScreen()),
       ),
     );
     await tester.pump(const Duration(milliseconds: 300));

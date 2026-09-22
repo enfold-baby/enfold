@@ -1,3 +1,4 @@
+import '../../../l10n/generated/app_localizations.dart';
 import '../../today/models/log_type.dart';
 
 abstract final class HubTypeFilter {
@@ -21,14 +22,10 @@ abstract final class HubTypeFilter {
 
   static bool isAll(Set<LogType> selected) => selected.isEmpty;
 
-  static String emptyMessage(Set<LogType> selected) {
-    if (selected.isEmpty) {
-      return 'No logs in this period. Open a type above to add one.';
-    }
-    if (selected.length == 1) {
-      return 'No ${selected.first.label.toLowerCase()} logs in this period.';
-    }
-    final labels = selected.map((t) => t.label.toLowerCase()).join(', ');
-    return 'No $labels logs in this period.';
+  static String emptyMessage(AppL10n l10n, Set<LogType> selected) {
+    if (selected.isEmpty) return l10n.logsEmptyAll;
+    final labels =
+        selected.map((t) => t.label(l10n).toLowerCase()).join(', ');
+    return l10n.logsEmptyForTypes(labels);
   }
 }

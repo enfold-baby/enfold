@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers/test_database.dart';
+import '../helpers/localized_app.dart';
 
 void main() {
   testWidgets('baby profile saves name', (tester) async {
@@ -14,7 +15,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: Scaffold(body: BabyProfileSection())),
+        child: localizedApp(const Scaffold(body: BabyProfileSection())),
       ),
     );
     await tester.pump(const Duration(milliseconds: 300));

@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import '../helpers/test_database.dart';
+import '../helpers/localized_app.dart';
 
 void main() {
   group('TodayScreen', () {
@@ -19,7 +20,7 @@ void main() {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
-          child: const MaterialApp(home: TodayScreen()),
+          child: localizedApp(const TodayScreen()),
         ),
       );
       await tester.pump();
@@ -75,7 +76,7 @@ void main() {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
-          child: MaterialApp.router(routerConfig: router),
+          child: localizedRouterApp(router),
         ),
       );
       await tester.pump(const Duration(milliseconds: 300));

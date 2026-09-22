@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../today/models/log_type.dart';
 import '../today/providers/today_log_provider.dart';
 import 'models/hub_type_filter.dart';
@@ -50,9 +51,10 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
     final openSleep = ref.watch(openSleepProvider).valueOrNull;
     final typeFilter = ref.watch(hubLogTypeFilterProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Logs')),
+      appBar: AppBar(title: Text(l10n.logsTitle)),
       body: SafeArea(
         child: SyncRefresh(
           indicatorKey: const Key('logs_pull_to_refresh'),
@@ -61,7 +63,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
           children: [
             Text(
-              'Your log history',
+              l10n.logsHubHeading,
               style: GoogleFonts.fraunces(
                 fontSize: 26,
                 fontWeight: FontWeight.w600,
@@ -70,7 +72,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Browse everything here, or open a type for focused filters.',
+              l10n.logsHubSubtitle,
               style: GoogleFonts.nunito(
                 fontSize: 15,
                 height: 1.45,
@@ -95,7 +97,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
                   width: (MediaQuery.sizeOf(context).width - 52) / 2,
                   child: _HubLinkCard(
                     key: const Key('logs_hub_growth'),
-                    label: 'Growth',
+                    label: l10n.logsHubGrowth,
                     icon: Icons.monitor_weight_outlined,
                     color: AppColors.sage,
                     onTap: () => context.push(AppRoutes.logsGrowth),
@@ -105,7 +107,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
                   width: (MediaQuery.sizeOf(context).width - 52) / 2,
                   child: _HubLinkCard(
                     key: const Key('logs_hub_milestones'),
-                    label: 'Milestones',
+                    label: l10n.logsHubMilestones,
                     icon: Icons.emoji_events_outlined,
                     color: AppColors.bloom,
                     onTap: () => context.push(AppRoutes.logsGrowth),
@@ -125,7 +127,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
-                      const SnackBar(content: Text('Wake-up logged')),
+                      SnackBar(content: Text(l10n.commonWakeUpLogged)),
                     );
                 },
                 onAdjustStart: () => context.push(
@@ -135,7 +137,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
             ],
             const SizedBox(height: 28),
             Text(
-              'Filter',
+              l10n.logsFilterLabel,
               style: GoogleFonts.nunito(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
@@ -158,7 +160,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
             LogPeriodBar(periodProvider: hubLogPeriodProvider),
             const SizedBox(height: 24),
             Text(
-              ref.watch(hubLogPeriodProvider).periodLabel(),
+              ref.watch(hubLogPeriodProvider).periodLabel(l10n),
               style: GoogleFonts.nunito(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
@@ -172,7 +174,7 @@ class _LogsHubScreenState extends ConsumerState<LogsHubScreen> {
               pageSize: hubLogsPageSize,
               visibleCountProvider: hubLogsVisibleCountProvider,
               emptyKey: const Key('logs_hub_empty'),
-              emptyMessage: HubTypeFilter.emptyMessage(typeFilter),
+              emptyMessage: HubTypeFilter.emptyMessage(l10n, typeFilter),
             ),
             const DeletedLogsSection(),
           ],

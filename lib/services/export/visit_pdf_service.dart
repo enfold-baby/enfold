@@ -7,15 +7,17 @@ import 'package:pdf/widgets.dart' as pw;
 import '../../core/datetime/clock_format.dart';
 import '../../features/logs/providers/logs_providers.dart';
 import '../../features/today/models/care_log_details.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../database/app_database.dart';
 
 class VisitPdfService {
   const VisitPdfService();
 
   static const brandName = 'Enfold';
-  static const tagline = 'Grow with confidence.';
 
+  /// The PDF follows the app language, so [l10n] carries every label on it.
   Future<Uint8List> buildSevenDaySummary({
+    required AppL10n l10n,
     required String babyName,
     required List<CareEvent> events,
     required DateTime generatedAt,
@@ -46,28 +48,36 @@ class VisitPdfService {
           ),
           pw.SizedBox(height: 4),
           pw.Text(
-            '7-day care summary for pediatric visit',
+            l10n.pdfTitle,
             style: const pw.TextStyle(fontSize: 14, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 4),
           pw.Text(
-            tagline,
+            l10n.pdfTagline,
             style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
           ),
           pw.SizedBox(height: 20),
-          pw.Text('Child: $babyName'),
+          pw.Text(l10n.pdfChild(babyName)),
           pw.Text(
-            'Period: ${dateFormat.format(rangeStart)} - ${dateFormat.format(rangeEnd.subtract(const Duration(days: 1)))}',
+            l10n.pdfPeriod(
+              dateFormat.format(rangeStart),
+              dateFormat.format(rangeEnd.subtract(const Duration(days: 1))),
+            ),
           ),
-          pw.Text('Generated: ${dateFormat.format(generatedAt)}'),
+          pw.Text(l10n.pdfGenerated(dateFormat.format(generatedAt))),
           pw.SizedBox(height: 16),
           pw.Text(
-            'Daily totals',
+            l10n.pdfDailyTotals,
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
           ),
           pw.SizedBox(height: 8),
           pw.Table.fromTextArray(
-            headers: ['Date', 'Feeds', 'Diapers', 'Sleep'],
+            headers: [
+              l10n.pdfColumnDate,
+              l10n.pdfColumnFeeds,
+              l10n.pdfColumnDiapers,
+              l10n.pdfColumnSleep,
+            ],
             data: [
               for (final row in dailyCounts)
                 [
@@ -83,12 +93,12 @@ class VisitPdfService {
           ),
           pw.SizedBox(height: 20),
           pw.Text(
-            'Event log',
+            l10n.pdfEventLog,
             style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
           ),
           pw.SizedBox(height: 8),
           if (events.isEmpty)
-            pw.Text('No care events logged in this period.')
+            pw.Text(l10n.pdfNoEvents)
           else
             pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -97,7 +107,7 @@ class VisitPdfService {
                   pw.Padding(
                     padding: const pw.EdgeInsets.only(bottom: 4),
                     child: pw.Text(
-                      '${dateFormat.format(event.occurredAt)} ${timeFormat.format(event.occurredAt)} - ${_eventLine(event, useImperial: useImperialUnits)}',
+                      '${dateFormat.format(event.occurredAt)} ${timeFormat.format(event.occurredAt)} - ${_eventLine(event, l10n, useImperial: useImperialUnits)}',
                       style: const pw.TextStyle(fontSize: 10),
                     ),
                   ),
@@ -105,8 +115,7 @@ class VisitPdfService {
             ),
           pw.SizedBox(height: 24),
           pw.Text(
-            'Educational information only - not medical advice. '
-            'Share with your pediatrician for context.',
+            l10n.pdfDisclaimer,
             style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
           ),
         ],
@@ -116,10 +125,14 @@ class VisitPdfService {
     return pdf.save();
   }
 
-  String _eventLine(CareEvent event, {required bool useImperial}) {
+  String _eventLine(
+    CareEvent event,
+    AppL10n l10n, {
+    required bool useImperial,
+  }) {
     final details = CareLogDetails.fromJsonString(event.detailsJson);
     final type = resolveLogType(event.type, details);
-    final label = type?.label ?? event.type;
+    final label = type?.label(l10n) ?? event.type;
     final summary =
         type == null ? '' : details.summarize(type, useImperial: useImperial);
     final parts = <String>[label];

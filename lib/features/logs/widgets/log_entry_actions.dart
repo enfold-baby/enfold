@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../today/models/care_log_entry.dart';
 import '../../today/providers/today_log_provider.dart';
 import '../log_retention.dart';
@@ -25,7 +26,7 @@ Future<void> showLogEntryActions(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              entry.type.label,
+              entry.type.label(AppL10n.of(context)),
               style: GoogleFonts.fraunces(
                 fontSize: 22,
                 fontWeight: FontWeight.w600,

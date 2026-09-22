@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../settings/providers/time_format_providers.dart';
 import '../../today/models/care_log_entry.dart';
 import '../../today/models/log_type.dart';
@@ -27,6 +28,7 @@ class LogEntryTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppL10n.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final use24Hour = ref.watch(use24HourTimeProvider).valueOrNull ?? false;
     final time = entry.listTimeLabel(use24Hour: use24Hour);
@@ -50,9 +52,9 @@ class LogEntryTile extends ConsumerWidget {
           when entry.details.medicationName != null &&
               entry.details.medicationName!.isNotEmpty =>
         entry.details.medicationName!,
-      LogType.pumping => 'Pumping',
-      LogType.tummyTime => 'Tummy time',
-      _ => entry.type.label,
+      LogType.pumping => l10n.logEntryPumping,
+      LogType.tummyTime => l10n.logEntryTummyTime,
+      _ => entry.type.label(l10n),
     };
 
     return ListTile(

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/auth/auth_providers.dart';
 import '../../services/database/database_provider.dart';
 import '../../services/sync/sync_providers.dart';
@@ -384,6 +385,7 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
   }
 
   Future<void> _exportPdf(BuildContext context, WidgetRef ref) async {
+    final l10n = AppL10n.of(context);
     final confirmed = await confirmVisitPdfExport(context);
     if (!confirmed || !context.mounted) return;
     try {
@@ -395,7 +397,8 @@ class _TodayScreenState extends ConsumerState<TodayScreen> {
       final use24Hour = await ref.read(use24HourTimeProvider.future);
       final pdfService = ref.read(visitPdfServiceProvider);
       final bytes = await pdfService.buildSevenDaySummary(
-        babyName: baby?.name ?? 'Baby',
+        l10n: l10n,
+        babyName: baby?.name ?? l10n.commonBabyFallbackName,
         events: events,
         generatedAt: DateTime.now(),
         useImperialUnits: useImperial,

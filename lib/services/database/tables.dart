@@ -118,6 +118,8 @@ class AppSettings extends Table {
   /// Today screen line "Awake for 1h 20m" after the last logged sleep. On by default.
   BoolColumn get showAwakeTime =>
       boolean().withDefault(const Constant(true))();
+  /// Forced UI language as a BCP 47 tag ("ro", "en"). Null follows the device.
+  TextColumn get languageTag => text().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {id};

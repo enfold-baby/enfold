@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../widgets/bloom_surface.dart';
 import '../models/log_type.dart';
 
@@ -23,13 +24,14 @@ class QuickLogTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final label = type.label(AppL10n.of(context));
     final brightness = theme.brightness;
     final isDark = brightness == Brightness.dark;
 
     return BloomSurface(
       onTap: onTap,
       onLongPress: onLongPress,
-      semanticLabel: '${type.label}. $supportingText',
+      semanticLabel: '$label. $supportingText',
       padding: const EdgeInsets.all(16),
       radius: 22,
       child: ConstrainedBox(
@@ -63,7 +65,7 @@ class QuickLogTile extends StatelessWidget {
               ],
             ),
             const Spacer(),
-            Text(type.label, style: theme.textTheme.titleMedium),
+            Text(label, style: theme.textTheme.titleMedium),
             const SizedBox(height: 2),
             Text(
               supportingText,

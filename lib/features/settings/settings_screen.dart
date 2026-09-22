@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'providers/theme_providers.dart';
 import 'widgets/about_section.dart';
 import 'widgets/awake_time_section.dart';
@@ -13,6 +14,7 @@ import 'widgets/account_section.dart';
 import 'widgets/baby_profile_section.dart';
 import 'widgets/caregiver_profile_section.dart';
 import 'widgets/export_section.dart';
+import 'widgets/language_section.dart';
 import 'widgets/legal_section.dart';
 import 'widgets/partner_notifications_section.dart';
 import 'widgets/partner_section.dart';
@@ -28,9 +30,10 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode =
         ref.watch(themeModeProvider).valueOrNull ?? ThemeMode.system;
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: SyncRefresh(
         indicatorKey: const Key('settings_pull_to_refresh'),
         child: ListView(
@@ -50,11 +53,11 @@ class SettingsScreen extends ConsumerWidget {
             key: const Key('settings_pregnancy'),
             leading: const Icon(Icons.favorite_outline),
             title: Text(
-              'Pregnancy',
+              l10n.settingsPregnancyTitle,
               style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
             ),
             subtitle: Text(
-              'Due date, kicks, and appointments.',
+              l10n.settingsPregnancySubtitle,
               style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
             ),
             trailing: const Icon(Icons.chevron_right),
@@ -69,13 +72,15 @@ class SettingsScreen extends ConsumerWidget {
           const Divider(height: 32),
           const AwakeTimeSection(),
           const Divider(height: 32),
+          const LanguageSection(),
+          const Divider(height: 32),
           ListTile(
             title: Text(
-              'Appearance',
+              l10n.settingsAppearanceTitle,
               style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
             ),
             subtitle: Text(
-              'Parents log at night, so dark mode matters.',
+              l10n.settingsAppearanceSubtitle,
               style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
             ),
           ),
@@ -83,21 +88,21 @@ class SettingsScreen extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SegmentedButton<ThemeMode>(
               key: const Key('theme_mode_selector'),
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: ThemeMode.system,
-                  label: Text('System'),
-                  icon: Icon(Icons.brightness_auto),
+                  label: Text(l10n.settingsThemeSystem),
+                  icon: const Icon(Icons.brightness_auto),
                 ),
                 ButtonSegment(
                   value: ThemeMode.light,
-                  label: Text('Light'),
-                  icon: Icon(Icons.light_mode),
+                  label: Text(l10n.settingsThemeLight),
+                  icon: const Icon(Icons.light_mode),
                 ),
                 ButtonSegment(
                   value: ThemeMode.dark,
-                  label: Text('Dark'),
-                  icon: Icon(Icons.dark_mode),
+                  label: Text(l10n.settingsThemeDark),
+                  icon: const Icon(Icons.dark_mode),
                 ),
               ],
               selected: {themeMode},

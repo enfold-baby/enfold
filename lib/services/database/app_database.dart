@@ -35,7 +35,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -103,6 +103,9 @@ class AppDatabase extends _$AppDatabase {
               milestoneAchievements,
               milestoneAchievements.deletedAt,
             );
+          }
+          if (from < 16) {
+            await m.addColumn(appSettings, appSettings.languageTag);
           }
         },
       );

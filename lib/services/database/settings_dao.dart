@@ -154,6 +154,19 @@ class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin 
         .map((rows) => rows.isEmpty ? true : rows.first.showAwakeTime);
   }
 
+  /// Null means "follow the device language".
+  Future<String?> languageTag() async {
+    final settings = await ensureSettings();
+    return settings.languageTag;
+  }
+
+  Future<void> setLanguageTag(String? tag) async {
+    await ensureSettings();
+    await (update(appSettings)..where((s) => s.id.equals(_singletonId))).write(
+      AppSettingsCompanion(languageTag: Value(tag)),
+    );
+  }
+
   static ThemeMode _parseThemeMode(String raw) => switch (raw) {
         'light' => ThemeMode.light,
         'dark' => ThemeMode.dark,

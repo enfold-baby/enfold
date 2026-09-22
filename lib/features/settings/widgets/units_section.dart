@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../providers/units_providers.dart';
 
 class UnitsSection extends ConsumerWidget {
@@ -13,6 +14,7 @@ class UnitsSection extends ConsumerWidget {
     final unitsAsync = ref.watch(useImperialUnitsProvider);
 
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
 
     return unitsAsync.when(
       loading: () => const SizedBox.shrink(),
@@ -22,11 +24,11 @@ class UnitsSection extends ConsumerWidget {
         children: [
           ListTile(
             title: Text(
-              'Units',
+              l10n.settingsUnitsTitle,
               style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
             ),
             subtitle: Text(
-              'Bottle amounts in logs and PDF export.',
+              l10n.settingsUnitsSubtitle,
               style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
             ),
           ),
@@ -34,14 +36,14 @@ class UnitsSection extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SegmentedButton<bool>(
               key: const Key('volume_unit_selector'),
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: false,
-                  label: Text('Metric (ml)'),
+                  label: Text(l10n.settingsUnitsMetric),
                 ),
                 ButtonSegment(
                   value: true,
-                  label: Text('US (fl oz)'),
+                  label: Text(l10n.settingsUnitsUs),
                 ),
               ],
               selected: {useImperial},

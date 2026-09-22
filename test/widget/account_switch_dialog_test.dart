@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import '../helpers/localized_app.dart';
 
 class _SeqAuthNotifier extends AuthSessionNotifier {
   _SeqAuthNotifier(this._sessions);
@@ -70,7 +71,7 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: const MaterialApp(home: Scaffold(body: AccountSection())),
+        child: localizedApp(const Scaffold(body: AccountSection())),
       ),
     );
     await tester.pumpAndSettle();

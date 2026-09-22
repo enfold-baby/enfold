@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:printing/printing.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/database/database_provider.dart';
 import '../../../services/export/visit_pdf_service.dart';
 import '../providers/time_format_providers.dart';
@@ -64,6 +65,7 @@ class _ExportSectionState extends ConsumerState<ExportSection> {
   String? _status;
 
   Future<void> _exportPdf() async {
+    final l10n = AppL10n.of(context);
     final confirmed = await confirmVisitPdfExport(context);
     if (!confirmed || !mounted) return;
     setState(() {
@@ -80,7 +82,8 @@ class _ExportSectionState extends ConsumerState<ExportSection> {
       final use24Hour = await ref.read(use24HourTimeProvider.future);
       final pdfService = ref.read(visitPdfServiceProvider);
       final bytes = await pdfService.buildSevenDaySummary(
-        babyName: baby?.name ?? 'Baby',
+        l10n: l10n,
+        babyName: baby?.name ?? l10n.commonBabyFallbackName,
         events: events,
         generatedAt: DateTime.now(),
         useImperialUnits: useImperial,
