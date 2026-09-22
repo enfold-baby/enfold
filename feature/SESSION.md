@@ -1,6 +1,6 @@
 # Last session
 
-**Date:** 2026-09-21 (work done 2026-09-17 and 18)  
+**Date:** 2026-09-22 (launch session 2026-09-21 and 22; last app code change 2026-09-18)  
 **Version:** `1.0.1+27` · Drift schema **v14** · 208 tests passing  
 **API:** `https://api.enfold.baby` · local `http://127.0.0.1:8282` (emulator `http://10.0.2.2:8282`)  
 **Contact:** `support@enfold.baby`  
@@ -10,10 +10,11 @@
 ## Where things stand
 
 - **App Store: LIVE.** 1.0.1 (27) approved after the 1.4.1 citations fix; listing at https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288 (App Store Connect state READY_FOR_DISTRIBUTION, checked 2026-09-21).
-- **Google Play: not public yet.** Production 1.0.0+22 was submitted 2026-09-12; 1.0.1+24 sits on internal testing. Check the Play Console; when 22 is live, promote a build from current `main` (has the citations and the sleep fix), not 24.
+- **Google Play: not public yet.** Production 1.0.0+22 submitted 2026-09-12, still "In review" on 2026-09-22 with no rejection, no policy flag, listing 404. Support ticket filed 2026-09-22 (App publishing, reply by email within 15 days to contact@ mailbox). When 22 goes live, promote a build from current `main` (build 28: citations, sleep fix, add the edge-to-edge tweak Play recommends for Android 15), not 24.
 - **Open source since 2026-09-17.** Org `enfold-baby`, repo `enfold`, AGPL-3.0 + app store covenant, learn cards CC BY-NC-ND, brand and illustrations reserved (`TRADEMARK.md`). CI, Dependabot (minor/patch only), secret scanning, branch ruleset on `main`, org profile, verified domain, Sponsor button. Launch thread on X: https://x.com/Gl0deanR/status/2100594197900181840.
-- **Launch posts (2026-09-21):** Product Hunt scheduled for Wed 2026-09-23 00:01 PT; dev.to article scheduled 2026-09-21 15:00 Bucharest; r/opensource post auto-removed (low karma, build karma or skip); TrustMRR page live (trustmrr.com/startup/enfold). Raul's decision: only PH, X, dev.to and Reddit; Peerlist, HN, Indie Hackers and LinkedIn parked. Copy: `feature/todos/LAUNCH_COPY.md`.
-- **Site** says open source everywhere (home section, `/open/` first section); still says "stores soon" until this session's copy update.
+- **Launch (2026-09-21/22):** Product Hunt scheduled by Raul for Wed 2026-09-23 00:01 PT (10:01 Romania), profile @raulglodean, page producthunt.com/products/enfold; X post for PH day scheduled 10:05 Romania. dev.to article live since 2026-09-21 15:00 (dev.to/gl0deanr), X follow-up posted 2026-09-22 and a reply in the pinned thread. Reddit skipped (r/opensource auto-removed the post for low karma). TrustMRR page live at trustmrr.com/startup/enfold with a read-only Stripe key. Raul's call: only PH, X, dev.to; Peerlist, HN, Indie Hackers, LinkedIn parked with copy kept in `feature/todos/LAUNCH_COPY.md`.
+- **FormKiosk iOS 1.0** (separate app, same Apple account): had sat Rejected since 2026-09-13 because a reply to an Information Needed request does not requeue; resubmitted 2026-09-22, Waiting for Review.
+- **Site** says open source everywhere and links the App Store; Play badge waits for Play approval.
 
 ## Done recently
 
@@ -26,22 +27,25 @@
 
 ## Next up
 
-1. **Launch everywhere** (prompt in `feature/PICKUP.md`, plan in `feature/todos/LAUNCH_POSTS.md`): Product Hunt, Peerlist, Hacker News (Show HN), Reddit, Indie Hackers, Lobsters, dev.to, LinkedIn, Romanian communities. Posting is Raul's keyboard; assets and copy are prepared here.
-2. Google Play: watch the review; promote from `main` once 22 is live; then Play badge on the site.
+1. **Product Hunt day, Wed 2026-09-23:** Raul in the comments from 10:01 Romania; short reply in the pinned X thread by hand. Afterwards: directories (AlternativeTo, awesome-flutter PR) if wanted.
+2. **Google Play:** wait for the ticket reply or approval; then promote build 28 from `main` (bump to 1.0.2+28, include the Android 15 edge-to-edge fix), then Play badge on the site.
 3. Romanian UI (moved up, `feature/todos/I18N_RO.md`): gen-l10n + ARB, ~280 strings, 2 to 3 sessions.
 4. Oana's card sign-offs into the JSON as they arrive.
 5. Later: replace the two Adobe-derived illustrations with original art; Riverpod 3 / go_router 18 migration (Dependabot majors are ignored on purpose).
 
 ## Blockers / waiting on
 
-- Google Play review (1.0.0+22)
+- Google Play review (1.0.0+22), support ticket filed 2026-09-22
+- FormKiosk iOS review (resubmitted 2026-09-22)
+- Product Hunt launch Wed 2026-09-23
 - Oana's card review
 - Raul: rotate the VPS password (pasted in a chat on 2026-09-17; key auth already works)
 
 ## Quick resume
 
 ```
-Read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md and ~/Desktop/LAUNCH-CHECKLIST.md.
-Enfold 1.0.1+27, Drift v14, 208 tests. App Store live; Play pending. Code public at github.com/enfold-baby/enfold.
+Read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md and ~/Desktop/LAUNCH-CHECKLIST.md (pickup at the top).
+Enfold 1.0.1+27, Drift v14, 208 tests. App Store live; Play in review (ticket filed 2026-09-22). Code public at github.com/enfold-baby/enfold.
+Launch done on PH (Wed 23 Sep), X, dev.to. Next dev work: Romanian UI (feature/todos/I18N_RO.md) or build 28 for both stores.
 Keep markdown current as we ship (feature/MAINTAIN.md). No em dashes. Public posts, logins and payments are Raul's keyboard.
 ```

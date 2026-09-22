@@ -1,7 +1,7 @@
 # Todos — what to work on next
 
 > Prioritized pending work. For implemented features see [features/STATUS.md](../features/STATUS.md).  
-> **Focus now:** launch posts on every platform (`LAUNCH_POSTS.md`), Google Play promotion, Romanian UI. Keep docs current as we ship.
+> **Focus now:** Romanian UI, build 28 for both stores once Play approves, Product Hunt day Wed 2026-09-23. Keep docs current as we ship.
 
 ## Queue
 
@@ -15,8 +15,8 @@
 | ✅ | ~~SES from noreply@enfold.baby~~ | [SES_MAIL.md](./SES_MAIL.md) | Live 2026-09-07 |
 | ✅ | ~~4-tab shell + docked Add FAB~~ | — | 2026-09 |
 | ✅ | ~~Growth history trend charts~~ | — | 2026-09 |
-| 🟠 P1 | **Launch posts everywhere** | [LAUNCH_POSTS.md](./LAUNCH_POSTS.md) | Copy + assets prepared, Raul posts |
-| 🟠 P1 | **Google Play: promote from main once 22 is live** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Then Play badge on the site |
+| ✅ | ~~Launch posts (PH, X, dev.to)~~ | [LAUNCH_POSTS.md](./LAUNCH_POSTS.md) | PH Wed 2026-09-23; others parked |
+| 🟠 P1 | **Google Play: promote build 28 from main once 22 is live** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Ticket filed 2026-09-22; bump 1.0.2+28, edge-to-edge fix, then Play badge |
 | 🟠 P2 | **Romanian UI** | [I18N_RO.md](./I18N_RO.md) | gen-l10n + ARB, ~280 strings, 2 to 3 sessions |
 | 🟠 P2 | **Learn card physician review** | [CONTENT_REVIEW.md](./CONTENT_REVIEW.md) | Pack sent to Oana 2026-09-17 |
 | 🟠 P2 | **Multiple children per family** | [MULTI_CHILD.md](./MULTI_CHILD.md) | Active child switcher |
@@ -38,6 +38,8 @@ Sideload APK installer was **removed** for Play policy (see [APP_VERSION_UPDATE.
 5. On finish → [MAINTAIN.md](../MAINTAIN.md) — **always update markdown**
 
 ## Recently completed ✅
+
+- Launch: Product Hunt scheduled (Wed 2026-09-23), dev.to article live, X follow-ups, TrustMRR page; copy for all platforms in LAUNCH_COPY.md (2026-09-21/22)
 
 - Today sleep total clipped to the calendar day; overnight in-progress sleep stays on Today (2026-09-18, not yet in a store build)
 - Learn card citations ("Sources" section, 53 verified links) after Apple's 1.4.1 rejection; build 27 approved, App Store live (2026-09-17)

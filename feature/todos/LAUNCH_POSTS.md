@@ -1,6 +1,6 @@
 # Todo: launch posts everywhere
 
-> **Priority:** P1 · **Status:** X done 2026-09-17; Raul's call 2026-09-21: only Product Hunt (scheduled Wed 23), X follow-ups, dev.to and Reddit; exact copy for every platform in `LAUNCH_COPY.md` · **Owner:** Raul posts, Claude prepares
+> **Priority:** P1 · **Status:** X done 2026-09-17, dev.to live 2026-09-21, Product Hunt Wed 2026-09-23, Reddit skipped; the rest parked; exact copy for every platform in `LAUNCH_COPY.md` · **Owner:** Raul posts, Claude prepares
 
 ## Facts to keep straight
 
