@@ -4,9 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/auth/display_name.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/auth/auth_providers.dart';
 
 /// How this person identifies when logging care (shown on partner devices).
+///
+/// These are stored values: they travel to the server inside `display_name`
+/// and are parsed back here, so they stay English whatever the UI language.
+/// [caregiverRoleLabel] is what the chips show.
 const caregiverRoleOptions = <String>[
   'Mom',
   'Dad',
@@ -16,6 +21,17 @@ const caregiverRoleOptions = <String>[
   'Caregiver',
   'Other',
 ];
+
+/// The translated chip label for a stored [role] value.
+String caregiverRoleLabel(AppL10n l10n, String role) => switch (role) {
+      'Mom' => l10n.settingsCaregiverRoleMom,
+      'Dad' => l10n.settingsCaregiverRoleDad,
+      'Partner' => l10n.settingsCaregiverRolePartner,
+      'Grandma' => l10n.settingsCaregiverRoleGrandma,
+      'Grandpa' => l10n.settingsCaregiverRoleGrandpa,
+      'Caregiver' => l10n.settingsCaregiverRoleCaregiver,
+      _ => l10n.settingsCaregiverRoleOther,
+    };
 
 /// Compose server `display_name` from optional role + name.
 String composeCaregiverDisplayName({String? role, String? name}) {
@@ -83,9 +99,10 @@ class _CaregiverProfileSectionState
   }
 
   Future<void> _save() async {
+    final l10n = AppL10n.of(context);
     final session = ref.read(authSessionProvider).valueOrNull;
     if (session == null) {
-      setState(() => _status = 'Sign in to save your profile.');
+      setState(() => _status = l10n.settingsCaregiverSignInFirst);
       return;
     }
 
@@ -105,11 +122,11 @@ class _CaregiverProfileSectionState
       setState(() {
         _dirty = false;
         _status = displayName.isEmpty
-            ? 'Profile cleared. Logs will use your email name.'
-            : 'Saved as “$displayName”. New logs will show this.';
+            ? l10n.settingsCaregiverCleared
+            : l10n.settingsCaregiverSaved(displayName);
       });
     } catch (_) {
-      setState(() => _status = 'Could not save profile. Try again.');
+      setState(() => _status = l10n.settingsCaregiverSaveFailed);
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -118,6 +135,7 @@ class _CaregiverProfileSectionState
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
     final session = ref.watch(authSessionProvider).valueOrNull;
     if (session == null) return const SizedBox.shrink();
 
@@ -140,11 +158,11 @@ class _CaregiverProfileSectionState
       children: [
         ListTile(
           title: Text(
-            'Your caregiver profile',
+            l10n.settingsCaregiverTitle,
             style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
           ),
           subtitle: Text(
-            'So partners see who logged each feed, diaper, or sleep.',
+            l10n.settingsCaregiverSubtitle,
             style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
           ),
         ),
@@ -154,7 +172,7 @@ class _CaregiverProfileSectionState
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'I am…',
+                l10n.settingsCaregiverRolePrompt,
                 style: GoogleFonts.nunito(fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 8),
@@ -166,7 +184,7 @@ class _CaregiverProfileSectionState
                   for (final role in caregiverRoleOptions)
                     ChoiceChip(
                       key: Key('caregiver_role_$role'),
-                      label: Text(role),
+                      label: Text(caregiverRoleLabel(l10n, role)),
                       selected: _role == role,
                       onSelected: (selected) {
                         setState(() {
@@ -183,9 +201,9 @@ class _CaregiverProfileSectionState
                 key: const Key('caregiver_name'),
                 controller: _nameController,
                 textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(
-                  labelText: 'Name (optional)',
-                  hintText: 'e.g. Ana',
+                decoration: InputDecoration(
+                  labelText: l10n.settingsCaregiverNameLabel,
+                  hintText: l10n.settingsCaregiverNameHint,
                 ),
                 onChanged: (_) => setState(() {
                   _dirty = true;
@@ -194,7 +212,9 @@ class _CaregiverProfileSectionState
               ),
               const SizedBox(height: 12),
               Text(
-                'On logs: ${preview.isEmpty ? fallback : preview}',
+                l10n.settingsCaregiverPreview(
+                  preview.isEmpty ? fallback : preview,
+                ),
                 style: GoogleFonts.nunito(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -205,7 +225,9 @@ class _CaregiverProfileSectionState
               FilledButton(
                 key: const Key('caregiver_profile_save'),
                 onPressed: _saving || !_dirty ? null : _save,
-                child: Text(_saving ? 'Saving…' : 'Save profile'),
+                child: Text(
+                  _saving ? l10n.settingsBabySaving : l10n.settingsBabySave,
+                ),
               ),
               if (_status != null) ...[
                 const SizedBox(height: 10),

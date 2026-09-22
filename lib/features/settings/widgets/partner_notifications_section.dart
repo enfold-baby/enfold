@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/auth/auth_providers.dart';
 import '../../partner/providers/partner_providers.dart';
 
@@ -12,6 +13,7 @@ class PartnerNotificationsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
     final session = ref.watch(authSessionProvider).valueOrNull;
     if (session == null) return const SizedBox.shrink();
 
@@ -24,22 +26,22 @@ class PartnerNotificationsSection extends ConsumerWidget {
       children: [
         ListTile(
           title: Text(
-            'Partner notifications',
+            l10n.settingsPartnerPushTitle,
             style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
           ),
           subtitle: Text(
-            'Optional awareness. Off by default, no guilt.',
+            l10n.settingsPartnerPushSubtitle,
             style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
           ),
         ),
         SwitchListTile(
           key: const Key('partner_activity_push_toggle'),
           title: Text(
-            'When partner logs',
+            l10n.settingsPartnerPushWhenLogs,
             style: GoogleFonts.nunito(fontWeight: FontWeight.w700),
           ),
           subtitle: Text(
-            'Push when your co-parent adds a feed, diaper, or sleep entry.',
+            l10n.settingsPartnerPushWhenLogsSubtitle,
             style: GoogleFonts.nunito(
               fontSize: 13,
               color: AppColors.mutedText(brightness),
@@ -51,11 +53,11 @@ class PartnerNotificationsSection extends ConsumerWidget {
         SwitchListTile(
           key: const Key('partner_gentle_nudge_toggle'),
           title: Text(
-            'Gentle reminders',
+            l10n.settingsPartnerNudgeTitle,
             style: GoogleFonts.nunito(fontWeight: FontWeight.w700),
           ),
           subtitle: Text(
-            'Soft in-app nudge if a core log has not been recorded in a while.',
+            l10n.settingsPartnerNudgeSubtitle,
             style: GoogleFonts.nunito(
               fontSize: 13,
               color: AppColors.mutedText(brightness),
@@ -67,8 +69,7 @@ class PartnerNotificationsSection extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
           child: Text(
-            'Pushes arrive when your co-parent logs a feed, diaper, or sleep. '
-            'Enfold asks for notification permission on this device.',
+            l10n.settingsPartnerPushNote,
             style: GoogleFonts.nunito(
               fontSize: 13,
               color: AppColors.mutedText(brightness),

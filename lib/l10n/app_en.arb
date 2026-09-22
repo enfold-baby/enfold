@@ -298,5 +298,124 @@
         "type": "String"
       }
     }
-  }
+  },
+  "settingsCaregiverRoleMom": "Mom",
+  "settingsCaregiverRoleDad": "Dad",
+  "settingsPartnerTitle": "Partner sharing",
+  "settingsPartnerSubtitle": "Invite a co-parent to see the same today log.",
+  "settingsPartnerLoadFailed": "Could not load family info.",
+  "settingsPartnerSharedWith": "{count, plural, =1{Shared with 1 partner} other{Shared with {count} partners}}",
+  "@settingsPartnerSharedWith": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPartnerLeaveButton": "Leave family",
+  "settingsPartnerYourInviteCode": "Your invite code",
+  "settingsPartnerCopyInvite": "Copy invite code",
+  "settingsPartnerInviteCodeCopied": "Invite code copied.",
+  "settingsPartnerCreateInvite": "Create invite code",
+  "settingsPartnerHaveACode": "Have a code?",
+  "settingsPartnerJoinCodeLabel": "Partner invite code",
+  "settingsPartnerJoinButton": "Join family",
+  "settingsPartnerJoined": "Joined family · sharing logs{forBaby}{pulled}.",
+  "@settingsPartnerJoined": {
+    "placeholders": {
+      "forBaby": {
+        "type": "String"
+      },
+      "pulled": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPartnerJoinedForBaby": " for {name}",
+  "@settingsPartnerJoinedForBaby": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPartnerJoinedPulled": " · {count} from partner",
+  "@settingsPartnerJoinedPulled": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsPartnerJoinedSyncRetry": "Joined family, but sync will retry ({error}).",
+  "@settingsPartnerJoinedSyncRetry": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPartnerLeaveFailed": "Could not leave family. Try again.",
+  "settingsPartnerApiUnreachable": "Could not reach partner invites on the API ({message}). Is the backend up to date?",
+  "@settingsPartnerApiUnreachable": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAccountTitle": "Account & sync",
+  "settingsAccountSignedOutSubtitle": "Sign in to back up logs and share with a partner.",
+  "settingsAccountSignedInAs": "Signed in as {email}",
+  "@settingsAccountSignedInAs": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAccountEmailLabel": "Email",
+  "settingsAccountSendCode": "Send sign-in code",
+  "settingsAccountResendCode": "Resend code",
+  "settingsAccountCodeLabel": "6-digit code",
+  "settingsAccountDevCode": "Dev code: {code}",
+  "@settingsAccountDevCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAccountVerify": "Verify & sync",
+  "settingsAccountSignOut": "Sign out",
+  "settingsAccountSignOutClear": "Sign out and clear device data",
+  "settingsAccountSyncNow": "Sync now",
+  "settingsAccountSynced": "Synced",
+  "settingsAccountDeleteLink": "Delete my account",
+  "settingsAccountClearTitle": "Clear device data?",
+  "settingsAccountClearBody": "This removes local logs, growth, and pregnancy data from this phone. Server backups stay with your account.",
+  "settingsAccountClearConfirm": "Sign out & clear",
+  "settingsAccountSignedOutCleared": "Signed out and cleared local data.",
+  "settingsAccountDeleteTitle": "Delete your account?",
+  "settingsAccountDeleteBody": "This permanently deletes your Enfold account and signs you out. If you are the only parent in the family, care logs stored on our servers for that family are deleted too. This cannot be undone.",
+  "settingsAccountDeleteConfirm": "Delete account",
+  "settingsAccountDeleted": "Your account has been deleted.",
+  "settingsAccountDeleteFailed": "Could not delete the account. Try again.",
+  "settingsAccountSyncPushed": "{count} pushed",
+  "@settingsAccountSyncPushed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAccountSyncPulled": "{count} from partner",
+  "@settingsAccountSyncPulled": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsAccountSyncUpToDate": "up to date"
 }

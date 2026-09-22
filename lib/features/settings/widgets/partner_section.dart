@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/api/api_exception.dart';
 import '../../../services/api/family_models.dart';
 import '../../../services/auth/account_switch_service.dart';
@@ -55,9 +56,10 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
   }
 
   Future<void> _createInvite() async {
+    final l10n = AppL10n.of(context);
     final session = ref.read(authSessionProvider).valueOrNull;
     if (session == null) {
-      _showFeedback('Sign in first to create an invite.', error: true);
+      _showFeedback(l10n.settingsPartnerSignInFirst, error: true);
       return;
     }
 
@@ -70,17 +72,18 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
           await ref.read(apiClientProvider).createFamilyInvite(session.token);
       await Clipboard.setData(ClipboardData(text: invite.code));
       ref.invalidate(familyInfoProvider);
-      _showFeedback('Invite code ${invite.code} copied.');
+      _showFeedback(l10n.settingsPartnerInviteCopied(invite.code));
     } on ApiException catch (e) {
-      _showFeedback(_messageForApiError(e), error: true);
+      _showFeedback(_messageForApiError(l10n, e), error: true);
     } catch (_) {
-      _showFeedback('Could not create invite. Try again.', error: true);
+      _showFeedback(l10n.settingsPartnerInviteFailed, error: true);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
   Future<void> _joinFamily() async {
+    final l10n = AppL10n.of(context);
     final session = ref.read(authSessionProvider).valueOrNull;
     if (session == null) return;
 
@@ -101,25 +104,29 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
       final joined = await ref.read(syncActionsProvider).syncAfterFamilyJoin();
       final syncResult = joined.result;
       final babyLabel = joined.babyName;
-      final shareBit =
-          babyLabel != null && babyLabel.isNotEmpty ? ' for $babyLabel' : '';
+      final shareBit = babyLabel != null && babyLabel.isNotEmpty
+          ? l10n.settingsPartnerJoinedForBaby(babyLabel)
+          : '';
+      final pulledBit = syncResult.pulled > 0
+          ? l10n.settingsPartnerJoinedPulled(syncResult.pulled)
+          : '';
       _showFeedback(
         syncResult.ok
-            ? 'Joined family · sharing logs$shareBit'
-                '${syncResult.pulled > 0 ? ' · ${syncResult.pulled} from partner' : ''}.'
-            : 'Joined family, but sync will retry (${syncResult.error}).',
+            ? l10n.settingsPartnerJoined(shareBit, pulledBit)
+            : l10n.settingsPartnerJoinedSyncRetry('${syncResult.error}'),
       );
       _codeController.clear();
     } on ApiException catch (e) {
-      _showFeedback(_messageForApiError(e), error: true);
+      _showFeedback(_messageForApiError(l10n, e), error: true);
     } catch (_) {
-      _showFeedback('Could not join with that code.', error: true);
+      _showFeedback(l10n.settingsPartnerJoinFailed, error: true);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
   Future<void> _leaveFamily() async {
+    final l10n = AppL10n.of(context);
     final session = ref.read(authSessionProvider).valueOrNull;
     if (session == null) return;
 
@@ -128,21 +135,17 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
       builder: (context) => AlertDialog(
         key: const Key('partner_leave_dialog'),
         title: Text(
-          'Leave this family?',
+          l10n.settingsPartnerLeaveTitle,
           style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
         ),
         content: Text(
-          'You will stop sharing with your partner.\n\n'
-          '• On this phone, synced care logs will be cleared so you start fresh.\n'
-          '• Your partner’s family keeps all their logs and baby data. Nothing '
-          'is deleted for them on the server.\n\n'
-          'You can join again later with a new invite code.',
+          l10n.settingsPartnerLeaveBody,
           style: GoogleFonts.nunito(),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             key: const Key('partner_leave_confirm'),
@@ -151,7 +154,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
               backgroundColor: Colors.red.shade700,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Leave family'),
+            child: Text(l10n.settingsPartnerLeaveConfirm),
           ),
         ],
       ),
@@ -167,27 +170,23 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
       // Drop partner-synced local rows; family keeps server data.
       await ref.read(accountSwitchServiceProvider).clearLocalCareData();
       ref.invalidate(familyInfoProvider);
-      _showFeedback(
-        'You left the family. Local synced logs were cleared; '
-        'partner data stays on their account.',
-      );
+      _showFeedback(l10n.settingsPartnerLeft);
     } on ApiException catch (e) {
-      _showFeedback(_messageForApiError(e), error: true);
+      _showFeedback(_messageForApiError(l10n, e), error: true);
     } catch (_) {
-      _showFeedback('Could not leave family. Try again.', error: true);
+      _showFeedback(l10n.settingsPartnerLeaveFailed, error: true);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
-  String _messageForApiError(ApiException e) {
+  String _messageForApiError(AppL10n l10n, ApiException e) {
     if (e.statusCode == 404) {
       // Distinct copy: join uses 404 for bad codes; create used to 404 when
       // the families router was missing on the API.
       return e.message.contains('Invite') || e.message.contains('code')
           ? e.message
-          : 'Could not reach partner invites on the API (${e.message}). '
-              'Is the backend up to date?';
+          : l10n.settingsPartnerApiUnreachable(e.message);
     }
     return e.message;
   }
@@ -195,6 +194,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
     final session = ref.watch(authSessionProvider).valueOrNull;
     if (session == null) return const SizedBox.shrink();
 
@@ -205,11 +205,11 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
       children: [
         ListTile(
           title: Text(
-            'Partner sharing',
+            l10n.settingsPartnerTitle,
             style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
           ),
           subtitle: Text(
-            'Invite a co-parent to see the same today log.',
+            l10n.settingsPartnerSubtitle,
             style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
           ),
         ),
@@ -221,7 +221,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
               child: LinearProgressIndicator(),
             ),
             error: (_, __) => Text(
-              'Could not load family info.',
+              l10n.settingsPartnerLoadFailed,
               style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
             ),
             data: (family) => Column(
@@ -229,7 +229,9 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
               children: [
                 if (family != null && family.members.length > 1) ...[
                   Text(
-                    'Shared with ${family.members.length - 1} partner',
+                    l10n.settingsPartnerSharedWith(
+                      family.members.length - 1,
+                    ),
                     style: GoogleFonts.nunito(
                       fontWeight: FontWeight.w700,
                       color: AppColors.accent(brightness),
@@ -250,7 +252,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                     key: const Key('partner_leave_family'),
                     onPressed: _busy ? null : _leaveFamily,
                     icon: const Icon(Icons.logout_outlined),
-                    label: const Text('Leave family'),
+                    label: Text(l10n.settingsPartnerLeaveButton),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -266,7 +268,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Your invite code',
+                          l10n.settingsPartnerYourInviteCode,
                           style: GoogleFonts.nunito(
                             fontWeight: FontWeight.w800,
                             color: AppColors.accent(brightness),
@@ -293,11 +295,12 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                               ClipboardData(text: family.inviteCode!),
                             );
                             setState(
-                              () => _status = 'Invite code copied.',
+                              () => _status =
+                                  l10n.settingsPartnerInviteCodeCopied,
                             );
                           },
                     icon: const Icon(Icons.copy_outlined),
-                    label: const Text('Copy invite code'),
+                    label: Text(l10n.settingsPartnerCopyInvite),
                   ),
                   const SizedBox(height: 16),
                 ],
@@ -310,11 +313,11 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                     minimumSize: const Size.fromHeight(48),
                   ),
                   icon: const Icon(Icons.person_add_outlined),
-                  label: const Text('Create invite code'),
+                  label: Text(l10n.settingsPartnerCreateInvite),
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Have a code?',
+                  l10n.settingsPartnerHaveACode,
                   style: GoogleFonts.nunito(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 8),
@@ -322,8 +325,8 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                   key: const Key('partner_join_code'),
                   controller: _codeController,
                   textCapitalization: TextCapitalization.characters,
-                  decoration: const InputDecoration(
-                    labelText: 'Partner invite code',
+                  decoration: InputDecoration(
+                    labelText: l10n.settingsPartnerJoinCodeLabel,
                     hintText: 'BLOOM42',
                   ),
                 ),
@@ -331,7 +334,7 @@ class _PartnerSectionState extends ConsumerState<PartnerSection> {
                 FilledButton(
                   key: const Key('partner_join'),
                   onPressed: _busy ? null : _joinFamily,
-                  child: const Text('Join family'),
+                  child: Text(l10n.settingsPartnerJoinButton),
                 ),
                 if (_status != null) ...[
                   const SizedBox(height: 12),

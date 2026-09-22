@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/api/api_exception.dart';
 import '../../../services/auth/account_switch_service.dart';
 import '../../../services/auth/auth_providers.dart';
@@ -32,20 +33,21 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
     super.dispose();
   }
 
-  String _requestCodeErrorMessage(Object error) {
+  String _requestCodeErrorMessage(AppL10n l10n, Object error) {
     if (error is ApiException) {
       if (error.statusCode == 422) {
-        return 'Enter a valid email address.';
+        return l10n.settingsAccountInvalidEmail;
       }
       if (error.statusCode == 503) {
-        return 'Could not send code. The mail service is busy. Try again in a moment.';
+        return l10n.settingsAccountCodeBusy;
       }
-      return 'Could not send code (${error.message}).';
+      return l10n.settingsAccountCodeFailedWithMessage(error.message);
     }
-    return 'Could not send code. Check your connection and try again.';
+    return l10n.settingsAccountCodeFailedOffline;
   }
 
   Future<void> _requestCode() async {
+    final l10n = AppL10n.of(context);
     setState(() {
       _busy = true;
       _status = null;
@@ -57,10 +59,10 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
       setState(() {
         _codeSent = true;
         _devCode = kDebugMode ? devCode : null;
-        _status = 'Check your email for a 6-digit code.';
+        _status = l10n.settingsAccountCodeSent;
       });
     } catch (e) {
-      setState(() => _status = _requestCodeErrorMessage(e));
+      setState(() => _status = _requestCodeErrorMessage(l10n, e));
     } finally {
       setState(() => _busy = false);
     }
@@ -71,34 +73,34 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
       context: context,
       barrierDismissible: false,
       builder: (context) {
+        final l10n = AppL10n.of(context);
         return AlertDialog(
           key: const Key('account_switch_dialog'),
           title: Text(
-            'Different account',
+            l10n.settingsAccountSwitchTitle,
             style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
           ),
           content: Text(
-            'This device already has logs from another account. '
-            'What should we do with the data on this phone?',
+            l10n.settingsAccountSwitchBody,
             style: GoogleFonts.nunito(),
           ),
           actions: [
             TextButton(
               key: const Key('account_switch_cancel'),
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
+              child: Text(l10n.commonCancel),
             ),
             TextButton(
               key: const Key('account_switch_upload'),
               onPressed: () =>
                   Navigator.of(context).pop(AccountSwitchChoice.uploadLocal),
-              child: const Text('Upload local logs'),
+              child: Text(l10n.settingsAccountSwitchUpload),
             ),
             FilledButton(
               key: const Key('account_switch_fresh'),
               onPressed: () =>
                   Navigator.of(context).pop(AccountSwitchChoice.startFresh),
-              child: const Text('Start fresh'),
+              child: Text(l10n.settingsAccountSwitchFresh),
             ),
           ],
         );
@@ -107,6 +109,7 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
   }
 
   Future<void> _verify() async {
+    final l10n = AppL10n.of(context);
     setState(() {
       _busy = true;
       _status = null;
@@ -120,7 +123,7 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
           );
       final session = ref.read(authSessionProvider).valueOrNull;
       if (session == null) {
-        setState(() => _status = 'Invalid or expired code.');
+        setState(() => _status = l10n.settingsAccountCodeInvalid);
         return;
       }
 
@@ -132,7 +135,7 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
         final choice = await _promptAccountSwitch();
         if (choice == null) {
           await ref.read(authSessionProvider.notifier).signOut();
-          setState(() => _status = 'Sign-in cancelled.');
+          setState(() => _status = l10n.settingsAccountSignInCancelled);
           return;
         }
         await switchService.applySwitchChoice(choice);
@@ -146,25 +149,38 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
 
       setState(() {
         _status = result.ok
-            ? _syncStatusMessage(result, prefix: 'Signed in')
-            : 'Signed in, but sync will retry (${result.error}).';
+            ? _syncStatusMessage(
+                l10n,
+                result,
+                prefix: l10n.settingsAccountSignedIn,
+              )
+            : l10n.settingsAccountSignedInSyncRetry('${result.error}');
       });
     } catch (e) {
-      setState(() => _status = 'Invalid or expired code.');
+      setState(() => _status = l10n.settingsAccountCodeInvalid);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
   }
 
-  String _syncStatusMessage(SyncResult result, {required String prefix}) {
+  String _syncStatusMessage(
+    AppL10n l10n,
+    SyncResult result, {
+    required String prefix,
+  }) {
     final parts = <String>[prefix];
-    if (result.pushed > 0) parts.add('${result.pushed} pushed');
-    if (result.pulled > 0) parts.add('${result.pulled} from partner');
-    if (parts.length == 1) parts.add('up to date');
+    if (result.pushed > 0) {
+      parts.add(l10n.settingsAccountSyncPushed(result.pushed));
+    }
+    if (result.pulled > 0) {
+      parts.add(l10n.settingsAccountSyncPulled(result.pulled));
+    }
+    if (parts.length == 1) parts.add(l10n.settingsAccountSyncUpToDate);
     return '${parts.join(' · ')}.';
   }
 
   Future<void> _signOut({bool clearDeviceData = false}) async {
+    final l10n = AppL10n.of(context);
     setState(() {
       _busy = true;
       _status = null;
@@ -176,23 +192,22 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
           builder: (context) => AlertDialog(
             key: const Key('sign_out_clear_dialog'),
             title: Text(
-              'Clear device data?',
+              l10n.settingsAccountClearTitle,
               style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
             ),
             content: Text(
-              'This removes local logs, growth, and pregnancy data from this '
-              'phone. Server backups stay with your account.',
+              l10n.settingsAccountClearBody,
               style: GoogleFonts.nunito(),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
+                child: Text(l10n.commonCancel),
               ),
               FilledButton(
                 key: const Key('sign_out_clear_confirm'),
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Sign out & clear'),
+                child: Text(l10n.settingsAccountClearConfirm),
               ),
             ],
           ),
@@ -209,7 +224,7 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
         _codeSent = false;
         _devCode = null;
         _status = clearDeviceData
-            ? 'Signed out and cleared local data.'
+            ? l10n.settingsAccountSignedOutCleared
             : null;
         _codeController.clear();
       });
@@ -219,24 +234,23 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
   }
 
   Future<void> _deleteAccount() async {
+    final l10n = AppL10n.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         key: const Key('delete_account_dialog'),
         title: Text(
-          'Delete your account?',
+          l10n.settingsAccountDeleteTitle,
           style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
         ),
         content: Text(
-          'This permanently deletes your Enfold account and signs you out. '
-          'If you are the only parent in the family, care logs stored on our '
-          'servers for that family are deleted too. This cannot be undone.',
+          l10n.settingsAccountDeleteBody,
           style: GoogleFonts.nunito(),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             key: const Key('delete_account_confirm'),
@@ -245,7 +259,7 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
               backgroundColor: AppColors.bloomDeep,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Delete account'),
+            child: Text(l10n.settingsAccountDeleteConfirm),
           ),
         ],
       ),
@@ -265,11 +279,11 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
         _codeSent = false;
         _devCode = null;
         _codeController.clear();
-        _status = 'Your account has been deleted.';
+        _status = l10n.settingsAccountDeleted;
       });
     } catch (e) {
       if (!mounted) return;
-      setState(() => _status = 'Could not delete the account. Try again.');
+      setState(() => _status = l10n.settingsAccountDeleteFailed);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -278,6 +292,7 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
     final sessionAsync = ref.watch(authSessionProvider);
     final session = sessionAsync.valueOrNull;
 
@@ -286,13 +301,13 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
       children: [
         ListTile(
           title: Text(
-            'Account & sync',
+            l10n.settingsAccountTitle,
             style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
           ),
           subtitle: Text(
             session == null
-                ? 'Sign in to back up logs and share with a partner.'
-                : 'Signed in as ${session.user.email}',
+                ? l10n.settingsAccountSignedOutSubtitle
+                : l10n.settingsAccountSignedInAs(session.user.email),
             style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
           ),
         ),
@@ -307,8 +322,8 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
+                  decoration: InputDecoration(
+                    labelText: l10n.settingsAccountEmailLabel,
                     hintText: 'you@example.com',
                   ),
                 ),
@@ -316,7 +331,11 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
                 FilledButton(
                   key: const Key('auth_send_code'),
                   onPressed: _busy ? null : _requestCode,
-                  child: Text(_codeSent ? 'Resend code' : 'Send sign-in code'),
+                  child: Text(
+                    _codeSent
+                        ? l10n.settingsAccountResendCode
+                        : l10n.settingsAccountSendCode,
+                  ),
                 ),
                 if (_codeSent) ...[
                   const SizedBox(height: 16),
@@ -324,14 +343,14 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
                     key: const Key('auth_code'),
                     controller: _codeController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: '6-digit code',
+                    decoration: InputDecoration(
+                      labelText: l10n.settingsAccountCodeLabel,
                     ),
                   ),
                   if (_devCode != null) ...[
                     const SizedBox(height: 8),
                     Text(
-                      'Dev code: $_devCode',
+                      l10n.settingsAccountDevCode('$_devCode'),
                       style: GoogleFonts.nunito(
                         fontSize: 13,
                         color: AppColors.accent(brightness),
@@ -348,14 +367,14 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
                       foregroundColor: AppColors.cream,
                       minimumSize: const Size.fromHeight(48),
                     ),
-                    child: const Text('Verify & sync'),
+                    child: Text(l10n.settingsAccountVerify),
                   ),
                 ],
               ] else ...[
                 OutlinedButton(
                   key: const Key('auth_sign_out'),
                   onPressed: _busy ? null : () => _signOut(),
-                  child: const Text('Sign out'),
+                  child: Text(l10n.settingsAccountSignOut),
                 ),
                 const SizedBox(height: 8),
                 TextButton(
@@ -363,7 +382,7 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
                   onPressed:
                       _busy ? null : () => _signOut(clearDeviceData: true),
                   child: Text(
-                    'Sign out and clear device data',
+                    l10n.settingsAccountSignOutClear,
                     style: GoogleFonts.nunito(
                       color: AppColors.mutedText(brightness),
                     ),
@@ -381,18 +400,22 @@ class _AccountSectionState extends ConsumerState<AccountSection> {
                           setState(() {
                             _busy = false;
                             _status = result.ok
-                                ? _syncStatusMessage(result, prefix: 'Synced')
-                                : 'Sync failed: ${result.error}';
+                                ? _syncStatusMessage(
+                                    l10n,
+                                    result,
+                                    prefix: l10n.settingsAccountSynced,
+                                  )
+                                : l10n.syncFailedWithError('${result.error}');
                           });
                         },
-                  child: const Text('Sync now'),
+                  child: Text(l10n.settingsAccountSyncNow),
                 ),
                 const SizedBox(height: 16),
                 TextButton(
                   key: const Key('auth_delete_account'),
                   onPressed: _busy ? null : _deleteAccount,
                   child: Text(
-                    'Delete my account',
+                    l10n.settingsAccountDeleteLink,
                     style: GoogleFonts.nunito(
                       color: AppColors.bloomDeep,
                       fontWeight: FontWeight.w800,

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../services/database/app_database.dart';
 import '../../baby/providers/baby_profile_providers.dart';
 
@@ -36,6 +37,7 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
   }
 
   Future<void> _save() async {
+    final l10n = AppL10n.of(context);
     setState(() {
       _saving = true;
       _status = null;
@@ -48,10 +50,10 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
           );
       setState(() {
         _dirty = false;
-        _status = 'Profile saved on device.';
+        _status = l10n.settingsBabySaved;
       });
     } catch (_) {
-      setState(() => _status = 'Could not save profile.');
+      setState(() => _status = l10n.settingsBabySaveFailed);
     } finally {
       setState(() => _saving = false);
     }
@@ -63,7 +65,7 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
       initialDate: _birthDate ?? DateTime.now(),
       firstDate: DateTime.now().subtract(const Duration(days: 365 * 4)),
       lastDate: DateTime.now().add(const Duration(days: 30)),
-      helpText: 'Birth date',
+      helpText: AppL10n.of(context).settingsBabyBirthDateLabel,
     );
     if (picked == null) return;
     setState(() {
@@ -76,6 +78,7 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final l10n = AppL10n.of(context);
     final babyAsync = ref.watch(activeBabyProvider);
     final dateFormat = DateFormat.yMMMMd();
 
@@ -90,11 +93,11 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
           children: [
             ListTile(
               title: Text(
-                'Baby profile',
+                l10n.settingsBabyTitle,
                 style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
               ),
               subtitle: Text(
-                'Name and birth date appear in exports and sync.',
+                l10n.settingsBabySubtitle,
                 style: GoogleFonts.nunito(color: AppColors.mutedText(brightness)),
               ),
             ),
@@ -107,9 +110,9 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
                     key: const Key('baby_name'),
                     controller: _nameController,
                     textCapitalization: TextCapitalization.words,
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      hintText: 'Baby',
+                    decoration: InputDecoration(
+                      labelText: l10n.settingsBabyNameLabel,
+                      hintText: l10n.commonBabyFallbackName,
                     ),
                     onChanged: (_) => setState(() {
                       _dirty = true;
@@ -122,8 +125,10 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
                     onPressed: _pickBirthDate,
                     child: Text(
                       _birthDate == null
-                          ? 'Set birth date (optional)'
-                          : 'Born ${dateFormat.format(_birthDate!)}',
+                          ? l10n.settingsBabySetBirthDate
+                          : l10n.settingsBabyBorn(
+                              dateFormat.format(_birthDate!),
+                            ),
                     ),
                   ),
                   if (_birthDate != null) ...[
@@ -137,7 +142,7 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
                           _dirty = true;
                           _status = null;
                         }),
-                        child: const Text('Clear birth date'),
+                        child: Text(l10n.settingsBabyClearBirthDate),
                       ),
                     ),
                   ],
@@ -146,11 +151,11 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
                     key: const Key('baby_preemie'),
                     contentPadding: EdgeInsets.zero,
                     title: Text(
-                      'Born preterm',
+                      l10n.settingsBabyPreterm,
                       style: GoogleFonts.nunito(fontWeight: FontWeight.w700),
                     ),
                     subtitle: Text(
-                      'We will add corrected-age milestones later.',
+                      l10n.settingsBabyPretermSubtitle,
                       style: GoogleFonts.nunito(
                         fontSize: 13,
                         height: 1.35,
@@ -168,7 +173,9 @@ class _BabyProfileSectionState extends ConsumerState<BabyProfileSection> {
                   FilledButton(
                     key: const Key('baby_save_profile'),
                     onPressed: _saving || !_dirty ? null : _save,
-                    child: Text(_saving ? 'Saving…' : 'Save profile'),
+                    child: Text(
+                      _saving ? l10n.settingsBabySaving : l10n.settingsBabySave,
+                    ),
                   ),
                   if (_status != null) ...[
                     const SizedBox(height: 12),
