@@ -6,8 +6,9 @@ focused, well-described changes over big rewrites.
 
 ## What helps most
 
-- **Translations.** Romanian is next (`feature/todos/I18N_RO.md`), then whatever language
-  you speak with your pediatrician.
+- **Translations.** English and Romanian ship today, as ARB files in `lib/l10n/`. A native
+  fix to the Romanian, or a new language, is very welcome; see "Translating" in the
+  [README](./README.md#translating).
 - **Bugs with steps.** Device, OS version, app version (Settings shows it), what you tapped,
   what happened.
 - **Accessibility and one-handed 3am use.** Big targets, high contrast, dark mode.

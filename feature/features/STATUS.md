@@ -1,7 +1,7 @@
 # Feature status — what's built
 
-> Snapshot as of **2026-09-21**. Source of truth is the code; update this when shipping.  
-> App: **`1.0.1+27`** · Drift **v14** · App Store live · Play pending · API + landing + support live · code public (AGPL-3.0).
+> Snapshot as of **2026-09-22**. Source of truth is the code; update this when shipping.  
+> App: **`1.0.2+28`** (not uploaded) · Drift **v16** · App Store live on 1.0.1 · Play pending · API + landing + support live · code public (AGPL-3.0).
 
 ## App shell
 
@@ -10,7 +10,7 @@
 | Today | Quick log tiles, summary, recent, **active sleep banner**, growth/meds shortcuts, pregnancy shortcut while expecting | ✅ |
 | Logs | Hub + per-type lists, filters, period bar, active sleep banner, 10-at-a-time Load more | ✅ |
 | Learn | 25 cards, search/filter, triage flow, **Sources section with citations on every card** (App Review 1.4.1) | ✅ |
-| Settings | Account, caregiver, partner, profile, pregnancy link, export, units, theme, legal, delete account | ✅ |
+| Settings | Account, caregiver, partner, profile, pregnancy link, export, units, time, awake time, **language**, theme, legal, delete account | ✅ |
 
 **Not a tab:** Pregnancy is a full-screen route (`/pregnancy`) from Settings, Today (while expecting), and the Add sheet.
 
@@ -96,9 +96,9 @@
 | Time (12-hour AM/PM / 24-hour) | ✅ default 12-hour |
 | Theme (system / light / dark, persisted) | ✅ dark secondary AA |
 | About + legal (privacy / terms URLs) | ✅ |
-| Language | 🔲 planned — [I18N_RO.md](../todos/I18N_RO.md) |
+| Language (Device / English / Romanian) | ✅ gen-l10n, 603 strings, per device. See [I18N_RO.md](../todos/I18N_RO.md) |
 
-## Local database (Drift v13)
+## Local database (Drift v16)
 
 | Table | Purpose |
 |---|---|
@@ -106,7 +106,7 @@
 | `care_events` | Unified log mirror of VPS `care_events` |
 | `pregnancy_profiles` | Due date, kick count |
 | `pregnancy_appointments` | Appointment notes |
-| `app_settings` | Onboarding, units, 12/24-hour clock, partner toggles, theme_mode, last_signed_in_user_id, care_reminders_enabled |
+| `app_settings` | Onboarding, units, 12/24-hour clock, partner toggles, theme_mode, last_signed_in_user_id, care_reminders_enabled, show_awake_time, language_tag |
 | `growth_measurements` | Weight/length/head |
 | `milestone_achievements` | Milestone done dates |
 | `medication_routines` | Local daily vitamin reminder (name, clock time). Not a repeating log. |
@@ -160,11 +160,26 @@ Containers / Postgres role stay **bloomdue** (do not rename).
 - Sideload APK `1.0.0+20` on Desktop includes Android config + daily vitamin reminder
 - iOS: plist in Xcode resources; **APNs auth key still needed** to actually deliver
 
+## Languages
+
+| Piece | Status |
+|---|---|
+| Setup | ✅ `flutter gen-l10n`, `l10n.yaml`, `lib/l10n/app_en.arb` + `app_ro.arb` (603 keys, generated output gitignored) |
+| Device default | ✅ Romanian device → Romanian, anything else → English |
+| Settings override | ✅ Device / English / Romanian, per device, stored in `app_settings.language_tag` |
+| Notifications | ✅ through `appL10nProvider`; iOS categories follow the device language (registered once per launch) |
+| Visit PDF | ✅ follows the app language |
+| Learn cards | 🔲 English on purpose until a clinician reviews a medical translation |
+| Native check | 🔲 Raul and Oana still to read the Romanian draft |
+| Website `/ro/` | 🔲 not started |
+
+**Stays English because it is stored or sent:** caregiver role values (`Mom`, `Dad`, …) inside `display_name`, medication category values, milestone keys, medication preset ids.
+
 ## Tests & tooling
 
 | Suite | Notes |
 |---|---|
-| Unit + widget | `test/` — 55 files, including contrast, sleep-in-progress, FAB, date bounds, 12/24-hour clock, daily vitamin reminder |
+| Unit + widget | `test/`, 220 tests, including contrast, sleep-in-progress, FAB, date bounds, 12/24-hour clock, daily vitamin reminder, edge-to-edge system bars, Romanian UI |
 | Integration | `integration_test/` — app, account-switch e2e, demo screenshots |
 | Demo / store goldens | `scripts/capture_demo_screenshots.sh` + `test/widget/store_screenshots_test.dart` — Play listing still needs a **real phone** |
 
@@ -176,4 +191,4 @@ Containers / Postgres role stay **bloomdue** (do not rename).
 | API container | ✅ prod |
 | Postgres / Redis | ✅ prod |
 | FCM service account volume | ✅ `./backend/secrets:/app/secrets:ro` |
-| GitHub | private for now (no public translation PRs) |
+| GitHub | public since 2026-09-17; ARB files exist, so translation PRs are possible |

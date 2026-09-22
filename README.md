@@ -27,6 +27,7 @@ nothing in the app.
 | `backend/` | The FastAPI + Postgres + Redis API behind `api.enfold.baby` (magic-code sign-in, family sync, partner push, Stripe supporters wall) |
 | `landing/` | The static website at `enfold.baby` |
 | `content/` | The learn cards, licensed separately (see below) |
+| `lib/l10n/` | Translations as ARB files. English and Romanian today, see [translating](#translating) |
 | `docs/` | Product, privacy and platform notes |
 | `feature/` | Working notes: status, roadmap, todos. Written for the team and for AI assistants; useful to see where things stand |
 
@@ -44,6 +45,19 @@ flutter run                        # debug builds use the local API
 Push notifications need your own Firebase project (`google-services.json`,
 `GoogleService-Info.plist`); the app builds and runs without them. Details, backend tests
 and the pull request rules are in [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+
+## Translating
+
+The UI lives in `lib/l10n/app_en.arb` (the template) and one file per language, today
+`app_ro.arb`. To add or fix a string, edit both files and run `flutter gen-l10n`
+(`flutter pub get` also regenerates); the generated Dart is not committed. To start a new
+language, copy `app_en.arb` to `app_<code>.arb`, translate the values, and add the locale to
+`supportedLocales` in `lib/features/settings/providers/locale_providers.dart`.
+
+Two things stay English on purpose: the learn card content in `content/`, because it needs a
+clinician to review a medical translation, and values that travel to the server or are stored
+as ids (caregiver roles, medication categories, milestone keys). Their labels are translated;
+the values are not.
 
 ## Principles we will not trade
 
@@ -70,5 +84,5 @@ Found something? Email support@enfold.baby instead of opening an issue. See
 
 ## Status
 
-Version `1.0.1+27`. Live on the [App Store](https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288); the Google Play release is in review as of September 2026.
+Version `1.0.2+28`. Live on the [App Store](https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288); the Google Play release is in review as of September 2026. The app speaks English and Romanian.
 Where we left off: [`feature/SESSION.md`](./feature/SESSION.md).

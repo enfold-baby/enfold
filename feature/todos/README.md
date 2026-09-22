@@ -1,7 +1,7 @@
 # Todos — what to work on next
 
 > Prioritized pending work. For implemented features see [features/STATUS.md](../features/STATUS.md).  
-> **Focus now:** Romanian UI, build 28 for both stores once Play approves, Product Hunt day Wed 2026-09-23. Keep docs current as we ship.
+> **Focus now:** native check on the Romanian draft, build 1.0.2+28 waiting for Play approval. Keep docs current as we ship.
 
 ## Queue
 
@@ -16,8 +16,8 @@
 | ✅ | ~~4-tab shell + docked Add FAB~~ | — | 2026-09 |
 | ✅ | ~~Growth history trend charts~~ | — | 2026-09 |
 | ✅ | ~~Launch posts (PH, X, dev.to)~~ | [LAUNCH_POSTS.md](./LAUNCH_POSTS.md) | PH Wed 2026-09-23; others parked |
-| 🟠 P1 | **Google Play: promote build 28 from main once 22 is live** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Ticket filed 2026-09-22; bump 1.0.2+28, edge-to-edge fix, then Play badge |
-| 🟠 P2 | **Romanian UI** | [I18N_RO.md](./I18N_RO.md) | gen-l10n + ARB, ~280 strings, 2 to 3 sessions |
+| 🟠 P1 | **Google Play: promote build 28 from main once 22 is live** | [STORE_RELEASE.md](./STORE_RELEASE.md) | Ticket filed 2026-09-22; 1.0.2+28 is bumped and builds clean with the edge-to-edge fix, not uploaded. Then the Play badge |
+| 🟠 P2 | **Romanian UI: native check** | [I18N_RO.md](./I18N_RO.md) | UI is fully translated (603 keys). Raul and Oana still read it on a phone; also screenshot for overflow |
 | 🟠 P2 | **Learn card physician review** | [CONTENT_REVIEW.md](./CONTENT_REVIEW.md) | Pack sent to Oana 2026-09-17 |
 | 🟠 P2 | **Multiple children per family** | [MULTI_CHILD.md](./MULTI_CHILD.md) | Active child switcher |
 | 🟡 P3 | **Real-time partner sync** | — | Websocket or denser pull |
@@ -38,6 +38,9 @@ Sideload APK installer was **removed** for Play policy (see [APP_VERSION_UPDATE.
 5. On finish → [MAINTAIN.md](../MAINTAIN.md) — **always update markdown**
 
 ## Recently completed ✅
+
+- Romanian UI: gen-l10n + ARB, 603 strings in English and Romanian, device-locale default with a Settings override (Drift v16). Learn cards stay English (2026-09-22)
+- Build 1.0.2+28: version bump, the overnight sleep fix, Android 15 edge-to-edge handling. Built locally, nothing uploaded (2026-09-22)
 
 - Launch: Product Hunt scheduled (Wed 2026-09-23), dev.to article live, X follow-ups, TrustMRR page; copy for all platforms in LAUNCH_COPY.md (2026-09-21/22)
 

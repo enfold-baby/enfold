@@ -115,6 +115,8 @@ App talks to **our VPS API**, not Supabase. Local Drift schema mirrors server `c
 34. **Phase 33** — Open source: `enfold-baby/enfold` public under AGPL-3.0, site and /open updated (2026-09-17) ✅
 35. **Phase 34** — Learn card citations ("Sources" on every card); App Store 1.0.1 approved and live ✅
 36. **Phase 35** — Today sleep total clipped to the calendar day ✅
+37. **Phase 36** — Launch: Product Hunt, X and dev.to (2026-09-21/23) ✅
+38. **Phase 37** — Romanian UI: gen-l10n, 603 ARB keys, Settings > Language, Android 15 edge-to-edge, build 1.0.2+28 (Drift v16) ✅
 
 **Docs hub:** [`feature/README.md`](./feature/README.md)
 

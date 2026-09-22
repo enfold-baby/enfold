@@ -11,7 +11,7 @@ Copy one of these into a fresh chat:
 
 ```
 Read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md and ~/Desktop/LAUNCH-CHECKLIST.md (pickup at the top).
-Enfold 1.0.1+27, Drift schema v14, 208 tests. App Store: 1.0.1 live (id 6811765288). Play: 1.0.0+22 in review since 12 Sep (support ticket 2026-09-22), 1.0.1+24 on internal testing.
+Enfold 1.0.2+28, Drift schema v16, 220 tests. App Store: 1.0.1 live (id 6811765288). Play: 1.0.0+22 in review since 12 Sep (support ticket 2026-09-22); 1.0.2+28 is built locally, not uploaded.
 Code is public: github.com/enfold-baby/enfold (AGPL-3.0). Never put VPS hosts, ssh users, personal inboxes or account ids into tracked files.
 Debug API → http://10.0.2.2:8282 (Android emulator); release → https://api.enfold.baby.
 Local docker: docker compose up -d. Contact: support@enfold.baby. Prod VPS is updated by copying files (private ops notes, ~/Documents/enfold/ops/).
@@ -72,11 +72,13 @@ Do not invent Play/App Store URLs.
 
 ---
 
-## Romanian i18n (later)
+## Romanian i18n (native check)
 
 ```
 Read feature/todos/I18N_RO.md.
-Device RO → RO; else EN; Settings can force RO. Repo stays private. Do not start extracting strings unless asked.
+The Romanian UI is already in: 603 keys in lib/l10n/app_en.arb and app_ro.arb, device-locale default, Settings > Language override (Drift v16, app_settings.language_tag). Learn card content stays English.
+Job: read the Romanian on a device and fix what sounds stiff, then screenshot phone and tablet, light and dark, and check for overflow (Romanian runs longer than English): bottom tabs, Settings segmented buttons, log form buttons.
+Adding a string means both ARB files plus flutter gen-l10n. Do not translate stored values (caregiver roles, medication categories, milestone keys).
 ```
 
 ---
