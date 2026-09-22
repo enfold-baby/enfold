@@ -1222,5 +1222,8 @@
   "nudgeBannerTitle": "Gentle reminder",
   "growthMeasurementLogged": "Measurement logged",
   "attributionYou": "you",
-  "attributionPartner": "Partner"
+  "attributionPartner": "Partner",
+  "syncStatusSynced": "synced",
+  "syncStatusWillSync": "will sync",
+  "syncStatusOnDevice": "on device"
 }

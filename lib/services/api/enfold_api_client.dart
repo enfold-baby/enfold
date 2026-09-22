@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import '../../core/config/api_config.dart';
 import 'api_exception.dart';
 import 'family_models.dart';
+import '../../features/settings/providers/locale_providers.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class AuthUser {
   const AuthUser({required this.id, required this.email, required this.displayName});
@@ -50,11 +52,17 @@ class EnfoldApiClient {
   EnfoldApiClient({
     http.Client? httpClient,
     String? baseUrl,
+    AppL10n? l10n,
   })  : _http = httpClient ?? http.Client(),
+        _l10n = l10n ?? lookupAppL10n(resolvedDeviceLocale()),
         _baseUrl = (baseUrl ?? ApiConfig.baseUrl).replaceAll(RegExp(r'/+$'), '');
 
   final http.Client _http;
   final String _baseUrl;
+
+  /// Only used when the API sends no readable message; the provider passes the
+  /// locale the UI is showing.
+  final AppL10n _l10n;
 
   Future<Map<String, dynamic>> requestMagicCode(String email) async {
     return _post('/v1/auth/magic-code/request', {'email': email});
@@ -417,9 +425,10 @@ class EnfoldApiClient {
       return body ?? <String, dynamic>{};
     }
     final message = switch (body) {
-      Map<String, dynamic> map => _detailMessage(map) ?? 'Request failed',
+      Map<String, dynamic> map =>
+        _detailMessage(map) ?? _l10n.apiRequestFailed,
       String text when text.isNotEmpty => text,
-      _ => 'Request failed (${response.statusCode})',
+      _ => _l10n.apiRequestFailedWithCode(response.statusCode),
     };
     throw ApiException(message, statusCode: response.statusCode);
   }

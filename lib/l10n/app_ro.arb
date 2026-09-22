@@ -596,11 +596,14 @@
   "summaryMinutes": "{minutes} min",
   "summaryHours": "{hours}h",
   "summaryHoursMinutes": "{hours}h {minutes}m",
-  "quickLogSupporting": "Vezi notările · ține apăsat ca să adaugi",
+  "quickLogSupporting": "Vezi · ține apăsat",
   "apiRequestFailed": "Cererea a eșuat",
   "apiRequestFailedWithCode": "Cererea a eșuat ({code})",
   "nudgeBannerTitle": "Aducere aminte blândă",
   "growthMeasurementLogged": "Măsurătoare notată",
   "attributionYou": "tu",
-  "attributionPartner": "Partener"
+  "attributionPartner": "Partener",
+  "syncStatusSynced": "sincronizat",
+  "syncStatusWillSync": "se va sincroniza",
+  "syncStatusOnDevice": "pe dispozitiv"
 }

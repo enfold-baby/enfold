@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -48,6 +49,9 @@ class EnfoldApp extends ConsumerWidget {
       themeMode: themeMode,
       routerConfig: router,
       builder: (context, child) {
+        // Month and weekday names come from intl, which reads a global. Keep it
+        // on the locale Flutter actually resolved, so dates follow the UI.
+        Intl.defaultLocale = Localizations.localeOf(context).toLanguageTag();
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
             alwaysUse24HourFormat: use24Hour,

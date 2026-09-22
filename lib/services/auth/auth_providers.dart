@@ -4,9 +4,14 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../api/enfold_api_client.dart';
 import 'auth_repository.dart';
 import 'auth_session.dart';
+import '../../features/settings/providers/locale_providers.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 final apiClientProvider = Provider<EnfoldApiClient>((ref) {
-  return EnfoldApiClient();
+  final override = ref.watch(localeOverrideProvider).valueOrNull;
+  return EnfoldApiClient(
+    l10n: lookupAppL10n(override ?? resolvedDeviceLocale()),
+  );
 });
 
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {

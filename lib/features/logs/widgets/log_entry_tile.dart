@@ -33,10 +33,10 @@ class LogEntryTile extends ConsumerWidget {
     final use24Hour = ref.watch(use24HourTimeProvider).valueOrNull ?? false;
     final time = entry.listTimeLabel(use24Hour: use24Hour);
     final sync = !entry.pendingSync
-        ? 'synced'
+        ? l10n.syncStatusSynced
         : isSignedIn
-            ? 'will sync'
-            : 'on device';
+            ? l10n.syncStatusWillSync
+            : l10n.syncStatusOnDevice;
     final detail = entry.detailSummary(l10n, useImperial: useImperial);
     final loggedBy = entry.loggedByLabel(
       l10n,

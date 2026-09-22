@@ -46,7 +46,7 @@ class CareLogEntry {
   ///
   /// Completed sleep uses start–end so a nap logged at wake and one
   /// saved as a range look the same. In-progress sleep shows the start.
-  String listTimeLabel({String locale = 'en_US', bool use24Hour = false}) {
+  String listTimeLabel({String? locale, bool use24Hour = false}) {
     final dateFmt = DateFormat('MMM d', locale);
     final timeFmt = ClockFormat.time(use24Hour: use24Hour, locale: locale);
     if (type == LogType.sleep) {
