@@ -25,13 +25,14 @@ class DeletedLogsSection extends ConsumerWidget {
       error: (_, _) => const SizedBox.shrink(),
       data: (entries) {
         if (entries.isEmpty) return const SizedBox.shrink();
+        final l10n = AppL10n.of(context);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 32),
             Text(
-              'Recently deleted',
+              l10n.deletedLogsTitle,
               style: GoogleFonts.nunito(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
@@ -41,7 +42,7 @@ class DeletedLogsSection extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Restore within 30 days. After that, logs are permanently removed.',
+              l10n.deletedLogsSubtitle,
               style: GoogleFonts.nunito(
                 fontSize: 14,
                 color: AppColors.mutedText(Theme.of(context).brightness),
@@ -60,7 +61,11 @@ class DeletedLogsSection extends ConsumerWidget {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
-                      SnackBar(content: Text('${entry.type.label} restored')),
+                      SnackBar(
+                        content: Text(
+                          l10n.deletedLogRestored(entry.type.label(l10n)),
+                        ),
+                      ),
                     );
                 },
                 onDeleteForever: () async {
@@ -76,8 +81,8 @@ class DeletedLogsSection extends ConsumerWidget {
                       SnackBar(
                         content: Text(
                           removed
-                              ? '${entry.type.label} permanently deleted'
-                              : 'Could not delete log',
+                              ? l10n.deletedLogPurged(entry.type.label(l10n))
+                              : l10n.deletedLogPurgeFailed,
                         ),
                       ),
                     );
@@ -91,17 +96,16 @@ class DeletedLogsSection extends ConsumerWidget {
 }
 
 Future<bool> _confirmPermanentDelete(BuildContext context) async {
+  final l10n = AppL10n.of(context);
   return await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Delete forever?'),
-          content: const Text(
-            'This log will be removed permanently. You cannot undo this.',
-          ),
+          title: Text(l10n.deletedLogPurgeTitle),
+          content: Text(l10n.deletedLogPurgeBody),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
+              child: Text(l10n.commonCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, true),
@@ -109,7 +113,7 @@ Future<bool> _confirmPermanentDelete(BuildContext context) async {
                 backgroundColor: AppColors.bloomDeep,
                 foregroundColor: AppColors.cream,
               ),
-              child: const Text('Delete forever'),
+              child: Text(l10n.deletedLogPurgeConfirm),
             ),
           ],
         ),
@@ -162,8 +166,7 @@ class _DeletedLogTile extends StatelessWidget {
           style: GoogleFonts.nunito(fontWeight: FontWeight.w800),
         ),
         subtitle: Text(
-          '$logged · '
-          '$daysLeft day${daysLeft == 1 ? '' : 's'} left to restore',
+          '$logged · ${AppL10n.of(context).deletedLogDaysLeft(daysLeft)}',
           style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness), fontSize: 13),
         ),
         trailing: Row(
@@ -171,7 +174,7 @@ class _DeletedLogTile extends StatelessWidget {
           children: [
             IconButton(
               key: Key('delete_forever_log_${entry.id}'),
-              tooltip: 'Delete forever',
+              tooltip: AppL10n.of(context).deletedLogPurgeConfirm,
               onPressed: onDeleteForever,
               icon: const Icon(Icons.delete_forever_outlined),
               color: AppColors.bloomDeep,
@@ -179,7 +182,7 @@ class _DeletedLogTile extends StatelessWidget {
             TextButton(
               key: Key('restore_log_${entry.id}'),
               onPressed: onRestore,
-              child: const Text('Restore'),
+              child: Text(AppL10n.of(context).deletedLogRestore),
             ),
           ],
         ),

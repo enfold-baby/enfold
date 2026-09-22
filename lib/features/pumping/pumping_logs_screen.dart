@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../logs/widgets/log_period_bar.dart';
 import '../logs/widgets/paginated_log_list.dart';
 import '../logs/widgets/type_filter_chips.dart';
@@ -18,9 +19,10 @@ class PumpingLogsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final logsAsync = ref.watch(pumpingLogsProvider);
     final side = ref.watch(pumpingSideFilterProvider);
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Pumping')),
+      appBar: AppBar(title: Text(l10n.pumpingLogsTitle)),
       floatingActionButton: FloatingActionButton(
         key: const Key('add_pumping_log'),
         onPressed: () => context.push(AppRoutes.logPumpingAdd),
@@ -36,7 +38,7 @@ class PumpingLogsScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
-              'All pumping sessions',
+              l10n.pumpingLogsAll,
               style: GoogleFonts.fraunces(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -46,11 +48,11 @@ class PumpingLogsScreen extends ConsumerWidget {
             LogPeriodBar(periodProvider: pumpingLogPeriodProvider),
             const SizedBox(height: 20),
             DetailFilterChips<String>(
-              label: 'Side',
-              options: const [
-                DetailFilterOption(value: 'left', label: 'Left'),
-                DetailFilterOption(value: 'right', label: 'Right'),
-                DetailFilterOption(value: 'both', label: 'Both'),
+              label: l10n.pumpingLogsSideFilter,
+              options: [
+                DetailFilterOption(value: 'left', label: l10n.feedSideLeft),
+                DetailFilterOption(value: 'right', label: l10n.feedSideRight),
+                DetailFilterOption(value: 'both', label: l10n.feedSideBoth),
               ],
               selected: side,
               onSelected: (value) =>
@@ -60,8 +62,7 @@ class PumpingLogsScreen extends ConsumerWidget {
             PaginatedLogList(
               logsAsync: logsAsync,
               emptyKey: const Key('pumping_logs_empty'),
-              emptyMessage:
-                  'No pumping logs in this period. Tap + to add one.',
+              emptyMessage: l10n.pumpingLogsEmpty,
             ),
           ],
         ),

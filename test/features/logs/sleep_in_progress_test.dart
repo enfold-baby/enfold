@@ -6,24 +6,27 @@ import 'package:enfold/services/database/database_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/test_database.dart';
+import 'package:enfold/l10n/generated/app_localizations.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
   test('formatSleepElapsed covers minutes and hours', () {
+    final l10n = lookupAppL10n(const Locale('en'));
     final start = DateTime(2026, 9, 6, 20, 0);
     expect(
-      formatSleepElapsed(start, start.add(const Duration(seconds: 20))),
+      formatSleepElapsed(l10n, start, start.add(const Duration(seconds: 20))),
       'just now',
     );
     expect(
-      formatSleepElapsed(start, start.add(const Duration(minutes: 20))),
+      formatSleepElapsed(l10n, start, start.add(const Duration(minutes: 20))),
       '20m',
     );
     expect(
-      formatSleepElapsed(start, start.add(const Duration(hours: 2))),
+      formatSleepElapsed(l10n, start, start.add(const Duration(hours: 2))),
       '2h',
     );
     expect(
-      formatSleepElapsed(start, start.add(const Duration(hours: 1, minutes: 5))),
+      formatSleepElapsed(l10n, start, start.add(const Duration(hours: 1, minutes: 5))),
       '1h 5m',
     );
   });

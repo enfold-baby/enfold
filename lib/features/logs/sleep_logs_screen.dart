@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../today/models/log_type.dart';
 import '../today/providers/today_log_provider.dart';
 import 'providers/logs_providers.dart';
@@ -21,9 +22,10 @@ class SleepLogsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final logsAsync = ref.watch(sleepLogsProvider);
     final openSleep = ref.watch(openSleepProvider).valueOrNull;
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sleep logs')),
+      appBar: AppBar(title: Text(l10n.sleepLogsTitle)),
       floatingActionButton: FloatingActionButton(
         key: const Key('add_sleep_log'),
         onPressed: () => context.push(AppRoutes.logSleepAdd),
@@ -39,7 +41,7 @@ class SleepLogsScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
-              'All sleep',
+              l10n.sleepLogsAll,
               style: GoogleFonts.fraunces(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -59,7 +61,7 @@ class SleepLogsScreen extends ConsumerWidget {
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
-                      const SnackBar(content: Text('Wake-up logged')),
+                      SnackBar(content: Text(l10n.commonWakeUpLogged)),
                     );
                 },
                 onAdjustStart: () => context.push(
@@ -69,10 +71,13 @@ class SleepLogsScreen extends ConsumerWidget {
             ],
             const SizedBox(height: 20),
             DetailFilterChips<bool>(
-              label: 'Status',
-              options: const [
-                DetailFilterOption(value: true, label: 'Sleeping now'),
-                DetailFilterOption(value: false, label: 'Completed'),
+              label: l10n.sleepLogsStatusFilter,
+              options: [
+                DetailFilterOption(value: true, label: l10n.sleepModeNow),
+                DetailFilterOption(
+                  value: false,
+                  label: l10n.sleepLogsCompleted,
+                ),
               ],
               selected: ref.watch(sleepStatusFilterProvider),
               onSelected: (value) =>
@@ -82,7 +87,7 @@ class SleepLogsScreen extends ConsumerWidget {
             PaginatedLogList(
               logsAsync: logsAsync,
               emptyKey: const Key('sleep_logs_empty'),
-              emptyMessage: 'No sleep logs in this period. Tap + to add one.',
+              emptyMessage: l10n.sleepLogsEmpty,
             ),
           ],
         ),

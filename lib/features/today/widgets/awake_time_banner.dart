@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/datetime/clock_format.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../logs/providers/logs_providers.dart';
 import '../../logs/widgets/active_sleep_banner.dart';
 import '../../settings/providers/awake_time_providers.dart';
@@ -56,7 +57,8 @@ class _AwakeTimeBannerState extends ConsumerState<AwakeTimeBanner> {
     final iconInk = isDark
         ? ink
         : Color.lerp(AppColors.medicationAmber, AppColors.bark, 0.45)!;
-    final elapsed = formatSleepElapsed(window.wokeAt, now);
+    final elapsed =
+        formatSleepElapsed(AppL10n.of(context), window.wokeAt, now);
     final title = elapsed == 'just now' ? 'Just woke up' : 'Awake for $elapsed';
     final since = ClockFormat.formatTime(window.wokeAt, use24Hour: use24Hour);
 

@@ -550,5 +550,126 @@
   "tummyDurationLabel": "Duration (minutes)",
   "tummyDurationHint": "e.g. 5",
   "tummySaveButton": "Save tummy time",
-  "medicationLogged": "Dose logged"
+  "medicationLogged": "Dose logged",
+  "feedLogsTitle": "Feed logs",
+  "feedLogsAll": "All feeds",
+  "feedLogsTypeFilter": "Type",
+  "feedLogsDeliveryFilter": "Breast delivery",
+  "feedLogsDeliveryPumpedShort": "Pumped",
+  "feedLogsEmpty": "No feed logs in this period. Tap + to add one.",
+  "diaperLogsTitle": "Diaper logs",
+  "diaperLogsAll": "All diapers",
+  "diaperLogsContentsFilter": "Contents",
+  "diaperLogsConsistencyFilter": "Consistency",
+  "diaperLogsWet": "Wet",
+  "diaperLogsDirty": "Poop",
+  "diaperLogsEmpty": "No diaper logs in this period. Tap + to add one.",
+  "sleepLogsTitle": "Sleep logs",
+  "sleepLogsAll": "All sleep",
+  "sleepLogsStatusFilter": "Status",
+  "sleepLogsCompleted": "Completed",
+  "sleepLogsEmpty": "No sleep logs in this period. Tap + to add one.",
+  "pumpingLogsTitle": "Pumping",
+  "pumpingLogsAll": "All pumping sessions",
+  "pumpingLogsSideFilter": "Side",
+  "pumpingLogsEmpty": "No pumping logs in this period. Tap + to add one.",
+  "tummyLogsTitle": "Tummy time",
+  "tummyLogsAll": "All tummy sessions",
+  "tummyLogsEmpty": "No tummy time logs in this period. Tap + to add one.",
+  "medicationLogsTitle": "Meds & vitamins",
+  "medicationLogsAll": "All doses",
+  "medicationLogsEmpty": "No medication or vitamin logs in this period. Tap + to add one.",
+  "deletedLogsTitle": "Recently deleted",
+  "deletedLogsSubtitle": "Restore within 30 days. After that, logs are permanently removed.",
+  "deletedLogRestored": "{type} restored",
+  "@deletedLogRestored": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "deletedLogPurged": "{type} permanently deleted",
+  "@deletedLogPurged": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "deletedLogPurgeFailed": "Could not delete log",
+  "deletedLogPurgeTitle": "Delete forever?",
+  "deletedLogPurgeBody": "This log will be removed permanently. You cannot undo this.",
+  "deletedLogPurgeConfirm": "Delete forever",
+  "deletedLogDaysLeft": "{count, plural, =1{1 day left to restore} other{{count} days left to restore}}",
+  "@deletedLogDaysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deletedLogRestore": "Restore",
+  "logActionsFallbackTitle": "Logged entry",
+  "logActionsEdit": "Edit",
+  "logActionsDelete": "Delete",
+  "logActionsSoftDeleted": "{type} moved to Recently deleted",
+  "@logActionsSoftDeleted": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "logActionsDeleteTitle": "Delete this log?",
+  "logActionsDeleteBody": "You can restore it within {days} days from Logs → Recently deleted. After that it is permanently removed.",
+  "@logActionsDeleteBody": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "activeSleepTitle": "Sleeping now",
+  "activeSleepSince": "Since {time} · {elapsed}",
+  "@activeSleepSince": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "elapsed": {
+        "type": "String"
+      }
+    }
+  },
+  "activeSleepWakeUp": "Wake up",
+  "elapsedJustNow": "just now",
+  "elapsedMinutes": "{minutes}m",
+  "@elapsedMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "elapsedHours": "{hours}h",
+  "@elapsedHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "elapsedHoursMinutes": "{hours}h {minutes}m",
+  "@elapsedHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "filterAll": "All"
 }

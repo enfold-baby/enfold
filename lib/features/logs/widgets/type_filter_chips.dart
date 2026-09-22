@@ -27,7 +27,7 @@ class HubTypeFilterChips extends StatelessWidget {
       children: [
         _FilterChip(
           key: const Key('filter_all_types'),
-          label: 'All',
+          label: AppL10n.of(context).filterAll,
           selected: isAll,
           onTap: onAllTap,
         ),

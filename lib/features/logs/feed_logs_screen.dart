@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'providers/logs_providers.dart';
 import 'widgets/log_period_bar.dart';
 import 'widgets/paginated_log_list.dart';
@@ -18,9 +19,10 @@ class FeedLogsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final logsAsync = ref.watch(feedLogsProvider);
     final feedMode = ref.watch(feedModeFilterProvider);
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Feed logs')),
+      appBar: AppBar(title: Text(l10n.feedLogsTitle)),
       floatingActionButton: FloatingActionButton(
         key: const Key('add_feed_log'),
         onPressed: () => context.push(AppRoutes.logFeedAdd),
@@ -36,7 +38,7 @@ class FeedLogsScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
-              'All feeds',
+              l10n.feedLogsAll,
               style: GoogleFonts.fraunces(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -46,10 +48,16 @@ class FeedLogsScreen extends ConsumerWidget {
             LogPeriodBar(periodProvider: feedLogPeriodProvider),
             const SizedBox(height: 20),
             DetailFilterChips<String>(
-              label: 'Type',
-              options: const [
-                DetailFilterOption(value: 'breast', label: 'Breast'),
-                DetailFilterOption(value: 'formula', label: 'Formula'),
+              label: l10n.feedLogsTypeFilter,
+              options: [
+                DetailFilterOption(
+                  value: 'breast',
+                  label: l10n.feedModeBreast,
+                ),
+                DetailFilterOption(
+                  value: 'formula',
+                  label: l10n.feedModeFormula,
+                ),
               ],
               selected: feedMode,
               onSelected: (value) {
@@ -62,10 +70,16 @@ class FeedLogsScreen extends ConsumerWidget {
             if (feedMode == 'breast') ...[
               const SizedBox(height: 16),
               DetailFilterChips<String>(
-                label: 'Breast delivery',
-                options: const [
-                  DetailFilterOption(value: 'direct', label: 'At breast'),
-                  DetailFilterOption(value: 'pumped', label: 'Pumped'),
+                label: l10n.feedLogsDeliveryFilter,
+                options: [
+                  DetailFilterOption(
+                    value: 'direct',
+                    label: l10n.feedDeliveryDirect,
+                  ),
+                  DetailFilterOption(
+                    value: 'pumped',
+                    label: l10n.feedLogsDeliveryPumpedShort,
+                  ),
                 ],
                 selected: ref.watch(feedDeliveryFilterProvider),
                 onSelected: (value) =>
@@ -76,7 +90,7 @@ class FeedLogsScreen extends ConsumerWidget {
             PaginatedLogList(
               logsAsync: logsAsync,
               emptyKey: const Key('feed_logs_empty'),
-              emptyMessage: 'No feed logs in this period. Tap + to add one.',
+              emptyMessage: l10n.feedLogsEmpty,
             ),
           ],
         ),

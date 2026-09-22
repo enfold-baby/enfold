@@ -18,85 +18,90 @@ Future<void> showLogEntryActions(
   await showModalBottomSheet<void>(
     context: context,
     showDragHandle: true,
-    builder: (context) => SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              entry.type.label(AppL10n.of(context)),
-              style: GoogleFonts.fraunces(
-                fontSize: 22,
-                fontWeight: FontWeight.w600,
+    builder: (context) {
+      final l10n = AppL10n.of(context);
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                entry.type.label(l10n),
+                style: GoogleFonts.fraunces(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              entry.detailSummary() ?? 'Logged entry',
-              style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
-            ),
-            const SizedBox(height: 20),
-            FilledButton.icon(
-              key: Key('edit_log_${entry.id}'),
-              onPressed: () {
-                Navigator.pop(context);
-                context.push(AppRoutes.logEdit(entry.type, entry.id));
-              },
-              icon: const Icon(Icons.edit_outlined),
-              label: const Text('Edit'),
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(48),
+              const SizedBox(height: 8),
+              Text(
+                entry.detailSummary() ?? l10n.logActionsFallbackTitle,
+                style: GoogleFonts.nunito(
+                  color: AppColors.mutedText(Theme.of(context).brightness),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            OutlinedButton.icon(
-              key: Key('delete_log_${entry.id}'),
-              onPressed: () async {
-                final confirmed = await _confirmDelete(context);
-                if (!confirmed) return;
-                final messenger = ScaffoldMessenger.of(context);
-                Navigator.pop(context);
-                await ref.read(careLogActionsProvider).softDeleteLog(entry.id);
-                messenger
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        '${entry.type.label} moved to Recently deleted',
+              const SizedBox(height: 20),
+              FilledButton.icon(
+                key: Key('edit_log_${entry.id}'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.push(AppRoutes.logEdit(entry.type, entry.id));
+                },
+                icon: const Icon(Icons.edit_outlined),
+                label: Text(l10n.logActionsEdit),
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(48),
+                ),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                key: Key('delete_log_${entry.id}'),
+                onPressed: () async {
+                  final confirmed = await _confirmDelete(context);
+                  if (!confirmed) return;
+                  final messenger = ScaffoldMessenger.of(context);
+                  Navigator.pop(context);
+                  await ref
+                      .read(careLogActionsProvider)
+                      .softDeleteLog(entry.id);
+                  messenger
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          l10n.logActionsSoftDeleted(entry.type.label(l10n)),
+                        ),
                       ),
-                    ),
-                  );
-              },
-              icon: const Icon(Icons.delete_outline),
-              label: const Text('Delete'),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.bloomDeep,
-                minimumSize: const Size.fromHeight(48),
+                    );
+                },
+                icon: const Icon(Icons.delete_outline),
+                label: Text(l10n.logActionsDelete),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.bloomDeep,
+                  minimumSize: const Size.fromHeight(48),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    ),
+      );
+    },
   );
 }
 
 Future<bool> _confirmDelete(BuildContext context) async {
+  final l10n = AppL10n.of(context);
   return await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Delete this log?'),
-          content: Text(
-            'You can restore it within ${LogRetention.recoveryDays} days '
-            'from Logs → Recently deleted. After that it is permanently removed.',
-          ),
+          title: Text(l10n.logActionsDeleteTitle),
+          content: Text(l10n.logActionsDeleteBody(LogRetention.recoveryDays)),
           actions: [
             TextButton(
               key: const Key('delete_log_cancel'),
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
+              child: Text(l10n.commonCancel),
             ),
             FilledButton(
               key: const Key('delete_log_confirm'),
@@ -105,7 +110,7 @@ Future<bool> _confirmDelete(BuildContext context) async {
                 backgroundColor: AppColors.bloomDeep,
                 foregroundColor: AppColors.cream,
               ),
-              child: const Text('Delete'),
+              child: Text(l10n.logActionsDelete),
             ),
           ],
         ),
@@ -114,8 +119,9 @@ Future<bool> _confirmDelete(BuildContext context) async {
 }
 
 int recoveryDaysRemaining(DateTime deletedAt) {
-  final expiresAt =
-      deletedAt.add(const Duration(days: LogRetention.recoveryDays));
+  final expiresAt = deletedAt.add(
+    const Duration(days: LogRetention.recoveryDays),
+  );
   final remaining = expiresAt.difference(DateTime.now()).inDays;
   return remaining < 0 ? 0 : remaining;
 }

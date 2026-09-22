@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'providers/logs_providers.dart';
 import 'widgets/log_period_bar.dart';
 import 'widgets/paginated_log_list.dart';
@@ -17,9 +18,10 @@ class DiaperLogsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final logsAsync = ref.watch(diaperLogsProvider);
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Diaper logs')),
+      appBar: AppBar(title: Text(l10n.diaperLogsTitle)),
       floatingActionButton: FloatingActionButton(
         key: const Key('add_diaper_log'),
         onPressed: () => context.push(AppRoutes.logDiaperAdd),
@@ -35,7 +37,7 @@ class DiaperLogsScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
-              'All diapers',
+              l10n.diaperLogsAll,
               style: GoogleFonts.fraunces(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -45,22 +47,37 @@ class DiaperLogsScreen extends ConsumerWidget {
             LogPeriodBar(periodProvider: diaperLogPeriodProvider),
             const SizedBox(height: 20),
             DetailFilterChips<String>(
-              label: 'Contents',
-              options: const [
-                DetailFilterOption(value: 'wet', label: 'Wet'),
-                DetailFilterOption(value: 'dirty', label: 'Poop'),
+              label: l10n.diaperLogsContentsFilter,
+              options: [
+                DetailFilterOption(value: 'wet', label: l10n.diaperLogsWet),
+                DetailFilterOption(
+                  value: 'dirty',
+                  label: l10n.diaperLogsDirty,
+                ),
               ],
               selected: _diaperContentsSelection(ref),
               onSelected: (value) => _setDiaperContentsFilter(ref, value),
             ),
             const SizedBox(height: 16),
             DetailFilterChips<String>(
-              label: 'Consistency',
-              options: const [
-                DetailFilterOption(value: 'normal', label: 'Normal'),
-                DetailFilterOption(value: 'soft', label: 'Soft'),
-                DetailFilterOption(value: 'hard', label: 'Hard'),
-                DetailFilterOption(value: 'loose', label: 'Loose'),
+              label: l10n.diaperLogsConsistencyFilter,
+              options: [
+                DetailFilterOption(
+                  value: 'normal',
+                  label: l10n.diaperStoolNormal,
+                ),
+                DetailFilterOption(
+                  value: 'soft',
+                  label: l10n.diaperStoolSoft,
+                ),
+                DetailFilterOption(
+                  value: 'hard',
+                  label: l10n.diaperStoolHard,
+                ),
+                DetailFilterOption(
+                  value: 'loose',
+                  label: l10n.diaperStoolLoose,
+                ),
               ],
               selected: ref.watch(diaperConsistencyFilterProvider),
               onSelected: (value) =>
@@ -71,7 +88,7 @@ class DiaperLogsScreen extends ConsumerWidget {
             PaginatedLogList(
               logsAsync: logsAsync,
               emptyKey: const Key('diaper_logs_empty'),
-              emptyMessage: 'No diaper logs in this period. Tap + to add one.',
+              emptyMessage: l10n.diaperLogsEmpty,
             ),
           ],
         ),

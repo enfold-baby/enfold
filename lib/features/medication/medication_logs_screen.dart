@@ -21,9 +21,10 @@ class MedicationLogsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final logsAsync = ref.watch(medicationLogsProvider);
     final category = ref.watch(medicationCategoryFilterProvider);
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Meds & vitamins')),
+      appBar: AppBar(title: Text(l10n.medicationLogsTitle)),
       floatingActionButton: FloatingActionButton(
         key: const Key('add_medication_log'),
         onPressed: () => context.push(AppRoutes.logMedicationAdd),
@@ -39,7 +40,7 @@ class MedicationLogsScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
-              'All doses',
+              l10n.medicationLogsAll,
               style: GoogleFonts.fraunces(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -50,15 +51,12 @@ class MedicationLogsScreen extends ConsumerWidget {
             LogPeriodBar(periodProvider: medicationLogPeriodProvider),
             const SizedBox(height: 20),
             DetailFilterChips<String>(
-              label: 'Category',
+              label: l10n.medicationCategoryLabel,
               options: [
                 for (final value in MedicationPresets.categoryValues)
                   DetailFilterOption(
                     value: value,
-                    label: MedicationPresets.categoryLabel(
-                      AppL10n.of(context),
-                      value,
-                    ),
+                    label: MedicationPresets.categoryLabel(l10n, value),
                   ),
               ],
               selected: category,
@@ -70,8 +68,7 @@ class MedicationLogsScreen extends ConsumerWidget {
             PaginatedLogList(
               logsAsync: logsAsync,
               emptyKey: const Key('medication_logs_empty'),
-              emptyMessage:
-                  'No medication or vitamin logs in this period. Tap + to add one.',
+              emptyMessage: l10n.medicationLogsEmpty,
             ),
           ],
         ),
