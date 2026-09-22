@@ -1,3 +1,5 @@
+import '../../l10n/generated/app_localizations.dart';
+
 class GrowthUnits {
   GrowthUnits._();
 
@@ -53,12 +55,12 @@ class GrowthUnits {
     return '$rounded cm';
   }
 
-  static String weightFieldLabel({required bool useImperial}) =>
-      useImperial ? 'Weight (lb, optional)' : 'Weight (kg, optional)';
+  static String weightFieldLabel(AppL10n l10n, {required bool useImperial}) =>
+      useImperial ? l10n.growthWeightFieldLb : l10n.growthWeightFieldKg;
 
-  static String lengthFieldLabel({required bool useImperial}) =>
-      useImperial ? 'Length (in, optional)' : 'Length (cm, optional)';
+  static String lengthFieldLabel(AppL10n l10n, {required bool useImperial}) =>
+      useImperial ? l10n.growthLengthFieldIn : l10n.growthLengthFieldCm;
 
-  static String headFieldLabel({required bool useImperial}) =>
-      useImperial ? 'Head (in, optional)' : 'Head (cm, optional)';
+  static String headFieldLabel(AppL10n l10n, {required bool useImperial}) =>
+      useImperial ? l10n.growthHeadFieldIn : l10n.growthHeadFieldCm;
 }

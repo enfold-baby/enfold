@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../core/units/growth_units.dart';
 import '../models/growth_measurement_entry.dart';
 
@@ -109,15 +110,17 @@ class _GrowthTrendChartState extends State<GrowthTrendChart> {
         GrowthChartMetric.head => AppColors.sleepBlue,
       };
 
-  String _metricLabel(GrowthChartMetric metric) => switch (metric) {
-        GrowthChartMetric.weight => 'Weight',
-        GrowthChartMetric.length => 'Length',
-        GrowthChartMetric.head => 'Head',
+  String _metricLabel(AppL10n l10n, GrowthChartMetric metric) =>
+      switch (metric) {
+        GrowthChartMetric.weight => l10n.growthWeight,
+        GrowthChartMetric.length => l10n.growthLength,
+        GrowthChartMetric.head => l10n.growthHead,
       };
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppL10n.of(context);
     final selectedMetrics = GrowthChartMetric.values
         .where(_metrics.contains)
         .toList();
@@ -139,7 +142,7 @@ class _GrowthTrendChartState extends State<GrowthTrendChart> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Trend',
+            l10n.growthTrendTitle,
             style: GoogleFonts.nunito(
               fontSize: 13,
               fontWeight: FontWeight.w800,
@@ -150,7 +153,7 @@ class _GrowthTrendChartState extends State<GrowthTrendChart> {
           ),
           const SizedBox(height: 4),
           Text(
-            'Your baby’s measurements over time, not a percentile chart.',
+            l10n.growthTrendSubtitle,
             style: GoogleFonts.nunito(
               fontSize: 13,
               height: 1.4,
@@ -162,18 +165,18 @@ class _GrowthTrendChartState extends State<GrowthTrendChart> {
             key: const Key('growth_chart_metric'),
             multiSelectionEnabled: true,
             emptySelectionAllowed: false,
-            segments: const [
+            segments: [
               ButtonSegment(
                 value: GrowthChartMetric.weight,
-                label: Text('Weight'),
+                label: Text(l10n.growthWeight),
               ),
               ButtonSegment(
                 value: GrowthChartMetric.length,
-                label: Text('Length'),
+                label: Text(l10n.growthLength),
               ),
               ButtonSegment(
                 value: GrowthChartMetric.head,
-                label: Text('Head'),
+                label: Text(l10n.growthHead),
               ),
             ],
             selected: _metrics,
@@ -188,7 +191,7 @@ class _GrowthTrendChartState extends State<GrowthTrendChart> {
           for (final metric in selectedMetrics) ...[
             if (selectedMetrics.length > 1) ...[
               Text(
-                _metricLabel(metric),
+                _metricLabel(l10n, metric),
                 style: GoogleFonts.nunito(
                   fontWeight: FontWeight.w800,
                   color: _metricColor(metric),
@@ -210,20 +213,23 @@ class _GrowthTrendChartState extends State<GrowthTrendChart> {
     required bool compact,
   }) {
     final points = _pointsFor(metric);
+    final l10n = AppL10n.of(context);
     final dateFormat = DateFormat.MMMd();
     final color = _metricColor(metric);
     final selected = _selected[metric];
 
     if (points.isEmpty) {
       return Text(
-        'No ${_metricLabel(metric).toLowerCase()} yet. Log it at a checkup to start this line.',
+        l10n.growthTrendEmpty(_metricLabel(l10n, metric).toLowerCase()),
         style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness), height: 1.45),
       );
     }
     if (points.length == 1) {
       return Text(
-        '${_formatValue(metric, points.first.value)} on ${dateFormat.format(points.first.at)}. '
-        'One more checkup and the curve appears.',
+        l10n.growthTrendOnePoint(
+          _formatValue(metric, points.first.value),
+          dateFormat.format(points.first.at),
+        ),
         style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness), height: 1.45),
       );
     }
@@ -243,8 +249,10 @@ class _GrowthTrendChartState extends State<GrowthTrendChart> {
         if (selected != null) ...[
           const SizedBox(height: 8),
           Text(
-            '${_formatValue(metric, points[selected].value)} · '
-            '${DateFormat.yMMMd().format(points[selected].at)}',
+            l10n.growthTrendSelected(
+              _formatValue(metric, points[selected].value),
+              DateFormat.yMMMd().format(points[selected].at),
+            ),
             style: GoogleFonts.nunito(
               fontWeight: FontWeight.w800,
               color: color,

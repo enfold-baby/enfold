@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/datetime/log_date_bounds.dart';
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../baby/providers/baby_profile_providers.dart';
 import '../settings/providers/units_providers.dart';
 import 'data/milestone_catalog.dart';
@@ -30,13 +31,14 @@ class GrowthScreen extends ConsumerWidget {
     final babyAsync = ref.watch(activeBabyProvider);
     final useImperial = ref.watch(useImperialUnitsProvider).valueOrNull ?? false;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppL10n.of(context);
 
     final ageLabel = babyAsync.valueOrNull?.birthDate != null
-        ? babyAgeLabel(babyAsync.valueOrNull!.birthDate)
+        ? babyAgeLabel(l10n, babyAsync.valueOrNull!.birthDate)
         : null;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Growth & milestones')),
+      appBar: AppBar(title: Text(l10n.growthTitle)),
       floatingActionButton: FloatingActionButton(
         key: const Key('add_growth_measurement'),
         onPressed: () {
@@ -55,7 +57,7 @@ class GrowthScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 88),
           children: [
             Text(
-              'Growing beautifully',
+              l10n.growthHeroTitle,
               style: GoogleFonts.fraunces(
                 fontSize: 26,
                 fontWeight: FontWeight.w600,
@@ -65,8 +67,8 @@ class GrowthScreen extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               ageLabel != null
-                  ? '$ageLabel · log checkups when you have them.'
-                  : 'Set birth date in Settings for age hints. Log measurements anytime.',
+                  ? l10n.growthHeroWithAge(ageLabel)
+                  : l10n.growthHeroNoBirthDate,
               style: GoogleFonts.nunito(
                 fontSize: 15,
                 height: 1.45,
@@ -75,7 +77,7 @@ class GrowthScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Measurements',
+              l10n.growthMeasurementsTitle,
               style: GoogleFonts.nunito(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
@@ -87,7 +89,7 @@ class GrowthScreen extends ConsumerWidget {
             measurementsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (_, __) => Text(
-                'Could not load measurements.',
+                l10n.growthMeasurementsLoadFailed,
                 style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
               ),
               data: (measurements) {
@@ -106,7 +108,7 @@ class GrowthScreen extends ConsumerWidget {
                     if (measurements.length > 1) ...[
                       const SizedBox(height: 20),
                       Text(
-                        'History',
+                        l10n.growthHistoryTitle,
                         style: GoogleFonts.nunito(
                           fontSize: 13,
                           fontWeight: FontWeight.w800,
@@ -145,7 +147,7 @@ class GrowthScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Milestones',
+                      l10n.growthMilestonesTitle,
                       style: GoogleFonts.nunito(
                         fontSize: 13,
                         fontWeight: FontWeight.w800,
@@ -155,8 +157,10 @@ class GrowthScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '$achieved of ${MilestoneCatalog.totalCount} celebrated · '
-                      'every baby has their own pace.',
+                      l10n.growthMilestonesCount(
+                        achieved,
+                        MilestoneCatalog.totalCount,
+                      ),
                       style: GoogleFonts.nunito(
                         fontSize: 14,
                         height: 1.45,
@@ -171,7 +175,7 @@ class GrowthScreen extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.only(top: 8, bottom: 4),
                             child: Text(
-                              group,
+                              groups[group]!.first.definition.groupLabel(l10n),
                               style: GoogleFonts.nunito(
                                 fontWeight: FontWeight.w800,
                                 color: isDark ? AppColors.cream : AppColors.bark,
@@ -205,19 +209,20 @@ class GrowthScreen extends ConsumerWidget {
     WidgetRef ref,
     String id,
   ) async {
+    final l10n = AppL10n.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete measurement?'),
-        content: const Text('This cannot be undone.'),
+        title: Text(l10n.growthDeleteMeasurementTitle),
+        content: Text(l10n.growthDeleteMeasurementBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete'),
+            child: Text(l10n.commonDelete),
           ),
         ],
       ),
@@ -234,6 +239,7 @@ Future<void> handleMilestoneToggle(
   WidgetRef ref,
   MilestoneStatus status,
 ) async {
+  final l10n = AppL10n.of(context);
   final actions = ref.read(growthActionsProvider);
   if (status.isAchieved) {
     final choice = await showDialog<_MilestoneEditChoice>(
@@ -241,26 +247,24 @@ Future<void> handleMilestoneToggle(
       builder: (dialogContext) {
         return AlertDialog(
           key: const Key('milestone_edit_dialog'),
-          title: Text(status.definition.title),
-          content: const Text(
-            'Change the date they reached this, or mark it as not yet.',
-          ),
+          title: Text(status.definition.title(l10n)),
+          content: Text(l10n.growthMilestoneEditBody),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
+              child: Text(l10n.commonCancel),
             ),
             TextButton(
               key: const Key('milestone_clear'),
               onPressed: () =>
                   Navigator.of(dialogContext).pop(_MilestoneEditChoice.clear),
-              child: const Text('Not yet'),
+              child: Text(l10n.milestoneNotYet),
             ),
             FilledButton(
               key: const Key('milestone_change_date'),
               onPressed: () => Navigator.of(dialogContext)
                   .pop(_MilestoneEditChoice.changeDate),
-              child: const Text('Change date'),
+              child: Text(l10n.milestoneChangeDate),
             ),
           ],
         );
@@ -297,6 +301,6 @@ Future<DateTime?> pickMilestoneDate(
     initialDate: initialDate,
     firstDate: LogDateBounds.firstDate(today),
     lastDate: today,
-    helpText: 'When did they reach this?',
+    helpText: AppL10n.of(context).milestoneDatePickerHelp,
   );
 }

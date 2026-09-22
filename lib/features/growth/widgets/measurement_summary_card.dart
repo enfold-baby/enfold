@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../../../core/units/growth_units.dart';
 import '../models/growth_measurement_entry.dart';
 
@@ -19,6 +20,7 @@ class MeasurementSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppL10n.of(context);
 
     if (latest == null) {
       return Container(
@@ -26,7 +28,7 @@ class MeasurementSummaryCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: _boxDecoration(isDark),
         child: Text(
-          'No measurements yet. Tap + to log weight, length, or head size.',
+          l10n.growthSummaryEmpty,
           style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness), height: 1.45),
         ),
       );
@@ -42,7 +44,7 @@ class MeasurementSummaryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Latest · ${dateFormat.format(latest!.measuredAt)}',
+            l10n.growthSummaryLatest(dateFormat.format(latest!.measuredAt)),
             style: GoogleFonts.nunito(
               fontSize: 13,
               fontWeight: FontWeight.w800,
@@ -56,7 +58,7 @@ class MeasurementSummaryCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _Metric(
-                  label: 'Weight',
+                  label: l10n.growthWeight,
                   value: GrowthUnits.formatWeightKg(
                     latest!.weightKg,
                     useImperial: useImperial,
@@ -65,7 +67,7 @@ class MeasurementSummaryCard extends StatelessWidget {
               ),
               Expanded(
                 child: _Metric(
-                  label: 'Length',
+                  label: l10n.growthLength,
                   value: GrowthUnits.formatLengthCm(
                     latest!.lengthCm,
                     useImperial: useImperial,
@@ -74,7 +76,7 @@ class MeasurementSummaryCard extends StatelessWidget {
               ),
               Expanded(
                 child: _Metric(
-                  label: 'Head',
+                  label: l10n.growthHead,
                   value: GrowthUnits.formatLengthCm(
                     latest!.headCm,
                     useImperial: useImperial,

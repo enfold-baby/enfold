@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../core/units/growth_units.dart';
 import '../logs/widgets/time_field.dart';
 import '../settings/providers/units_providers.dart';
@@ -84,9 +85,10 @@ class _AddGrowthMeasurementScreenState
   @override
   Widget build(BuildContext context) {
     final useImperial = ref.watch(useImperialUnitsProvider).valueOrNull ?? false;
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Add measurement')),
+      appBar: AppBar(title: Text(l10n.growthAddTitle)),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
@@ -98,6 +100,7 @@ class _AddGrowthMeasurementScreenState
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 labelText: GrowthUnits.weightFieldLabel(
+                  l10n,
                   useImperial: useImperial,
                 ),
               ),
@@ -110,6 +113,7 @@ class _AddGrowthMeasurementScreenState
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 labelText: GrowthUnits.lengthFieldLabel(
+                  l10n,
                   useImperial: useImperial,
                 ),
               ),
@@ -121,19 +125,24 @@ class _AddGrowthMeasurementScreenState
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
-                labelText: GrowthUnits.headFieldLabel(useImperial: useImperial),
+                labelText: GrowthUnits.headFieldLabel(
+                  l10n,
+                  useImperial: useImperial,
+                ),
               ),
             ),
             const SizedBox(height: 16),
             TimeField(
-              label: 'Date & time',
+              label: l10n.growthDateTimeLabel,
               value: _measuredAt,
               onChanged: (value) => setState(() => _measuredAt = value),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _noteController,
-              decoration: const InputDecoration(labelText: 'Note (optional)'),
+              decoration: InputDecoration(
+                labelText: l10n.commonNoteOptional,
+              ),
               textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: 24),
@@ -145,7 +154,9 @@ class _AddGrowthMeasurementScreenState
                 foregroundColor: AppColors.cream,
                 minimumSize: const Size.fromHeight(52),
               ),
-              child: Text(_busy ? 'Saving…' : 'Save measurement'),
+              child: Text(
+                _busy ? l10n.commonSaving : l10n.growthSaveButton,
+              ),
             ),
           ],
         ),

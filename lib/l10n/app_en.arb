@@ -671,5 +671,179 @@
       }
     }
   },
-  "filterAll": "All"
+  "filterAll": "All",
+  "milestoneSocialSmile": "First social smile",
+  "milestoneAgeSocialSmile": "Around 6–8 weeks",
+  "milestoneLiftsHeadTummy": "Lifts head on tummy",
+  "milestoneAgeLiftsHeadTummy": "Around 1 month",
+  "milestoneFollowsObjects": "Follows objects with eyes",
+  "milestoneAgeFollowsObjects": "Around 2 months",
+  "milestoneCoos": "Coos and makes sounds",
+  "milestoneAgeCoos": "Around 2 months",
+  "milestoneHoldsHeadSteady": "Holds head steady",
+  "milestoneAgeHoldsHeadSteady": "Around 3 months",
+  "milestoneLaughs": "Laughs out loud",
+  "milestoneAgeLaughs": "Around 3–4 months",
+  "milestonePushesUpTummy": "Pushes up on arms during tummy time",
+  "milestoneAgePushesUpTummy": "Around 4 months",
+  "milestoneRollsOver": "Rolls over (one way)",
+  "milestoneAgeRollsOver": "Around 4–6 months",
+  "milestoneSitsWithSupport": "Sits with support",
+  "milestoneAgeSitsWithSupport": "Around 5–6 months",
+  "milestoneBabbles": "Babbles consonant sounds",
+  "milestoneAgeBabbles": "Around 6 months",
+  "milestoneSitsWithoutSupport": "Sits without support",
+  "milestoneAgeSitsWithoutSupport": "Around 6–8 months",
+  "milestoneCrawlsOrScoots": "Crawls or scoots",
+  "milestoneAgeCrawlsOrScoots": "Around 7–9 months",
+  "milestonePincerGrasp": "Picks up small objects (pincer grasp)",
+  "milestoneAgePincerGrasp": "Around 9 months",
+  "milestoneGroupEarlyWeeks": "Early weeks",
+  "milestoneGroupOneTwoMonths": "1–2 months",
+  "milestoneGroupTwoFourMonths": "2–4 months",
+  "milestoneGroupFourSixMonths": "4–6 months",
+  "milestoneGroupSixNineMonths": "6–9 months",
+  "growthTitle": "Growth & milestones",
+  "growthHeroTitle": "Growing beautifully",
+  "growthHeroWithAge": "{age} · log checkups when you have them.",
+  "@growthHeroWithAge": {
+    "placeholders": {
+      "age": {
+        "type": "String"
+      }
+    }
+  },
+  "growthHeroNoBirthDate": "Set birth date in Settings for age hints. Log measurements anytime.",
+  "growthMeasurementsTitle": "Measurements",
+  "growthMeasurementsLoadFailed": "Could not load measurements.",
+  "growthHistoryTitle": "History",
+  "growthMilestonesTitle": "Milestones",
+  "growthMilestonesCount": "{achieved} of {total} celebrated · every baby has their own pace.",
+  "@growthMilestonesCount": {
+    "placeholders": {
+      "achieved": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "growthDeleteMeasurementTitle": "Delete measurement?",
+  "growthDeleteMeasurementBody": "This cannot be undone.",
+  "growthMilestoneEditBody": "Change the date they reached this, or mark it as not yet.",
+  "milestoneCelebrated": "Celebrated {date} · {ageHint}",
+  "@milestoneCelebrated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "ageHint": {
+        "type": "String"
+      }
+    }
+  },
+  "babyAgeBornToday": "Born today",
+  "babyAgeDays": "{count, plural, =1{1 day old} other{{count} days old}}",
+  "@babyAgeDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "babyAgeWeeks": "{count, plural, =1{1 week old} other{{count} weeks old}}",
+  "@babyAgeWeeks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "babyAgeMonths": "{count, plural, =1{1 month old} other{{count} months old}}",
+  "@babyAgeMonths": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "babyAgeYears": "{count, plural, =1{1 year old} other{{count} years old}}",
+  "@babyAgeYears": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "babyAgeYearsMonths": "{years} y {months} mo",
+  "@babyAgeYearsMonths": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      },
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "growthAddTitle": "Add measurement",
+  "growthAddAtLeastOne": "Add at least one measurement.",
+  "growthSaved": "Measurement saved",
+  "growthDateTimeLabel": "Date & time",
+  "growthSaveButton": "Save measurement",
+  "growthWeight": "Weight",
+  "growthLength": "Length",
+  "growthHead": "Head",
+  "growthWeightFieldKg": "Weight (kg, optional)",
+  "growthWeightFieldLb": "Weight (lb, optional)",
+  "growthLengthFieldCm": "Length (cm, optional)",
+  "growthLengthFieldIn": "Length (in, optional)",
+  "growthHeadFieldCm": "Head (cm, optional)",
+  "growthHeadFieldIn": "Head (in, optional)",
+  "growthTrendTitle": "Trend",
+  "growthTrendSubtitle": "Your baby’s measurements over time, not a percentile chart.",
+  "growthTrendEmpty": "No {metric} yet. Log it at a checkup to start this line.",
+  "@growthTrendEmpty": {
+    "placeholders": {
+      "metric": {
+        "type": "String"
+      }
+    }
+  },
+  "growthTrendOnePoint": "{value} on {date}. One more checkup and the curve appears.",
+  "@growthTrendOnePoint": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "growthTrendSelected": "{value} · {date}",
+  "@growthTrendSelected": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "growthSummaryEmpty": "No measurements yet. Tap + to log weight, length, or head size.",
+  "growthSummaryLatest": "Latest · {date}",
+  "@growthSummaryLatest": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "milestoneNotYet": "Not yet",
+  "milestoneChangeDate": "Change date",
+  "milestoneDatePickerHelp": "When did they reach this?",
+  "commonDelete": "Delete"
 }
