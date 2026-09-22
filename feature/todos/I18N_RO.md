@@ -34,14 +34,40 @@
   Their labels are translated; the values never move.
 - HTTP headers, debug log lines, the brand name.
 
+## Screenshot pass, 2026-09-22
+
+Run on two Android 16 (API 36) emulators, `enfold_phone_api36` (medium phone, 1080x2400)
+and `enfold_tablet_api36` (medium tablet, 2560x1600), with the app locale forced by
+`adb shell cmd locale set-app-locales baby.enfold.app --locales ro`. 24 screenshots in
+`~/Desktop/enfold-ro-screenshots/`.
+
+Verified working: device-language default, the Settings override switching language live
+both ways, diacritics, ICU plurals ("1 masă" vs "scutece"), the bottom tabs, the Settings
+segmented buttons, the log forms, Growth and milestones, the Learn chrome with English
+card content, phone and tablet, light and dark. Edge-to-edge also confirmed: content draws
+behind both system bars and the bar icons flip with the theme.
+
+Three bugs found and fixed (commit "three fixes the emulator screenshots caught"):
+
+1. **Dates were English.** `ClockFormat` defaulted its `locale` to `en_US`, so a Romanian
+   UI still read "Tue, Sep 22 · 3:18 PM". The default is null now, `DateFormat` reads
+   `Intl.defaultLocale`, and the app sets that from the resolved locale.
+2. **Quick action tiles truncated.** "Vezi notările · ține apăs…" in a one-line label on a
+   half-width tile. Shortened to "Vezi · ține apăsat".
+3. **The log tile sync state was never translated** ("on device").
+
+**Lesson for the next language:** a one-line `Text` with `maxLines: 1` truncates with an
+ellipsis rather than raising a RenderFlex overflow, so the 320px overflow test cannot see
+it. One-line labels on narrow tiles need an eye on a real screen.
+
 ## Still to do
 
 - [ ] **Native check by Raul and Oana.** Read the Romanian on a phone, fix what sounds
       stiff. The draft is one pass by Claude, not a native edit.
-- [ ] Screenshot the Romanian UI on a phone and a tablet, light and dark. Romanian is
-      longer than English, so check the bottom tabs, the segmented buttons in Settings
-      and the log form buttons for overflow. No emulator was available in the session
-      that wrote this.
+- [ ] **Decide the clock default for Romanian.** Romania uses the 24-hour clock almost
+      everywhere, but the app defaults to 12-hour, so the screenshots read "3:20 p.m.".
+      Settings already offers both; the question is whether the default should follow the
+      locale. Raul's call, since it would move for existing users too.
 - [ ] Milestone names: worth Oana's eye alongside the learn cards.
 - [ ] Learn cards in Romanian, once a clinician can review them.
 - [ ] Website `enfold.baby/ro/` + `hreflang` (marketing + legal, not mobile onboarding).

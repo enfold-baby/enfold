@@ -43,13 +43,20 @@
   Peerlist, HN, Indie Hackers, LinkedIn parked with copy in `feature/todos/LAUNCH_COPY.md`.
 - **FormKiosk iOS 1.0** (separate app, same Apple account) resubmitted 2026-09-22.
 
+- **Screenshot pass on two emulators.** Created `enfold_phone_api36` and
+  `enfold_tablet_api36` (Android 16, API 36, the level that enforces edge-to-edge), forced
+  the app locale to Romanian with `adb shell cmd locale set-app-locales`, and walked the app
+  on both, light and dark. 24 screenshots in `~/Desktop/enfold-ro-screenshots/`. Edge-to-edge
+  confirmed on screen; the language override switches live both ways. **Three bugs found and
+  fixed:** dates stayed English (`ClockFormat` hardcoded `en_US`), the quick action tiles
+  truncated in Romanian, and the log tile sync state ("on device") was never translated.
+
 ## Next up
 
 1. **Native check on the Romanian.** Raul and Oana read it on a phone and fix what sounds
    stiff; it is one pass by Claude, not a native edit. Details in `feature/todos/I18N_RO.md`.
-2. **Screenshot the Romanian UI** on a phone and a tablet, light and dark. Romanian runs
-   longer than English, so check the bottom tabs, the Settings segmented buttons and the log
-   form buttons for overflow. No emulator was available this session.
+2. **Decide the clock default for Romanian:** Romania uses 24-hour, the app defaults to
+   12-hour, so Romanian screenshots read "3:20 p.m.". Settings already offers both.
 3. **Google Play:** wait for the ticket reply or approval, then upload 1.0.2+28 and put the
    Play badge on the site.
 4. Oana's learn card sign-offs into the JSON as they arrive; the 13 milestone names are
@@ -62,7 +69,6 @@
 - Google Play review (1.0.0+22), support ticket filed 2026-09-22
 - FormKiosk iOS review (resubmitted 2026-09-22)
 - Oana's card review
-- A device or emulator for the Romanian screenshots
 - Raul: rotate the VPS password (pasted in a chat on 2026-09-17; key auth already works)
 
 ## Quick resume
