@@ -845,5 +845,121 @@
   "milestoneNotYet": "Not yet",
   "milestoneChangeDate": "Change date",
   "milestoneDatePickerHelp": "When did they reach this?",
-  "commonDelete": "Delete"
+  "commonDelete": "Delete",
+  "onboardingSelectDueDate": "Select due date",
+  "onboardingTagline": "Grow with confidence.",
+  "onboardingWelcomeBody": "Calm baby care from bump to toddler. Quick when you need it, reassuring when you do not know what comes next.",
+  "onboardingGetStarted": "Get started",
+  "onboardingSkip": "Skip for now",
+  "onboardingHeroCaption": "CALM CARE · DAY & NIGHT",
+  "onboardingJourneyTitle": "Where are you\nin the journey?",
+  "onboardingJourneySubtitle": "Choose what feels closest today. You can change this anytime.",
+  "onboardingJourneyPregnant": "Still expecting",
+  "onboardingJourneyPregnantSubtitle": "Due date, kicks, appointments, and gentle guidance",
+  "onboardingJourneyBaby": "Baby is here",
+  "onboardingJourneyBabySubtitle": "Feeds, diapers, sleep, growth, and shared care",
+  "onboardingContinue": "Continue",
+  "onboardingDetailsTitleDue": "When is baby due?",
+  "onboardingDetailsTitleBaby": "A little about baby",
+  "onboardingDetailsSubtitle": "Everything here is optional. Add only what feels useful.",
+  "onboardingPickDueDate": "Pick due date",
+  "onboardingDueOn": "Due {date}",
+  "@onboardingDueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingBabyNameLabel": "Baby name",
+  "onboardingBirthDateOptional": "Birth date (optional)",
+  "onboardingOfflineNote": "Your care log starts offline. Sign in later to share with a partner.",
+  "onboardingFinish": "Start caring",
+  "onboardingBack": "Back",
+  "pregnancyTitle": "Pregnancy",
+  "pregnancyLoadFailed": "Could not load pregnancy profile.",
+  "pregnancyEyebrow": "Bump to baby",
+  "pregnancyHeroTitle": "Track the journey",
+  "pregnancyKickLogged": "Kick {count} logged today",
+  "@pregnancyKickLogged": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pregnancyAppointments": "Appointments",
+  "pregnancyAddNote": "Add note",
+  "pregnancyAppointmentsEmpty": "Save questions for your next prenatal visit.",
+  "pregnancyAppointmentDialogTitle": "Appointment note",
+  "pregnancyAppointmentTitleLabel": "Title",
+  "pregnancyAppointmentNotesLabel": "Notes",
+  "pregnancyAppointmentPickDate": "Pick date (optional)",
+  "commonSave": "Save",
+  "pregnancyDueDate": "Due date",
+  "pregnancyNoDueDate": "Set your due date to see your current week.",
+  "pregnancyWeek": "Week {week}",
+  "@pregnancyWeek": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      }
+    }
+  },
+  "pregnancyWeekWithDays": "Week {week} · {days} days to go",
+  "@pregnancyWeekWithDays": {
+    "placeholders": {
+      "week": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "pregnancySetDueDate": "Set due date",
+  "pregnancyChangeDueDate": "Change date",
+  "commonClear": "Clear",
+  "pregnancyKickCounter": "Kick counter",
+  "pregnancyKickCounterSubtitle": "Tap when you feel movement. Count resets each day.",
+  "pregnancyLogKick": "Log kick",
+  "commonReset": "Reset",
+  "learnTitle": "Learn",
+  "learnLoadFailed": "Could not load learn cards.",
+  "learnHeroTitle": "Is this normal?",
+  "learnHeroSubtitle": "Plain-language guidance for real parent days. Reassurance before panic.",
+  "learnSearchHint": "Search topics…",
+  "learnNoResults": "No cards match your search.",
+  "learnTriageBadge": "Triage",
+  "learnCardNotFound": "Card not found.",
+  "learnQuickTriage": "Quick triage",
+  "learnWatchFor": "Watch for",
+  "learnCallDoctorIf": "Call doctor if",
+  "learnSourcesTitle": "Sources",
+  "learnSourcesSubtitle": "Where this guidance comes from. Tap to open.",
+  "learnDisclaimerUnreviewed": "General educational information, not medical advice",
+  "learnReviewedBy": "Reviewed by {name}, {credentials} · {specialty} · {reviewedAt}",
+  "@learnReviewedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "credentials": {
+        "type": "String"
+      },
+      "specialty": {
+        "type": "String"
+      },
+      "reviewedAt": {
+        "type": "String"
+      }
+    }
+  },
+  "triageNotAvailable": "Triage not available.",
+  "triageNoneForTopic": "No triage for this topic.",
+  "triageStartOver": "Start over",
+  "commonYes": "Yes",
+  "commonNo": "No",
+  "learnCardsEnglishNote": "Learn cards are in English for now.",
+  "learnWhatsNormal": "What's normal"
 }

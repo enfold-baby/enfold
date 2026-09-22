@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../models/learn_card.dart';
 
 /// "Sources" block at the end of a learn card: one tappable row per citation,
@@ -31,7 +32,7 @@ class LearnSources extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              'Sources',
+              AppL10n.of(context).learnSourcesTitle,
               style: GoogleFonts.nunito(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
@@ -43,7 +44,7 @@ class LearnSources extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'Where this guidance comes from. Tap to open.',
+          AppL10n.of(context).learnSourcesSubtitle,
           style: GoogleFonts.nunito(
             fontSize: 13,
             color: AppColors.mutedText(brightness),

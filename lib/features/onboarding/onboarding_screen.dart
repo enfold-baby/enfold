@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../widgets/bloom_brand_mark.dart';
 import '../../widgets/bloom_illustrations.dart';
 import '../../widgets/bloom_surface.dart';
@@ -69,7 +70,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       initialDate: initial,
       firstDate: today,
       lastDate: today.add(const Duration(days: 320)),
-      helpText: 'Select due date',
+      helpText: AppL10n.of(context).onboardingSelectDueDate,
     );
     if (picked != null) setState(() => _dueDate = picked);
   }
@@ -80,7 +81,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       initialDate: DateTime.now(),
       firstDate: DateTime.now().subtract(const Duration(days: 365 * 3)),
       lastDate: DateTime.now(),
-      helpText: 'Birth date',
+      helpText: AppL10n.of(context).settingsBabyBirthDateLabel,
     );
     if (picked != null) setState(() => _birthDate = picked);
   }
@@ -210,19 +211,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget _welcomeCopy() {
     final theme = Theme.of(context);
     final brightness = theme.brightness;
+    final l10n = AppL10n.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Enfold', style: theme.textTheme.displayLarge),
         const SizedBox(height: 8),
         Text(
-          'Grow with confidence.',
+          l10n.onboardingTagline,
           style: theme.textTheme.titleMedium?.copyWith(color: AppColors.bloom),
         ),
         const SizedBox(height: 8),
         Text(
-          'Calm baby care from bump to toddler. Quick when you need it, '
-          'reassuring when you do not know what comes next.',
+          l10n.onboardingWelcomeBody,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: AppColors.mutedText(brightness),
           ),
@@ -241,13 +242,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               ? null
               : () => setState(() => _step = _OnboardingStep.journey),
           style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(56)),
-          child: const Text('Get started'),
+          child: Text(AppL10n.of(context).onboardingGetStarted),
         ),
         const SizedBox(height: 8),
         TextButton(
           key: const Key('onboarding_skip'),
           onPressed: _busy ? null : _finish,
-          child: const Text('Skip for now'),
+          child: Text(AppL10n.of(context).onboardingSkip),
         ),
       ],
     );
@@ -313,7 +314,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
-                  'CALM CARE · DAY & NIGHT',
+                  AppL10n.of(context).onboardingHeroCaption,
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: AppColors.mutedText(brightness),
                     fontWeight: FontWeight.w900,
@@ -347,12 +348,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       children: [
         const SizedBox(height: 12),
         Text(
-          'Where are you\nin the journey?',
+          AppL10n.of(context).onboardingJourneyTitle,
           style: theme.textTheme.headlineLarge,
         ),
         const SizedBox(height: 10),
         Text(
-          'Choose what feels closest today. You can change this anytime.',
+          AppL10n.of(context).onboardingJourneySubtitle,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: AppColors.mutedText(brightness),
           ),
@@ -360,8 +361,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         const SizedBox(height: 28),
         _journeyCard(
           key: const Key('onboarding_journey_pregnant'),
-          title: 'Still expecting',
-          subtitle: 'Due date, kicks, appointments, and gentle guidance',
+          title: AppL10n.of(context).onboardingJourneyPregnant,
+          subtitle: AppL10n.of(context).onboardingJourneyPregnantSubtitle,
           illustration: BloomIllustrations.pregnancyJourney,
           illustrationAlignment: Alignment.centerRight,
           accent: AppColors.bloom,
@@ -371,8 +372,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         const SizedBox(height: 14),
         _journeyCard(
           key: const Key('onboarding_journey_baby'),
-          title: 'Baby is here',
-          subtitle: 'Feeds, diapers, sleep, growth, and shared care',
+          title: AppL10n.of(context).onboardingJourneyBaby,
+          subtitle: AppL10n.of(context).onboardingJourneyBabySubtitle,
           illustration: BloomIllustrations.familyCare,
           illustrationAlignment: Alignment.center,
           accent: AppColors.sage,
@@ -387,7 +388,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               ? null
               : () => setState(() => _step = _OnboardingStep.details),
           style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(56)),
-          child: const Text('Continue'),
+          child: Text(AppL10n.of(context).onboardingContinue),
         ),
       ],
     );
@@ -396,6 +397,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget _detailsStep() {
     final theme = Theme.of(context);
     final brightness = theme.brightness;
+    final l10n = AppL10n.of(context);
     final expecting = _journey == _JourneyChoice.pregnant;
 
     return Column(
@@ -425,12 +427,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         ),
         const SizedBox(height: 22),
         Text(
-          expecting ? 'When is baby due?' : 'A little about baby',
+          expecting
+              ? l10n.onboardingDetailsTitleDue
+              : l10n.onboardingDetailsTitleBaby,
           style: theme.textTheme.headlineLarge,
         ),
         const SizedBox(height: 10),
         Text(
-          'Everything here is optional. Add only what feels useful.',
+          l10n.onboardingDetailsSubtitle,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: AppColors.mutedText(brightness),
           ),
@@ -445,8 +449,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   icon: const Icon(Icons.calendar_month_outlined),
                   label: Text(
                     _dueDate == null
-                        ? 'Pick due date'
-                        : 'Due ${DateFormat.yMMMMd().format(_dueDate!)}',
+                        ? l10n.onboardingPickDueDate
+                        : l10n.onboardingDueOn(
+                            DateFormat.yMMMMd().format(_dueDate!),
+                          ),
                   ),
                 )
               : Column(
@@ -455,10 +461,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       key: const Key('onboarding_baby_name'),
                       controller: _babyNameController,
                       textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(
-                        labelText: 'Baby name',
-                        hintText: 'Baby',
-                        prefixIcon: Icon(Icons.face_outlined),
+                      decoration: InputDecoration(
+                        labelText: l10n.onboardingBabyNameLabel,
+                        hintText: l10n.commonBabyFallbackName,
+                        prefixIcon: const Icon(Icons.face_outlined),
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -468,8 +474,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       icon: const Icon(Icons.cake_outlined),
                       label: Text(
                         _birthDate == null
-                            ? 'Birth date (optional)'
-                            : 'Born ${DateFormat.yMMMMd().format(_birthDate!)}',
+                            ? l10n.onboardingBirthDateOptional
+                            : l10n.settingsBabyBorn(
+                                DateFormat.yMMMMd().format(_birthDate!),
+                              ),
                       ),
                     ),
                   ],
@@ -487,7 +495,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Your care log starts offline. Sign in later to share with a partner.',
+                l10n.onboardingOfflineNote,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: AppColors.mutedText(brightness),
                 ),
@@ -501,7 +509,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           key: const Key('onboarding_finish'),
           onPressed: _busy ? null : _finish,
           style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(56)),
-          child: Text(_busy ? 'Saving…' : 'Start caring'),
+          child: Text(
+            _busy ? l10n.commonSaving : l10n.onboardingFinish,
+          ),
         ),
       ],
     );
@@ -619,7 +629,7 @@ class _OnboardingHeader extends StatelessWidget {
         IconButton.filledTonal(
           key: const Key('onboarding_back'),
           onPressed: busy ? null : onBack,
-          tooltip: 'Back',
+          tooltip: AppL10n.of(context).onboardingBack,
           icon: const Icon(Icons.arrow_back),
         ),
         const Spacer(),

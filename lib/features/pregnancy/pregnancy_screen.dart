@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../services/database/app_database.dart';
 import '../../widgets/sync_refresh.dart';
 import 'expecting_date_bounds.dart';
@@ -20,12 +21,12 @@ class PregnancyScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Pregnancy')),
+      appBar: AppBar(title: Text(AppL10n.of(context).pregnancyTitle)),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Text(
-            'Could not load pregnancy profile.',
+            AppL10n.of(context).pregnancyLoadFailed,
             style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
           ),
         ),
@@ -47,7 +48,7 @@ class PregnancyScreen extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
               Text(
-                'Bump to baby',
+                AppL10n.of(context).pregnancyEyebrow,
                 style: GoogleFonts.nunito(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -56,7 +57,7 @@ class PregnancyScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Track the journey',
+                AppL10n.of(context).pregnancyHeroTitle,
                 style: GoogleFonts.fraunces(
                   fontSize: 26,
                   fontWeight: FontWeight.w600,
@@ -84,7 +85,9 @@ class PregnancyScreen extends ConsumerWidget {
                     ..hideCurrentSnackBar()
                     ..showSnackBar(
                       SnackBar(
-                        content: Text('Kick $count logged today'),
+                        content: Text(
+                          AppL10n.of(context).pregnancyKickLogged(count),
+                        ),
                         duration: const Duration(seconds: 2),
                       ),
                     );
@@ -96,7 +99,7 @@ class PregnancyScreen extends ConsumerWidget {
               Row(
                 children: [
                   Text(
-                    'Appointments',
+                    AppL10n.of(context).pregnancyAppointments,
                     style: GoogleFonts.nunito(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
@@ -109,7 +112,7 @@ class PregnancyScreen extends ConsumerWidget {
                     key: const Key('add_appointment'),
                     onPressed: () => _addAppointment(context, ref),
                     icon: const Icon(Icons.add, size: 18),
-                    label: const Text('Add note'),
+                    label: Text(AppL10n.of(context).pregnancyAddNote),
                   ),
                 ],
               ),
@@ -130,7 +133,7 @@ class PregnancyScreen extends ConsumerWidget {
                     ),
                   ),
                   child: Text(
-                    'Save questions for your next prenatal visit.',
+                    AppL10n.of(context).pregnancyAppointmentsEmpty,
                     style: GoogleFonts.nunito(
                       fontSize: 15,
                       color: AppColors.mutedText(Theme.of(context).brightness),
@@ -179,7 +182,7 @@ class PregnancyScreen extends ConsumerWidget {
       initialDate: initial,
       firstDate: today,
       lastDate: last,
-      helpText: 'Select due date',
+      helpText: AppL10n.of(context).onboardingSelectDueDate,
     );
     if (picked == null) return;
     await ref.read(pregnancyActionsProvider).setDueDate(picked);
@@ -193,21 +196,25 @@ class PregnancyScreen extends ConsumerWidget {
     final saved = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Appointment note'),
+        title: Text(AppL10n.of(context).pregnancyAppointmentDialogTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               key: const Key('appointment_title'),
               controller: titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+              decoration: InputDecoration(
+                labelText: AppL10n.of(context).pregnancyAppointmentTitleLabel,
+              ),
               textCapitalization: TextCapitalization.sentences,
             ),
             const SizedBox(height: 12),
             TextField(
               key: const Key('appointment_notes'),
               controller: notesController,
-              decoration: const InputDecoration(labelText: 'Notes'),
+              decoration: InputDecoration(
+                labelText: AppL10n.of(context).pregnancyAppointmentNotesLabel,
+              ),
               maxLines: 3,
               textCapitalization: TextCapitalization.sentences,
             ),
@@ -225,19 +232,19 @@ class PregnancyScreen extends ConsumerWidget {
                 );
                 if (picked != null) scheduledAt = picked;
               },
-              child: const Text('Pick date (optional)'),
+              child: Text(AppL10n.of(context).pregnancyAppointmentPickDate),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppL10n.of(context).commonCancel),
           ),
           FilledButton(
             key: const Key('appointment_save'),
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Save'),
+            child: Text(AppL10n.of(context).commonSave),
           ),
         ],
       ),
@@ -295,7 +302,7 @@ class _DueDateCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Due date',
+            AppL10n.of(context).pregnancyDueDate,
             style: GoogleFonts.nunito(
               fontWeight: FontWeight.w800,
               color: AppColors.accent(Theme.of(context).brightness),
@@ -304,7 +311,7 @@ class _DueDateCard extends StatelessWidget {
           const SizedBox(height: 8),
           if (dueDate == null)
             Text(
-              'Set your due date to see your current week.',
+              AppL10n.of(context).pregnancyNoDueDate,
               style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
             )
           else ...[
@@ -318,7 +325,12 @@ class _DueDateCard extends StatelessWidget {
             const SizedBox(height: 8),
             if (week != null)
               Text(
-                'Week $week${daysLeft != null && daysLeft! >= 0 ? ' · $daysLeft days to go' : ''}',
+                daysLeft != null && daysLeft! >= 0
+                    ? AppL10n.of(context).pregnancyWeekWithDays(
+                        week!,
+                        daysLeft!,
+                      )
+                    : AppL10n.of(context).pregnancyWeek(week!),
                 style: GoogleFonts.nunito(
                   fontSize: 15,
                   color: AppColors.mutedText(Theme.of(context).brightness),
@@ -335,14 +347,18 @@ class _DueDateCard extends StatelessWidget {
                   backgroundColor: AppColors.bloom,
                   foregroundColor: AppColors.cream,
                 ),
-                child: Text(dueDate == null ? 'Set due date' : 'Change date'),
+                child: Text(
+                  dueDate == null
+                      ? AppL10n.of(context).pregnancySetDueDate
+                      : AppL10n.of(context).pregnancyChangeDueDate,
+                ),
               ),
               if (onClear != null) ...[
                 const SizedBox(width: 8),
                 TextButton(
                   key: const Key('clear_due_date'),
                   onPressed: onClear,
-                  child: const Text('Clear'),
+                  child: Text(AppL10n.of(context).commonClear),
                 ),
               ],
             ],
@@ -384,7 +400,7 @@ class _KickCounterCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Kick counter',
+            AppL10n.of(context).pregnancyKickCounter,
             style: GoogleFonts.nunito(
               fontWeight: FontWeight.w800,
               color: AppColors.accent(Theme.of(context).brightness),
@@ -392,7 +408,7 @@ class _KickCounterCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Tap when you feel movement. Count resets each day.',
+            AppL10n.of(context).pregnancyKickCounterSubtitle,
             style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
           ),
           const SizedBox(height: 16),
@@ -415,14 +431,14 @@ class _KickCounterCard extends StatelessWidget {
                   backgroundColor: AppColors.sage,
                   foregroundColor: AppColors.cream,
                 ),
-                child: const Text('Log kick'),
+                child: Text(AppL10n.of(context).pregnancyLogKick),
               ),
               const SizedBox(width: 8),
               if (count > 0)
                 TextButton(
                   key: const Key('reset_kicks'),
                   onPressed: onReset,
-                  child: const Text('Reset'),
+                  child: Text(AppL10n.of(context).commonReset),
                 ),
             ],
           ),

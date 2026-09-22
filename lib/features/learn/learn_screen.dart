@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../../widgets/sync_refresh.dart';
 import 'models/learn_card.dart';
 import 'providers/learn_content_provider.dart';
@@ -46,16 +47,17 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
   Widget build(BuildContext context) {
     final cardsAsync = ref.watch(learnCardsProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppL10n.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Learn')),
+      appBar: AppBar(title: Text(l10n.learnTitle)),
       body: cardsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Text(
-              'Could not load learn cards.',
+              l10n.learnLoadFailed,
               style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
             ),
           ),
@@ -70,7 +72,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: [
               Text(
-                'Is this normal?',
+                l10n.learnHeroTitle,
                 style: GoogleFonts.fraunces(
                   fontSize: 26,
                   fontWeight: FontWeight.w600,
@@ -79,7 +81,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Plain-language guidance for real parent days. Reassurance before panic.',
+                l10n.learnHeroSubtitle,
                 style: GoogleFonts.nunito(
                   fontSize: 15,
                   height: 1.45,
@@ -92,7 +94,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                 controller: _searchController,
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
-                  hintText: 'Search topics…',
+                  hintText: l10n.learnSearchHint,
                   prefixIcon: const Icon(Icons.search),
                   suffixIcon: _query.isEmpty
                       ? null
@@ -108,7 +110,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24),
                   child: Text(
-                    'No cards match your search.',
+                    l10n.learnNoResults,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.nunito(
                       fontSize: 15,
@@ -196,7 +198,7 @@ class _LearnCardTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    'Triage',
+                    AppL10n.of(context).learnTriageBadge,
                     style: GoogleFonts.nunito(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,

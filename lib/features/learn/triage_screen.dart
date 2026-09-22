@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'models/learn_card.dart';
 import 'providers/learn_content_provider.dart';
 import 'widgets/medical_disclaimer.dart';
@@ -54,7 +55,7 @@ class _TriageScreenState extends ConsumerState<TriageScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quick triage'),
+        title: Text(AppL10n.of(context).learnQuickTriage),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () =>
@@ -65,7 +66,7 @@ class _TriageScreenState extends ConsumerState<TriageScreen> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Text(
-            'Triage not available.',
+            AppL10n.of(context).triageNotAvailable,
             style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
           ),
         ),
@@ -74,7 +75,7 @@ class _TriageScreenState extends ConsumerState<TriageScreen> {
           if (triage == null) {
             return Center(
               child: Text(
-                'No triage for this topic.',
+                AppL10n.of(context).triageNoneForTopic,
                 style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
               ),
             );
@@ -123,7 +124,7 @@ class _TriageScreenState extends ConsumerState<TriageScreen> {
                 const SizedBox(height: 20),
                 OutlinedButton(
                   onPressed: () => _reset(triage),
-                  child: const Text('Start over'),
+                  child: Text(AppL10n.of(context).triageStartOver),
                 ),
                 const SizedBox(height: 16),
                 MedicalDisclaimer(text: card.disclaimer),
@@ -165,7 +166,7 @@ class _TriageScreenState extends ConsumerState<TriageScreen> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: const Text('Yes'),
+                child: Text(AppL10n.of(context).commonYes),
               ),
               const SizedBox(height: 12),
               OutlinedButton(
@@ -177,7 +178,7 @@ class _TriageScreenState extends ConsumerState<TriageScreen> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                child: const Text('No'),
+                child: Text(AppL10n.of(context).commonNo),
               ),
               const SizedBox(height: 24),
               MedicalDisclaimer(text: card.disclaimer),

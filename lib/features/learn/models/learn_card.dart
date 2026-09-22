@@ -1,3 +1,5 @@
+import '../../../l10n/generated/app_localizations.dart';
+
 class LearnReviewer {
   const LearnReviewer({
     required this.name,
@@ -25,9 +27,9 @@ class LearnReviewer {
   bool get isReviewed =>
       credentials.trim().isNotEmpty && !name.toLowerCase().startsWith('pending');
 
-  String get displayLine {
-    if (!isReviewed) return 'General educational information, not medical advice';
-    return 'Reviewed by $name, $credentials · $specialty · $reviewedAt';
+  String displayLine(AppL10n l10n) {
+    if (!isReviewed) return l10n.learnDisclaimerUnreviewed;
+    return l10n.learnReviewedBy(name, credentials, specialty, reviewedAt);
   }
 }
 

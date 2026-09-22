@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/router/app_router.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'providers/learn_content_provider.dart';
 import 'widgets/learn_section.dart';
 import 'widgets/learn_sources.dart';
@@ -22,7 +23,7 @@ class LearnCardScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Learn'),
+        title: Text(AppL10n.of(context).learnTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go(AppRoutes.learn),
@@ -32,7 +33,7 @@ class LearnCardScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: Text(
-            'Card not found.',
+            AppL10n.of(context).learnCardNotFound,
             style: GoogleFonts.nunito(color: AppColors.mutedText(Theme.of(context).brightness)),
           ),
         ),
@@ -63,7 +64,7 @@ class LearnCardScreen extends ConsumerWidget {
                 onPressed: () =>
                     context.go('${AppRoutes.learn}/${card.id}/triage'),
                 icon: const Icon(Icons.help_outline),
-                label: const Text('Quick triage'),
+                label: Text(AppL10n.of(context).learnQuickTriage),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.sage,
                   foregroundColor: AppColors.cream,
@@ -76,19 +77,19 @@ class LearnCardScreen extends ConsumerWidget {
             ],
             const SizedBox(height: 28),
             LearnSection(
-              label: "What's normal",
+              label: AppL10n.of(context).learnWhatsNormal,
               color: AppColors.sage,
               body: card.whatsNormal,
             ),
             const SizedBox(height: 24),
             LearnSection(
-              label: 'Watch for',
+              label: AppL10n.of(context).learnWatchFor,
               color: const Color(0xFFC9A227),
               bullets: card.watchFor,
             ),
             const SizedBox(height: 24),
             LearnSection(
-              label: 'Call doctor if',
+              label: AppL10n.of(context).learnCallDoctorIf,
               color: AppColors.bloomDeep,
               bullets: card.callDoctorIf,
             ),
@@ -98,7 +99,7 @@ class LearnCardScreen extends ConsumerWidget {
             ],
             const SizedBox(height: 24),
             Text(
-              card.reviewer.displayLine,
+              card.reviewer.displayLine(AppL10n.of(context)),
               style: GoogleFonts.nunito(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
