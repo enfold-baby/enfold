@@ -179,7 +179,7 @@ Containers / Postgres role stay **bloomdue** (do not rename).
 
 | Suite | Notes |
 |---|---|
-| Unit + widget | `test/`, 221 tests, including contrast, sleep-in-progress, FAB, date bounds, 12/24-hour clock, daily vitamin reminder, edge-to-edge system bars, Romanian UI |
+| Unit + widget | `test/`, 223 tests, including contrast, sleep-in-progress, FAB, date bounds, 12/24-hour clock, daily vitamin reminder, edge-to-edge system bars, Romanian UI |
 | Integration | `integration_test/` — app, account-switch e2e, demo screenshots |
 | Demo / store goldens | `scripts/capture_demo_screenshots.sh` + `test/widget/store_screenshots_test.dart` — Play listing still needs a **real phone** |
 

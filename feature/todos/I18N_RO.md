@@ -60,6 +60,16 @@ Three bugs found and fixed (commit "three fixes the emulator screenshots caught"
 ellipsis rather than raising a RenderFlex overflow, so the 320px overflow test cannot see
 it. One-line labels on narrow tiles need an eye on a real screen.
 
+## Phone round 1, Raul, 23 September
+
+Sideloaded release APK on his phone. Language, edge-to-edge, the overnight sleep fix,
+notifications and the PDF all passed. Two bugs found, both fixed:
+
+- Pagination behaved as if it did not exist (see `paginated_column.dart`); not an i18n bug
+- "Greutate" wrapped inside the growth chart's segmented button, fixed with `SegmentLabel`
+
+Wording feedback is coming as he and the family use it in Romanian.
+
 ## Still to do
 
 - [ ] **Native check by Raul and Oana.** Read the Romanian on a phone, fix what sounds

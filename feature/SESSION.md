@@ -1,7 +1,7 @@
 # Last session
 
 **Date:** 2026-09-22 (app dev session, after the launch sessions on 21 and 22)  
-**Version:** `1.0.2+28` · Drift schema **v16** · 221 tests passing  
+**Version:** `1.0.2+28` · Drift schema **v16** · 223 tests passing  
 **API:** `https://api.enfold.baby` · local `http://127.0.0.1:8282` (emulator `http://10.0.2.2:8282`)  
 **Contact:** `support@enfold.baby`  
 **Display:** Enfold (App Store name "Enfold: Baby Tracker") · bundle `baby.enfold.app`  
@@ -32,6 +32,15 @@
   `language_tag` column, a Romanian rendering test, and a Romanian overflow check that pumps
   six screens at 320px and fails on a RenderFlex overflow. Widget tests now pump through a
   `localizedApp` helper that carries the delegates.
+
+- **First phone round from Raul (23 Sep), two bugs fixed.** Pagination looked absent
+  because `PaginatedColumn` also loaded on scroll and one fling tripped the listener
+  several times (10 to 30 tiles in a single fling), so the button was never seen and
+  Recently deleted, which sits after the list on the hub, kept being pushed away. Loading
+  is explicit now. Second, "Greutate" wrapped as "Greutat" / "e" in the growth chart's
+  segmented button; the new `SegmentLabel` scales long labels down instead of wrapping and
+  is used on every segmented button with translated text. 223 tests.
+- Release APK for sideloading is on Raul's Desktop with a test plan beside it.
 
 ## Where things stand
 
@@ -75,7 +84,7 @@
 
 ```
 Read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md and ~/Desktop/LAUNCH-CHECKLIST.md (pickup at the top).
-Enfold 1.0.2+28, Drift v16, 221 tests. App Store live on 1.0.1; Play still in review (ticket filed 2026-09-22); 28 is built but not uploaded.
+Enfold 1.0.2+28, Drift v16, 223 tests. App Store live on 1.0.1; Play still in review (ticket filed 2026-09-22); 28 is built but not uploaded.
 Romanian UI is in (603 ARB keys, Settings > Language, learn cards stay English). Next: native check and screenshots for overflow.
 Keep markdown current as we ship (feature/MAINTAIN.md). No em dashes. Public posts, logins and payments are Raul's keyboard.
 ```

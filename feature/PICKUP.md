@@ -11,7 +11,7 @@ Copy one of these into a fresh chat:
 
 ```
 Read feature/SESSION.md, feature/PICKUP.md, feature/todos/README.md and ~/Desktop/LAUNCH-CHECKLIST.md (pickup at the top).
-Enfold 1.0.2+28, Drift schema v16, 221 tests. App Store: 1.0.1 live (id 6811765288). Play: 1.0.0+22 in review since 12 Sep (support ticket 2026-09-22); 1.0.2+28 is built locally, not uploaded.
+Enfold 1.0.2+28, Drift schema v16, 223 tests. App Store: 1.0.1 live (id 6811765288). Play: 1.0.0+22 in review since 12 Sep (support ticket 2026-09-22); 1.0.2+28 is built locally, not uploaded.
 Code is public: github.com/enfold-baby/enfold (AGPL-3.0). Never put VPS hosts, ssh users, personal inboxes or account ids into tracked files.
 Debug API → http://10.0.2.2:8282 (Android emulator); release → https://api.enfold.baby.
 Local docker: docker compose up -d. Contact: support@enfold.baby. Prod VPS is updated by copying files (private ops notes, ~/Documents/enfold/ops/).
