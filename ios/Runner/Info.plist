@@ -6,6 +6,15 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<!-- iOS resolves the app language against this list. Without it a Romanian
+	     iPhone reports English to Flutter and the device-language default never
+	     fires. Keep in step with supportedLocales in
+	     lib/features/settings/providers/locale_providers.dart. -->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ro</string>
+	</array>
 	<key>CFBundleDisplayName</key>
 	<string>Enfold</string>
 	<key>CFBundleExecutable</key>

@@ -5,6 +5,7 @@
     <application
         android:label="Enfold"
         android:name="${applicationName}"
+        android:localeConfig="@xml/locales_config"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

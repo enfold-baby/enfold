@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Lists the languages the app ships, so Android 13+ shows Enfold in
+     Settings > Apps > Enfold > Language. Keep in step with supportedLocales
+     in lib/features/settings/providers/locale_providers.dart. -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en"/>
+    <locale android:name="ro"/>
+</locale-config>
