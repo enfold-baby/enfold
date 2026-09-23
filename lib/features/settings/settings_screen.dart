@@ -21,6 +21,7 @@ import 'widgets/partner_section.dart';
 import 'widgets/time_format_section.dart';
 import 'widgets/units_section.dart';
 import '../../widgets/sync_refresh.dart';
+import '../../widgets/segment_label.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -91,17 +92,17 @@ class SettingsScreen extends ConsumerWidget {
               segments: [
                 ButtonSegment(
                   value: ThemeMode.system,
-                  label: Text(l10n.settingsThemeSystem),
+                  label: SegmentLabel(l10n.settingsThemeSystem),
                   icon: const Icon(Icons.brightness_auto),
                 ),
                 ButtonSegment(
                   value: ThemeMode.light,
-                  label: Text(l10n.settingsThemeLight),
+                  label: SegmentLabel(l10n.settingsThemeLight),
                   icon: const Icon(Icons.light_mode),
                 ),
                 ButtonSegment(
                   value: ThemeMode.dark,
-                  label: Text(l10n.settingsThemeDark),
+                  label: SegmentLabel(l10n.settingsThemeDark),
                   icon: const Icon(Icons.dark_mode),
                 ),
               ],

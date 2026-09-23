@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../providers/time_format_providers.dart';
+import '../../../widgets/segment_label.dart';
 
 class TimeFormatSection extends ConsumerWidget {
   const TimeFormatSection({super.key});
@@ -38,11 +39,11 @@ class TimeFormatSection extends ConsumerWidget {
               segments: [
                 ButtonSegment(
                   value: false,
-                  label: Text(l10n.settingsTime12Hour),
+                  label: SegmentLabel(l10n.settingsTime12Hour),
                 ),
                 ButtonSegment(
                   value: true,
-                  label: Text(l10n.settingsTime24Hour),
+                  label: SegmentLabel(l10n.settingsTime24Hour),
                 ),
               ],
               selected: {use24Hour},

@@ -10,6 +10,7 @@ import '../today/models/log_type.dart';
 import '../today/providers/today_log_provider.dart';
 import 'providers/logs_providers.dart';
 import 'widgets/time_field.dart';
+import '../../widgets/segment_label.dart';
 
 enum _SleepMode { range, now }
 
@@ -209,11 +210,11 @@ class _LogSleepScreenState extends ConsumerState<LogSleepScreen> {
                 segments: [
                   ButtonSegment(
                     value: _SleepMode.range,
-                    label: Text(l10n.sleepModeNap),
+                    label: SegmentLabel(l10n.sleepModeNap),
                   ),
                   ButtonSegment(
                     value: _SleepMode.now,
-                    label: Text(l10n.sleepModeNow),
+                    label: SegmentLabel(l10n.sleepModeNow),
                   ),
                 ],
                 selected: {_mode},

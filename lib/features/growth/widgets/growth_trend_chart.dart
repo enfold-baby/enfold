@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../../core/units/growth_units.dart';
 import '../models/growth_measurement_entry.dart';
+import '../../../widgets/segment_label.dart';
 
 enum GrowthChartMetric { weight, length, head }
 
@@ -168,15 +169,15 @@ class _GrowthTrendChartState extends State<GrowthTrendChart> {
             segments: [
               ButtonSegment(
                 value: GrowthChartMetric.weight,
-                label: Text(l10n.growthWeight),
+                label: SegmentLabel(l10n.growthWeight),
               ),
               ButtonSegment(
                 value: GrowthChartMetric.length,
-                label: Text(l10n.growthLength),
+                label: SegmentLabel(l10n.growthLength),
               ),
               ButtonSegment(
                 value: GrowthChartMetric.head,
-                label: Text(l10n.growthHead),
+                label: SegmentLabel(l10n.growthHead),
               ),
             ],
             selected: _metrics,

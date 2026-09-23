@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../providers/locale_providers.dart';
+import '../../../widgets/segment_label.dart';
 
 class LanguageSection extends ConsumerWidget {
   const LanguageSection({super.key});
@@ -35,16 +36,16 @@ class LanguageSection extends ConsumerWidget {
             segments: [
               ButtonSegment(
                 value: 'system',
-                label: Text(l10n.settingsLanguageSystem),
+                label: SegmentLabel(l10n.settingsLanguageSystem),
                 icon: const Icon(Icons.smartphone),
               ),
               ButtonSegment(
                 value: 'en',
-                label: Text(l10n.settingsLanguageEnglish),
+                label: SegmentLabel(l10n.settingsLanguageEnglish),
               ),
               ButtonSegment(
                 value: 'ro',
-                label: Text(l10n.settingsLanguageRomanian),
+                label: SegmentLabel(l10n.settingsLanguageRomanian),
               ),
             ],
             selected: {override?.languageCode ?? 'system'},

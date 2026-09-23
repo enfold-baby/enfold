@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../providers/units_providers.dart';
+import '../../../widgets/segment_label.dart';
 
 class UnitsSection extends ConsumerWidget {
   const UnitsSection({super.key});
@@ -39,11 +40,11 @@ class UnitsSection extends ConsumerWidget {
               segments: [
                 ButtonSegment(
                   value: false,
-                  label: Text(l10n.settingsUnitsMetric),
+                  label: SegmentLabel(l10n.settingsUnitsMetric),
                 ),
                 ButtonSegment(
                   value: true,
-                  label: Text(l10n.settingsUnitsUs),
+                  label: SegmentLabel(l10n.settingsUnitsUs),
                 ),
               ],
               selected: {useImperial},
