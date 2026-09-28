@@ -13,6 +13,7 @@
     <meta name="color-scheme" content="light" />
     <meta name="application-name" content="Enfold" />
     <meta name="apple-mobile-web-app-title" content="Enfold" />
+    <meta name="apple-itunes-app" content="app-id=6811765288" />
     <link rel="canonical" href="https://enfold.baby/" />
     <link rel="icon" href="/favicon.png?v=20260902-brand" type="image/png" sizes="32x32" />
     <link rel="icon" href="/favicon.svg?v=20260902-brand" type="image/svg+xml" />
@@ -23,7 +24,7 @@
     <meta property="og:title" content="Enfold · Calm baby care, from bump to toddler" />
     <meta
       property="og:description"
-      content="Two-tap care logging, pregnancy tools, partner sync, and calm guidance for real parent days. In review on Google Play, iOS shortly after."
+      content="Two-tap care logging, pregnancy tools, partner sync, and calm guidance for real parent days. Free on the App Store and Google Play."
     />
     <meta property="og:url" content="https://enfold.baby/" />
     <meta property="og:image" content="https://enfold.baby/og-image.jpg?v=20260902-brand" />
@@ -52,7 +53,7 @@
       crossorigin
     />
     <link rel="preload" href="/images/family-care-hero.webp" as="image" type="image/webp" />
-    <link rel="stylesheet" href="/styles.css?v=20260917-oss" />
+    <link rel="stylesheet" href="/styles.css?v=20260928-stores" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -66,8 +67,12 @@
           "price": "0",
           "priceCurrency": "USD"
         },
-        "description": "A free, open-source, calm parent app for care logging, pregnancy tools, partner sync, and educational guidance. Submitted to Google Play and in review, then iOS shortly after.",
-        "softwareVersion": "0.1.0"
+        "description": "A free, open-source, calm parent app for care logging, pregnancy tools, partner sync, and educational guidance.",
+        "sameAs": [
+          "https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288",
+          "https://play.google.com/store/apps/details?id=baby.enfold.app",
+          "https://github.com/enfold-baby/enfold"
+        ]
       }
     </script>
   </head>
@@ -87,26 +92,25 @@
         <a href="/support/">Support</a>
       </nav>
 
-      <a class="button button-small button-primary header-cta" href="#notify">Notify me</a>
+      <a class="button button-small button-primary header-cta" href="#download">Get the app</a>
     </header>
 
     <main id="main">
       <section class="hero section-shell">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="eyebrow-dot"></span>Free · no ads · open source · now on the App Store</p>
+          <p class="eyebrow"><span class="eyebrow-dot"></span>Free · no ads · open source · iOS and Android</p>
           <h1>Baby care that feels <em>calm.</em></h1>
           <p class="lede">
             Keep feeds, sleep, diapers, growth, and pregnancy moments in one gentle place, then
             get clear guidance when you wonder, “is this normal?”
           </p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#notify"
-              >Notify me
-              <svg viewBox="0 0 20 20" aria-hidden="true">
-                <path d="m7 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
+          <div class="hero-actions store-badges">
+            <a class="store-badge" href="https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288" target="_blank" rel="noopener noreferrer" data-store="ios" data-where="hero">
+              <img src="/images/badges/app-store.svg" width="120" height="40" alt="Download on the App Store" />
             </a>
-            <a class="button button-secondary" href="https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288" target="_blank" rel="noopener noreferrer">Get it on the App Store</a>
+            <a class="store-badge" href="https://play.google.com/store/apps/details?id=baby.enfold.app&amp;referrer=utm_source%3Denfold.baby%26utm_medium%3Dwebsite" target="_blank" rel="noopener noreferrer" data-store="android" data-where="hero">
+              <img src="/images/badges/google-play.svg" width="135" height="40" alt="Get it on Google Play" />
+            </a>
           </div>
           <ul class="hero-reassurance" aria-label="Enfold promises">
             <li>
@@ -460,110 +464,29 @@
         </div>
       </section>
 
-      <div id="join-beta"></div>
-      <section id="notify" class="final-cta section-shell section-space" aria-labelledby="notify-title">
+      <div id="notify" class="anchor-alias"></div>
+      <div id="join-beta" class="anchor-alias"></div>
+      <section id="download" class="final-cta section-shell section-space" aria-labelledby="download-title">
         <div class="final-cta-inner">
           <span class="final-flower final-flower--one" aria-hidden="true"></span>
           <span class="final-flower final-flower--two" aria-hidden="true"></span>
-          <p class="eyebrow">Coming soon</p>
-          <h2 id="notify-title">A calmer care rhythm starts here.</h2>
+          <p class="eyebrow">Free on iOS and Android</p>
+          <h2 id="download-title">A calmer care rhythm starts here.</h2>
           <p>
-            Enfold was submitted to Google Play on 12 September and is in review, then the App Store right after. Leave your
-            email and we’ll tell you the moment Android is live. iOS follows quickly. No ads, no
-            guilt, no complicated setup.
+            Enfold is free on the App Store and Google Play. No ads, no guilt, no complicated
+            setup. Invite your partner from inside the app and you both see the same day.
           </p>
-
-          <div id="beta-form-success" class="beta-success" hidden>
-            <p class="beta-success-title">You’re on the list 💚</p>
-            <p>
-              Thanks, we received your request and sent a short confirmation to your inbox. We’ll
-              email you when Enfold is on Google Play, and again when iOS is live.
-            </p>
+          <div class="store-badges store-badges--center">
+            <a class="store-badge" href="https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288" target="_blank" rel="noopener noreferrer" data-store="ios" data-where="final">
+              <img src="/images/badges/app-store.svg" width="120" height="40" alt="Download on the App Store" />
+            </a>
+            <a class="store-badge" href="https://play.google.com/store/apps/details?id=baby.enfold.app&amp;referrer=utm_source%3Denfold.baby%26utm_medium%3Dwebsite" target="_blank" rel="noopener noreferrer" data-store="android" data-where="final">
+              <img src="/images/badges/google-play.svg" width="135" height="40" alt="Get it on Google Play" />
+            </a>
           </div>
-
-          <form id="beta-request-form" class="beta-form" novalidate>
-            <div class="beta-form-grid">
-              <label class="beta-field">
-                <span>Email <abbr title="required">*</abbr></span>
-                <input
-                  id="beta-email"
-                  name="email"
-                  type="email"
-                  autocomplete="email"
-                  inputmode="email"
-                  required
-                  maxlength="254"
-                  placeholder="you@example.com"
-                />
-              </label>
-              <label class="beta-field">
-                <span>Name <span class="beta-optional">(optional)</span></span>
-                <input
-                  id="beta-name"
-                  name="name"
-                  type="text"
-                  autocomplete="name"
-                  maxlength="120"
-                  placeholder="How should we greet you?"
-                />
-              </label>
-              <label class="beta-field">
-                <span>Platform</span>
-                <select id="beta-platform" name="platform">
-                  <option value="android" selected>Android (Google Play)</option>
-                  <option value="ios">iOS (App Store)</option>
-                  <option value="both">Both</option>
-                </select>
-              </label>
-              <label class="beta-field beta-field--full">
-                <span>Anything else? <span class="beta-optional">(optional)</span></span>
-                <textarea
-                  id="beta-message"
-                  name="message"
-                  rows="3"
-                  maxlength="1000"
-                  placeholder="Stage of the journey, partner needs, or questions…"
-                ></textarea>
-              </label>
-            </div>
-
-            <!-- Honeypot: leave empty -->
-            <label class="beta-hp" aria-hidden="true">
-              <span>Website</span>
-              <input
-                id="beta-website"
-                name="website"
-                type="text"
-                tabindex="-1"
-                autocomplete="off"
-              />
-            </label>
-
-            <p id="beta-form-error" class="beta-form-error" role="alert" hidden></p>
-
-            <div class="beta-form-actions">
-              <button class="button button-primary" type="submit" id="beta-submit">
-                Notify me at launch
-                <svg viewBox="0 0 20 20" aria-hidden="true">
-                  <path
-                    d="m7 4 6 6-6 6"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-              <p class="beta-form-note">
-                We’ll email you at the address you provide. See our
-                <a href="/privacy/">Privacy Policy</a>. Prefer mail?
-                <a href="mailto:support@enfold.baby?subject=Enfold%20launch"
-                  >support@enfold.baby</a
-                >
-              </p>
-            </div>
-          </form>
+          <p class="store-note">
+            Questions or ideas? <a href="mailto:support@enfold.baby">support@enfold.baby</a>
+          </p>
         </div>
       </section>
     </main>
@@ -612,121 +535,21 @@
           <span aria-hidden="true">·</span>
           <a href="/delete-account/">Delete account</a>
         </p>
+        <p class="footer-meta footer-trademarks">
+          App Store and the Apple logo are trademarks of Apple Inc. Google Play and the Google Play
+          logo are trademarks of Google LLC.
+        </p>
       </div>
     </footer>
 
     <script>
-      (function () {
-        // Prod API by default; local docker uses Caddy /api or direct backend :8282.
-        var API = (function () {
-          var h = location.hostname;
-          var local =
-            h === "localhost" || h === "127.0.0.1" || h === "10.0.2.2";
-          if (!local) return "https://api.enfold.baby/v1/beta-requests";
-          // Served via Caddy :8280 → same-origin /api
-          if (location.port === "8280" || location.port === "") {
-            return location.origin + "/api/v1/beta-requests";
-          }
-          // Landing-only container :8283 → hit backend on host
-          return "http://127.0.0.1:8282/v1/beta-requests";
-        })();
-        var form = document.getElementById("beta-request-form");
-        var success = document.getElementById("beta-form-success");
-        var errorEl = document.getElementById("beta-form-error");
-        var submitBtn = document.getElementById("beta-submit");
-        if (!form || !success || !errorEl || !submitBtn) return;
-
-        function showError(message) {
-          errorEl.hidden = false;
-          errorEl.textContent = message;
-        }
-
-        function clearError() {
-          errorEl.hidden = true;
-          errorEl.textContent = "";
-        }
-
-        form.addEventListener("submit", function (event) {
-          event.preventDefault();
-          clearError();
-
-          var email = (document.getElementById("beta-email").value || "").trim();
-          var name = (document.getElementById("beta-name").value || "").trim();
-          var platform = (document.getElementById("beta-platform").value || "android").trim();
-          var message = (document.getElementById("beta-message").value || "").trim();
-          var website = (document.getElementById("beta-website").value || "").trim();
-
-          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            showError("Please enter a valid email address.");
-            document.getElementById("beta-email").focus();
-            return;
-          }
-
-          submitBtn.disabled = true;
-          submitBtn.setAttribute("aria-busy", "true");
-          var original = submitBtn.innerHTML;
-          submitBtn.textContent = "Sending…";
-
-          fetch(API, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify({
-              email: email,
-              name: name,
-              platform: platform,
-              message: message,
-              website: website,
-            }),
-          })
-            .then(function (res) {
-              return res.json().catch(function () {
-                return {};
-              }).then(function (data) {
-                return { ok: res.ok, status: res.status, data: data };
-              });
-            })
-            .then(function (result) {
-              if (result.ok) {
-                form.hidden = true;
-                success.hidden = false;
-                success.focus && success.focus();
-                if (window.sa_event) {
-                  try {
-                    window.sa_event("beta_request_submitted");
-                  } catch (e) {}
-                }
-                return;
-              }
-              var detail =
-                (result.data && (result.data.detail || result.data.message)) ||
-                "Something went wrong. Please try again or email support@enfold.baby.";
-              if (Array.isArray(detail)) {
-                detail = detail
-                  .map(function (item) {
-                    return item.msg || JSON.stringify(item);
-                  })
-                  .join(" ");
-              }
-              if (result.status === 429) {
-                detail =
-                  (typeof detail === "string" && detail) ||
-                  "Too many requests. Please try again later.";
-              }
-              showError(typeof detail === "string" ? detail : "Please try again.");
-              submitBtn.disabled = false;
-              submitBtn.removeAttribute("aria-busy");
-              submitBtn.innerHTML = original;
-            })
-            .catch(function () {
-              showError(
-                "Network error. Check your connection, or email support@enfold.baby."
-              );
-              submitBtn.disabled = false;
-              submitBtn.removeAttribute("aria-busy");
-              submitBtn.innerHTML = original;
-            });
-        });
-      })();
+      document.addEventListener("click", function (event) {
+        var link = event.target.closest && event.target.closest("[data-store]");
+        if (!link || !window.sa_event) return;
+        try {
+          window.sa_event("store_click_" + link.dataset.store + "_" + link.dataset.where);
+        } catch (e) {}
+      });
     </script>
     <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
     <noscript

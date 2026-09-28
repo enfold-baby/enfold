@@ -4,6 +4,12 @@
 log feeds, diapers and sleep in two taps at 3am, share with your partner in real time,
 read clinician-reviewed "is this normal?" cards, and export a summary for the pediatrician.
 
+<p>
+  <a href="https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288"><img src="landing/public/images/badges/app-store.svg" alt="Download on the App Store" height="48"></a>
+  &nbsp;
+  <a href="https://play.google.com/store/apps/details?id=baby.enfold.app"><img src="landing/public/images/badges/google-play.svg" alt="Get it on Google Play" height="48"></a>
+</p>
+
 Website: [enfold.baby](https://enfold.baby) · Support: [enfold.baby/support](https://enfold.baby/support/) · Contact: support@enfold.baby
 
 Enfold is built by a developer and a neonatologist who are also parents. It is free for
@@ -84,5 +90,5 @@ Found something? Email support@enfold.baby instead of opening an issue. See
 
 ## Status
 
-Version `1.0.2+28`. Live on the [App Store](https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288); the Google Play release is in review as of September 2026. The app speaks English and Romanian.
+Version `1.0.2+28`. Live on the [App Store](https://apps.apple.com/us/app/enfold-baby-tracker/id6811765288) and [Google Play](https://play.google.com/store/apps/details?id=baby.enfold.app). The app speaks English and Romanian.
 Where we left off: [`feature/SESSION.md`](./feature/SESSION.md).

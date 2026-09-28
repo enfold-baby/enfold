@@ -1510,165 +1510,61 @@ p {
   color: var(--bark-soft);
 }
 
-.beta-form {
+.store-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.store-badges--center {
   position: relative;
   z-index: 1;
-  width: min(34rem, 100%);
-  margin-inline: auto;
-  text-align: left;
+  justify-content: center;
 }
 
-.beta-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.9rem 1rem;
+.store-badge {
+  display: inline-flex;
+  border-radius: 0.6rem;
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
-.beta-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  color: var(--bark);
-  font-size: 0.82rem;
-  font-weight: 800;
+.store-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
 }
 
-.beta-field--full {
-  grid-column: 1 / -1;
+.store-badge:focus-visible {
+  outline: 3px solid var(--sage);
+  outline-offset: 3px;
 }
 
-.beta-optional {
-  color: var(--bark-soft);
-  font-weight: 700;
+/* Official artwork: scale only, never recolor or crop. Apple asks for 40px minimum. */
+.store-badge img {
+  display: block;
+  width: auto;
+  height: 3rem;
 }
 
-.beta-field abbr {
-  color: var(--bloom-deep);
-  text-decoration: none;
+.final-cta p.store-note {
+  position: relative;
+  z-index: 1;
+  margin: 1.4rem auto 0;
+  font-size: 0.9rem;
 }
 
-.beta-field input,
-.beta-field select,
-.beta-field textarea {
-  width: 100%;
-  min-height: 3rem;
-  padding: 0.75rem 0.95rem;
-  border: 1px solid var(--line-strong);
-  border-radius: 1rem;
-  color: var(--bark);
-  background: rgba(255, 253, 249, 0.92);
-  font: inherit;
-  font-size: 0.95rem;
-  font-weight: 600;
-  box-shadow: 0 10px 24px -22px rgba(61, 50, 41, 0.55);
-  transition: border-color 160ms ease, box-shadow 160ms ease;
-}
-
-.beta-field textarea {
-  min-height: 6.5rem;
-  resize: vertical;
-  line-height: 1.45;
-}
-
-.beta-field select {
-  appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--sage-deep) 50%),
-    linear-gradient(135deg, var(--sage-deep) 50%, transparent 50%);
-  background-position:
-    calc(100% - 1.15rem) calc(50% - 0.12rem),
-    calc(100% - 0.75rem) calc(50% - 0.12rem);
-  background-size: 0.4rem 0.4rem, 0.4rem 0.4rem;
-  background-repeat: no-repeat;
-  padding-right: 2.2rem;
-}
-
-.beta-field input::placeholder,
-.beta-field textarea::placeholder {
-  color: rgba(107, 94, 84, 0.72);
-  font-weight: 600;
-}
-
-.beta-field input:focus,
-.beta-field select:focus,
-.beta-field textarea:focus {
-  outline: none;
-  border-color: rgba(92, 127, 113, 0.55);
-  box-shadow: 0 0 0 4px rgba(92, 127, 113, 0.16);
-}
-
-.beta-hp {
-  position: absolute;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
-.beta-form-actions {
-  display: grid;
-  gap: 0.9rem;
-  margin-top: 1.15rem;
-  justify-items: center;
-}
-
-.beta-form-actions .button {
-  width: min(100%, 18rem);
-}
-
-.beta-form-actions .button:disabled {
-  opacity: 0.72;
-  cursor: wait;
-  transform: none;
-}
-
-.beta-form-note {
-  margin: 0;
-  max-width: 28rem;
-  color: var(--bark-soft);
-  font-size: 0.78rem;
-  font-weight: 700;
-  line-height: 1.5;
-  text-align: center;
-}
-
-.beta-form-note a {
+.store-note a {
   color: var(--sage-deep);
   font-weight: 800;
 }
 
-.beta-form-error {
-  margin: 0.85rem 0 0;
-  padding: 0.75rem 0.9rem;
-  border: 1px solid rgba(168, 85, 104, 0.28);
-  border-radius: 0.9rem;
-  color: var(--bloom-deep);
-  background: var(--bloom-mist);
-  font-size: 0.88rem;
-  font-weight: 700;
-  line-height: 1.45;
+.anchor-alias {
+  scroll-margin-top: 5.5rem;
 }
 
-.beta-success {
-  width: min(32rem, 100%);
-  margin: 0.25rem auto 0;
-  padding: 1.35rem 1.25rem;
-  border: 1px solid rgba(92, 127, 113, 0.28);
-  border-radius: var(--radius-md);
-  background: rgba(228, 238, 232, 0.55);
-  text-align: center;
-}
-
-.beta-success-title {
-  margin: 0 0 0.45rem;
-  color: var(--sage-deep);
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 700;
-}
-
-.beta-success p:last-child {
-  margin-bottom: 0;
+.footer-trademarks {
+  font-size: 0.72rem;
+  opacity: 0.8;
 }
 
 .final-flower,
@@ -2305,6 +2201,11 @@ p {
     flex-direction: column;
   }
 
+  .hero-actions.store-badges {
+    align-items: center;
+    flex-direction: row;
+  }
+
   .hero-actions .button {
     width: 100%;
   }
@@ -2622,10 +2523,6 @@ p {
   .final-cta-inner {
     padding: 4.2rem 1.3rem;
     border-radius: 1.75rem;
-  }
-
-  .beta-form-grid {
-    grid-template-columns: 1fr;
   }
 
   .footer-main {

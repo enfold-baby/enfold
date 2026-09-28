@@ -33,3 +33,10 @@ users' data to `api.enfold.baby`.
 If you see an app on a store that copies Enfold's name, icon or content, email
 support@enfold.baby. We file takedowns through Google Play's impersonation policy and
 Apple's App Store guideline 4.1 (Copycats).
+
+## Store badges
+
+`landing/public/images/badges/` holds the official "Download on the App Store" and "Get it
+on Google Play" badges. They belong to Apple Inc. and Google LLC, are not covered by the AGPL,
+and are used under the badge guidelines of each store. App Store and the Apple logo are
+trademarks of Apple Inc. Google Play and the Google Play logo are trademarks of Google LLC.
